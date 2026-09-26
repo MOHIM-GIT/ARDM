@@ -51,11 +51,37 @@ export default function App() {
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
-  // URL Path State for Sitelink Routing (Normalizes .html extension e.g. /courses.html -> /courses)
+  // Detect GitHub Pages repo sub-path (e.g. /ARDM/ or /ARDM)
+  const getRepoBase = () => {
+    if (typeof window === 'undefined') return '';
+    const pathname = window.location.pathname;
+    const parts = pathname.split('/').filter(Boolean);
+    if (window.location.hostname.endsWith('github.io') && parts.length > 0) {
+      return `/${parts[0]}`;
+    }
+    return '';
+  };
+  const repoBase = getRepoBase();
+
+  // URL Path State for Sitelink Routing (Normalizes repo prefix & .html extension)
   const normalizePath = (p: string) => {
     if (!p) return '/';
-    const clean = p.replace(/\.html$/, '');
+    let clean = p.replace(/\.html$/, '');
+    if (repoBase && clean.startsWith(repoBase)) {
+      clean = clean.slice(repoBase.length);
+    }
+    if (!clean.startsWith('/')) clean = '/' + clean;
+    if (clean.length > 1 && clean.endsWith('/')) {
+      clean = clean.slice(0, -1);
+    }
     return clean.length > 0 ? clean : '/';
+  };
+
+  const toBrowserUrl = (cleanPath: string) => {
+    if (repoBase && !cleanPath.startsWith(repoBase)) {
+      return `${repoBase}${cleanPath.startsWith('/') ? cleanPath : '/' + cleanPath}`;
+    }
+    return cleanPath;
   };
 
   const [currentPath, setCurrentPath] = useState<string>(() => {
@@ -101,7 +127,7 @@ export default function App() {
         const [rawPath, hash] = pathOrId.split('#');
         const path = normalizePath(rawPath);
         setCurrentPath(path || '/');
-        window.history.pushState({}, '', pathOrId);
+        window.history.pushState({}, '', toBrowserUrl(pathOrId));
         setTimeout(() => {
           const el = document.getElementById(hash);
           if (el) {
@@ -115,7 +141,7 @@ export default function App() {
 
       const path = normalizePath(pathOrId);
       setCurrentPath(path);
-      window.history.pushState({}, '', pathOrId);
+      window.history.pushState({}, '', toBrowserUrl(pathOrId));
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
