@@ -1,0 +1,108 @@
+import React, { useEffect, useState } from 'react';
+import { BrandLogo } from './BrandLogo';
+import { ArrowRight } from 'lucide-react';
+
+interface SplashScreenProps {
+  onComplete: () => void;
+  minDurationMs?: number;
+}
+
+export const SplashScreen: React.FC<SplashScreenProps> = ({
+  onComplete,
+  minDurationMs = 2000,
+}) => {
+  const [fadedOut, setFadedOut] = useState(false);
+  const [progress, setProgress] = useState(15);
+
+  useEffect(() => {
+    // Respect user preference for reduced motion
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+      onComplete();
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 95) {
+          clearInterval(interval);
+          return 100;
+        }
+        return prev + 15;
+      });
+    }, minDurationMs / 10);
+
+    const fadeTimer = setTimeout(() => {
+      setFadedOut(true);
+    }, minDurationMs - 350);
+
+    const completeTimer = setTimeout(() => {
+      onComplete();
+    }, minDurationMs);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(fadeTimer);
+      clearTimeout(completeTimer);
+    };
+  }, [minDurationMs, onComplete]);
+
+  return (
+    <div
+      className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-950 text-white transition-opacity duration-400 ${
+        fadedOut ? 'opacity-0 pointer-events-none' : 'opacity-100'
+      }`}
+      aria-live="polite"
+      role="status"
+    >
+      {/* Background Ambience */}
+      <div className="absolute -top-32 -left-32 w-80 h-80 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="relative flex flex-col items-center text-center px-4 animate-in fade-in zoom-in-95 duration-700 ease-out">
+        {/* 1. Official ARDM Logo Emblem with 2. Animated Circular Border / Ring */}
+        <div className="relative p-3 rounded-full mb-4">
+          <div className="absolute inset-0 rounded-full border-2 border-indigo-500/30 border-t-cyan-400 border-r-indigo-500 animate-spin [animation-duration:3s]" />
+          <BrandLogo variant="icon" size="xl" light className="relative" />
+        </div>
+
+        {/* 3. ARDM Academy Name */}
+        <div className="mt-2 flex items-center gap-2">
+          <span className="text-3xl sm:text-4xl font-black tracking-tight text-white font-sans">ARDM</span>
+          <span className="text-3xl sm:text-4xl font-semibold tracking-wider text-cyan-400 font-sans">ACADEMY</span>
+        </div>
+
+        {/* 4. Official Slogan: LEARN • PRACTICE • IMPROVE */}
+        <div className="mt-3 flex items-center gap-2 text-xs sm:text-sm font-bold tracking-[0.25em] text-slate-300 uppercase">
+          <span>LEARN</span>
+          <span className="text-rose-500 font-black">•</span>
+          <span>PRACTICE</span>
+          <span className="text-rose-500 font-black">•</span>
+          <span>IMPROVE</span>
+        </div>
+
+        {/* Animated Loading Bar */}
+        <div className="mt-8 w-44 flex flex-col items-center gap-2">
+          <div className="w-full bg-slate-800/80 rounded-full h-1 overflow-hidden border border-slate-700/50">
+            <div
+              className="bg-gradient-to-r from-blue-500 via-indigo-400 to-cyan-300 h-full rounded-full transition-all duration-200 ease-out"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          <span className="text-[10px] text-slate-400 font-mono tracking-wider">
+            PREPARING ACADEMIC SUITE
+          </span>
+        </div>
+
+        {/* Quick Skip Button */}
+        <button
+          onClick={onComplete}
+          className="mt-6 inline-flex items-center gap-1 text-[11px] text-slate-500 hover:text-slate-300 transition-colors py-1 px-3 rounded-full hover:bg-slate-900 border border-transparent hover:border-slate-800"
+        >
+          <span>Skip to Website</span>
+          <ArrowRight className="w-3 h-3" />
+        </button>
+      </div>
+    </div>
+  );
+};

@@ -1,0 +1,6 @@
+{
+  "name": "ARDM Academy",
+  "description": "ARDM Academy provides academic classes, mock tests, Computer Science, Data Science, AI workshops and learning resources for students.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
