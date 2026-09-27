@@ -79,10 +79,10 @@ export const WhatWeProvide: React.FC<WhatWeProvideProps> = ({ onRegisterSubject 
             <Sparkles className="w-3.5 h-3.5" />
             <span>Curriculum & Learning Tracks</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
             What We Provide
           </h2>
-          <p className="text-base text-slate-600 leading-relaxed">
+          <p className="text-base text-white/95 leading-relaxed">
             A comprehensive dual-track education model combining rigorous board academic excellence with future-ready computer & tech literacy.
           </p>
 
@@ -126,11 +126,11 @@ export const WhatWeProvide: React.FC<WhatWeProvideProps> = ({ onRegisterSubject 
           <div className="mb-14">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-blue-600" />
+                <h3 className="text-xl font-extrabold text-white flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-600" />
                   <span>Academic Education (Class 10 Board Subjects)</span>
                 </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-white/90 mt-0.5">
                   Full syllabus coaching, practice tests, problem-solving clinics, and mock examination modules.
                 </p>
               </div>
@@ -140,23 +140,23 @@ export const WhatWeProvide: React.FC<WhatWeProvideProps> = ({ onRegisterSubject 
               {DEFAULT_SUBJECTS.map((subject) => (
                 <div
                   key={subject.id}
-                  className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-200 hover:-translate-y-1 flex flex-col justify-between group"
+                  className="bg-[#121215] rounded-2xl p-5 border border-slate-800 shadow-xs hover:shadow-md transition-all duration-200 hover:-translate-y-1 flex flex-col justify-between group"
                 >
                   <div>
                     {/* Icon & Category Tag */}
                     <div className="flex items-center justify-between mb-4">
-                      <div className="w-11 h-11 rounded-xl bg-blue-50 group-hover:bg-blue-600 text-blue-600 group-hover:text-white transition-colors flex items-center justify-center">
+                      <div className="w-11 h-11 rounded-xl bg-red-950/80 group-hover:bg-red-700 text-red-400 group-hover:text-white transition-colors flex items-center justify-center">
                         {renderIcon(subject.icon, 'w-5 h-5')}
                       </div>
-                      <span className="text-[11px] font-bold text-blue-600 bg-blue-50/80 px-2 py-0.5 rounded-full">
+                      <span className="text-[11px] font-bold text-red-400 bg-red-950/80 border border-red-900/60 px-2 py-0.5 rounded-full font-mono">
                         ₹{subject.price} Mock Fee
                       </span>
                     </div>
 
-                    <h4 className="text-base font-bold text-slate-900 mb-1.5 group-hover:text-blue-600 transition-colors">
+                    <h4 className="text-base font-bold text-white mb-1.5 group-hover:text-red-400 transition-colors">
                       {subject.name}
                     </h4>
-                    <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed mb-4">
+                    <p className="text-xs text-white/90 line-clamp-2 leading-relaxed mb-4">
                       {subject.description}
                     </p>
 
@@ -212,11 +212,11 @@ export const WhatWeProvide: React.FC<WhatWeProvideProps> = ({ onRegisterSubject 
           <div id="tech-courses">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-indigo-600" />
+                <h3 className="text-xl font-extrabold text-white flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-rose-600" />
                   <span>Technology Education & Digital Skills</span>
                 </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-white/90 mt-0.5">
                   Computer Science, Python, Artificial Intelligence, Data awareness and hands-on tech labs for young innovators.
                 </p>
               </div>
@@ -226,22 +226,22 @@ export const WhatWeProvide: React.FC<WhatWeProvideProps> = ({ onRegisterSubject 
               {TECH_EDUCATION_COURSES.map((course) => (
                 <div
                   key={course.id}
-                  className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-200 hover:-translate-y-1 flex flex-col justify-between group"
+                  className="bg-[#121215] rounded-2xl p-6 border border-slate-800 shadow-xs hover:shadow-md transition-all duration-200 hover:-translate-y-1 flex flex-col justify-between group"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-4">
-                      <div className="w-12 h-12 rounded-xl bg-indigo-50 group-hover:bg-indigo-600 text-indigo-600 group-hover:text-white transition-colors flex items-center justify-center">
+                      <div className="w-12 h-12 rounded-xl bg-red-950/80 group-hover:bg-red-700 text-red-400 group-hover:text-white transition-colors flex items-center justify-center">
                         {renderIcon(course.icon, 'w-6 h-6')}
                       </div>
-                      <span className="text-[10px] font-bold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-full uppercase tracking-wider">
+                      <span className="text-[10px] font-bold text-red-300 bg-red-950/80 border border-red-800/60 px-2.5 py-1 rounded-full uppercase tracking-wider font-mono">
                         {course.level}
                       </span>
                     </div>
 
-                    <h4 className="text-base font-bold text-slate-900 mb-2 group-hover:text-indigo-600 transition-colors">
+                    <h4 className="text-base font-bold text-white mb-2 group-hover:text-red-400 transition-colors">
                       {course.title}
                     </h4>
-                    <p className="text-xs text-slate-600 leading-relaxed mb-4">
+                    <p className="text-xs text-white/90 leading-relaxed mb-4">
                       {course.description}
                     </p>
 

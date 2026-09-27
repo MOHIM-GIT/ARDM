@@ -35,7 +35,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onOpenDownloadAdmitCard,
 }) => {
   return (
-    <section id="home" className="relative pt-24 pb-14 md:pt-32 md:pb-20 overflow-hidden">
+    <section id="home" className="relative pt-10 pb-14 md:pt-16 md:pb-20 overflow-hidden">
       {/* Background Subtle Gradient Blobs - Soft Red Ambient in Light & Dark Mode */}
       <div className="absolute top-10 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-br from-red-100/20 via-rose-50/10 to-transparent dark:from-red-950/20 dark:via-rose-950/10 dark:to-transparent rounded-full blur-3xl -z-10 pointer-events-none" />
       <div className="absolute top-40 right-10 w-72 h-72 bg-red-100/20 dark:bg-red-950/15 rounded-full blur-2xl -z-10 pointer-events-none" />
@@ -83,12 +83,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <div className="flex items-center justify-center lg:justify-start pt-1 pb-1">
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/90 border border-slate-800 shadow-lg backdrop-blur-md">
                   <span className="text-xs font-black text-[#FF9933]">Learn.</span>
-                  <span className="text-slate-600 text-xs font-bold">•</span>
+                  <span className="text-white/60 text-xs font-bold">•</span>
                   <span className="text-xs font-black text-white">Practice.</span>
-                  <span className="text-slate-600 text-xs font-bold">•</span>
+                  <span className="text-white/60 text-xs font-bold">•</span>
                   <span className="text-xs font-black text-[#22C55E]">Improve.</span>
-                  <span className="text-slate-700 text-xs ml-1">|</span>
-                  <span className="text-[10px] font-mono text-white/90 uppercase tracking-wider">Official Motto</span>
+                  <span className="text-white/40 text-xs ml-1">|</span>
+                  <span className="text-[10px] font-mono text-white uppercase tracking-wider font-semibold">Official Motto</span>
                 </div>
               </div>
             </div>
@@ -159,7 +159,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <MessageCircle className="w-3.5 h-3.5" />
                 <span>WhatsApp Channel</span>
               </a>
-              <span className="text-slate-600">•</span>
+              <span className="text-white/40">•</span>
               <a
                 href={getTelLink()}
                 className="inline-flex items-center gap-1 text-red-400 hover:text-red-300 font-bold font-mono hover:underline"
@@ -167,7 +167,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <PhoneCall className="w-3.5 h-3.5" />
                 <span>{SITE_CONFIG.contact.phoneNumber}</span>
               </a>
-              <span className="text-slate-600">•</span>
+              <span className="text-white/40">•</span>
               <button
                 onClick={onContactUs}
                 className="text-white hover:text-red-400 font-semibold hover:underline cursor-pointer"

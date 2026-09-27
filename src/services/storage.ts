@@ -19,6 +19,7 @@ import {
   Course,
   CourseEnrollment,
   MeritRecord,
+  BannerItem,
 } from '../types';
 import { SITE_CONFIG } from '../config/siteConfig';
 
@@ -44,6 +45,7 @@ const KEYS = {
   COURSES: 'ardm_courses_v3',
   COURSE_ENROLLMENTS: 'ardm_course_enrollments_v3',
   MERIT_RECORDS: 'ardm_merit_records_v3',
+  BANNERS: 'ardm_banners_v3',
 };
 
 // Initial Seed Subjects
@@ -2892,3 +2894,124 @@ export async function deleteFreeClass(id: string): Promise<boolean> {
 
   return true;
 }
+
+// ==========================================
+// BANNER MANAGEMENT (Image / Video Slider)
+// ==========================================
+export const DEFAULT_BANNERS: BannerItem[] = [
+  {
+    id: 'banner_prostuti_2026',
+    title: 'PROSTUTI 2026: State-Level Class 10 Mock Exam Suite',
+    subtitle: 'Comprehensive WBBSE & CBSE mock examination with 96%+ historical similarity, granular speed analytics, and real exam atmosphere.',
+    badgeText: 'OFFICIAL MOCK EXAM',
+    mediaType: 'image',
+    mediaUrl: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&auto=format&fit=crop&q=80',
+    ctaText: 'Register for PROSTUTI (₹100)',
+    ctaLink: '#mock-tests',
+    isVisible: true,
+    orderIndex: 1,
+    createdAt: '2026-01-01T00:00:00.000Z',
+  },
+  {
+    id: 'banner_dada_didi_mentorship',
+    title: 'Dada-Didi Mentorship & Free Curriculum Lectures',
+    subtitle: '100% free video classes for Classes 5 to 10 covering Mathematics, Physical Science, and Life Science with senior toppers.',
+    badgeText: '100% FREE EDUCATION',
+    mediaType: 'image',
+    mediaUrl: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&auto=format&fit=crop&q=80',
+    ctaText: 'Watch Free Lectures',
+    ctaLink: '#free-classes',
+    isVisible: true,
+    orderIndex: 2,
+    createdAt: '2026-01-02T00:00:00.000Z',
+  },
+  {
+    id: 'banner_ai_coding_labs',
+    title: 'Monthly AI Masterclass & Next-Gen Coding Workshops',
+    subtitle: 'Learn Python, modern Artificial Intelligence fundamentals, prompt craft, and receive digital verifiable certificates.',
+    badgeText: 'AI & CODING LAB',
+    mediaType: 'video',
+    mediaUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+    ctaText: 'Explore AI Workshops',
+    ctaLink: '#ai-webinars',
+    isVisible: true,
+    orderIndex: 3,
+    createdAt: '2026-01-03T00:00:00.000Z',
+  },
+];
+
+export function getBanners(): BannerItem[] {
+  if (typeof window === 'undefined') return DEFAULT_BANNERS;
+  try {
+    const raw = localStorage.getItem(KEYS.BANNERS);
+    if (!raw) {
+      saveBanners(DEFAULT_BANNERS);
+      return DEFAULT_BANNERS;
+    }
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed) || parsed.length === 0) {
+      saveBanners(DEFAULT_BANNERS);
+      return DEFAULT_BANNERS;
+    }
+    return parsed.sort((a, b) => a.orderIndex - b.orderIndex);
+  } catch (e) {
+    console.error('Failed to get banners from storage', e);
+    return DEFAULT_BANNERS;
+  }
+}
+
+export function saveBanners(banners: BannerItem[]): void {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(KEYS.BANNERS, JSON.stringify(banners));
+    window.dispatchEvent(new Event('ardm_banners_updated'));
+  } catch (e) {
+    console.error('Failed to save banners to storage', e);
+  }
+}
+
+export function addBanner(bannerData: Omit<BannerItem, 'id' | 'createdAt'>): BannerItem {
+  const current = getBanners();
+  const newBanner: BannerItem = {
+    ...bannerData,
+    id: `banner_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+    createdAt: new Date().toISOString(),
+    orderIndex: bannerData.orderIndex || current.length + 1,
+  };
+  const updated = [...current, newBanner];
+  saveBanners(updated);
+  return newBanner;
+}
+
+export function updateBanner(id: string, updates: Partial<BannerItem>): BannerItem | null {
+  const current = getBanners();
+  const index = current.findIndex(b => b.id === id);
+  if (index === -1) return null;
+
+  current[index] = {
+    ...current[index],
+    ...updates,
+    updatedAt: new Date().toISOString(),
+  };
+  saveBanners(current);
+  return current[index];
+}
+
+export function toggleBannerVisibility(id: string): BannerItem | null {
+  const current = getBanners();
+  const index = current.findIndex(b => b.id === id);
+  if (index === -1) return null;
+
+  current[index].isVisible = !current[index].isVisible;
+  current[index].updatedAt = new Date().toISOString();
+  saveBanners(current);
+  return current[index];
+}
+
+export function deleteBanner(id: string): boolean {
+  const current = getBanners();
+  const filtered = current.filter(b => b.id !== id);
+  saveBanners(filtered);
+  return true;
+}
+

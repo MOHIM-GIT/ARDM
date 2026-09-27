@@ -98,6 +98,30 @@
     --color-slate-50: #0f0f12;
     --color-slate-100: #18181b;
     --color-slate-200: #27272a;
+    --color-slate-300: #f8fafc;
+    --color-slate-400: #ffffff;
+    --color-slate-500: #ffffff;
+    --color-slate-600: #f8fafc;
+    --color-slate-700: #ffffff;
+    --color-slate-800: #18181b;
+    --color-slate-900: #0f0f12;
+    --color-slate-950: #09090b;
+
+    --color-gray-300: #f8fafc;
+    --color-gray-400: #ffffff;
+    --color-gray-500: #ffffff;
+    --color-gray-600: #f8fafc;
+    --color-gray-700: #ffffff;
+    --color-gray-800: #18181b;
+    --color-gray-900: #0f0f12;
+
+    --color-zinc-300: #f8fafc;
+    --color-zinc-400: #ffffff;
+    --color-zinc-500: #ffffff;
+    --color-zinc-600: #f8fafc;
+    --color-zinc-700: #ffffff;
+    --color-zinc-800: #18181b;
+    --color-zinc-900: #0f0f12;
   }
 
   body {
@@ -253,6 +277,16 @@ body.theme-black aside {
 }
 
 /* PURE LIGHT WHITE TEXT: Transforms all ash/gray/slate/zinc/neutral text into pure light white */
+html.dark [class*="text-slate-"],
+body.theme-black [class*="text-slate-"],
+html.dark [class*="text-gray-"],
+body.theme-black [class*="text-gray-"],
+html.dark [class*="text-zinc-"],
+body.theme-black [class*="text-zinc-"],
+html.dark [class*="text-neutral-"],
+body.theme-black [class*="text-neutral-"],
+html.dark [class*="text-stone-"],
+body.theme-black [class*="text-stone-"],
 html.dark .text-slate-900,
 body.theme-black .text-slate-900,
 html.dark .text-slate-950,
@@ -267,36 +301,57 @@ html.dark .text-slate-500,
 body.theme-black .text-slate-500,
 html.dark .text-slate-400,
 body.theme-black .text-slate-400,
-html.dark [class*="text-gray-"],
-body.theme-black [class*="text-gray-"],
-html.dark [class*="text-zinc-"],
-body.theme-black [class*="text-zinc-"],
-html.dark [class*="text-neutral-"],
-body.theme-black [class*="text-neutral-"] {
-  color: #f8fafc !important;
-}
-
-html.dark .text-slate-300,
-body.theme-black .text-slate-300,
-html.dark .text-slate-200,
-body.theme-black .text-slate-200,
-html.dark .text-slate-100,
-body.theme-black .text-slate-100,
-html.dark .text-slate-50,
-body.theme-black .text-slate-50 {
+html.dark [class*="text-slate-300"],
+body.theme-black [class*="text-slate-300"],
+html.dark [class*="text-slate-200"],
+body.theme-black [class*="text-slate-200"],
+html.dark [class*="text-slate-100"],
+body.theme-black [class*="text-slate-100"],
+html.dark [class*="text-slate-50"],
+body.theme-black [class*="text-slate-50"],
+html.dark [class*="text-gray-300"],
+body.theme-black [class*="text-gray-300"],
+html.dark [class*="text-gray-200"],
+body.theme-black [class*="text-gray-200"],
+html.dark [class*="text-zinc-300"],
+body.theme-black [class*="text-zinc-300"],
+html.dark [class*="text-zinc-200"],
+body.theme-black [class*="text-zinc-200"] {
   color: #ffffff !important;
 }
 
 /* Secondary descriptions, notes and body text in pure luminous light white */
 html.dark p,
 body.theme-black p,
+html.dark label,
+body.theme-black label,
+html.dark li,
+body.theme-black li,
+html.dark td,
+body.theme-black td,
+html.dark th,
+body.theme-black th,
 html.dark span.text-slate-500,
 body.theme-black span.text-slate-500,
 html.dark span.text-slate-400,
 body.theme-black span.text-slate-400,
 html.dark .text-muted,
-body.theme-black .text-muted {
-  color: #f1f5f9 !important;
+body.theme-black .text-muted,
+html.dark [class*="text-muted"],
+body.theme-black [class*="text-muted"] {
+  color: #ffffff !important;
+}
+
+/* SVG icons previously in ash gray turn pure light white */
+html.dark svg.text-slate-400,
+body.theme-black svg.text-slate-400,
+html.dark svg.text-slate-500,
+body.theme-black svg.text-slate-500,
+html.dark svg.text-gray-400,
+body.theme-black svg.text-gray-400,
+html.dark svg.text-zinc-400,
+body.theme-black svg.text-zinc-400 {
+  color: #ffffff !important;
 }
 
 /* Red, Crimson & Rose text high contrast in Dark Mode */

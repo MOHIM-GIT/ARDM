@@ -392,5 +392,20 @@ export interface AdmitCardQRConfig {
   updatedAt: string;
 }
 
+export interface BannerItem {
+  id: string;
+  title: string;
+  subtitle?: string;
+  badgeText?: string;
+  mediaType: 'image' | 'video'; // 'image' or 'video'
+  mediaUrl: string; // image URL, direct mp4, or video embed URL
+  ctaText?: string;
+  ctaLink?: string;
+  isVisible: boolean; // Controlled by admin: make visible or not
+  orderIndex: number; // Order in which banners slide
+  createdAt: string;
+  updatedAt?: string;
+}
+
 // Backward compatibility alias for existing Registration type
 export type Registration = StudentProfile;

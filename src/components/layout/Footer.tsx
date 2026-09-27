@@ -51,7 +51,7 @@ export const Footer: React.FC<FooterProps> = ({
                 href={SITE_CONFIG.social.whatsappChannel}
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 rounded-xl bg-slate-900 hover:bg-emerald-600 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
+                className="w-9 h-9 rounded-xl bg-slate-900 hover:bg-emerald-600 text-white flex items-center justify-center transition-colors border border-slate-800"
                 title="Official WhatsApp Channel"
               >
                 <MessageCircle className="w-4 h-4" />
@@ -60,7 +60,7 @@ export const Footer: React.FC<FooterProps> = ({
                 href={SITE_CONFIG.social.youtube}
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 rounded-xl bg-slate-900 hover:bg-red-600 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
+                className="w-9 h-9 rounded-xl bg-slate-900 hover:bg-red-600 text-white flex items-center justify-center transition-colors border border-slate-800"
                 title="Official YouTube Channel"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -71,7 +71,7 @@ export const Footer: React.FC<FooterProps> = ({
                 href={SITE_CONFIG.social.facebook}
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 rounded-xl bg-slate-900 hover:bg-blue-600 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
+                className="w-9 h-9 rounded-xl bg-slate-900 hover:bg-blue-600 text-white flex items-center justify-center transition-colors border border-slate-800"
                 title="Facebook Community"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -82,7 +82,7 @@ export const Footer: React.FC<FooterProps> = ({
                 href={SITE_CONFIG.social.instagram}
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 rounded-xl bg-slate-900 hover:bg-pink-600 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
+                className="w-9 h-9 rounded-xl bg-slate-900 hover:bg-pink-600 text-white flex items-center justify-center transition-colors border border-slate-800"
                 title="Instagram Channel"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -91,14 +91,14 @@ export const Footer: React.FC<FooterProps> = ({
               </a>
               <a
                 href={getTelLink()}
-                className="w-9 h-9 rounded-xl bg-slate-900 hover:bg-blue-600 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
+                className="w-9 h-9 rounded-xl bg-slate-900 hover:bg-blue-600 text-white flex items-center justify-center transition-colors border border-slate-800"
                 title={`Call ${SITE_CONFIG.contact.phoneNumber}`}
               >
                 <PhoneCall className="w-4 h-4" />
               </a>
               <a
                 href={getMailtoLink()}
-                className="w-9 h-9 rounded-xl bg-slate-900 hover:bg-indigo-600 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
+                className="w-9 h-9 rounded-xl bg-slate-900 hover:bg-indigo-600 text-white flex items-center justify-center transition-colors border border-slate-800"
                 title={`Mail ${SITE_CONFIG.contact.emailAddress}`}
               >
                 <Mail className="w-4 h-4" />

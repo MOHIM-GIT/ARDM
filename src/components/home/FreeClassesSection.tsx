@@ -59,25 +59,25 @@ export const FreeClassesSection: React.FC = () => {
             <Video className="w-3.5 h-3.5" />
             <span>ARDM Academy Open Video Studio</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
             Free Education & YouTube Classes (Classes 5 to 10)
           </h2>
-          <p className="text-base text-slate-600 leading-relaxed">
+          <p className="text-base text-white/95 leading-relaxed">
             High-definition video lectures, board exam concept breakdowns, chapter-wise notes, and technology workshops streaming freely for all students.
           </p>
 
           {/* Class-wise Filter Tabs (Phase 2 Section 8 & 9) */}
           <div className="space-y-3 pt-3">
             <div className="flex flex-wrap items-center justify-center gap-2">
-              <span className="text-[11px] font-mono uppercase text-slate-400 font-bold mr-1">Class:</span>
+              <span className="text-[11px] font-mono uppercase text-white/80 font-bold mr-1">Class:</span>
               {classList.map((cls) => (
                 <button
                   key={cls}
                   onClick={() => setSelectedClass(cls)}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                     selectedClass === cls
-                      ? 'bg-slate-900 text-white shadow-xs'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      ? 'bg-red-700 text-white shadow-xs'
+                      : 'bg-[#18181b] text-white hover:bg-slate-800 border border-slate-800'
                   }`}
                 >
                   {cls}
@@ -87,15 +87,15 @@ export const FreeClassesSection: React.FC = () => {
 
             {/* Subject Filters */}
             <div className="flex flex-wrap items-center justify-center gap-2">
-              <span className="text-[11px] font-mono uppercase text-slate-400 font-bold mr-1">Subject:</span>
+              <span className="text-[11px] font-mono uppercase text-white/80 font-bold mr-1">Subject:</span>
               {subjectList.map((sub) => (
                 <button
                   key={sub}
                   onClick={() => setSelectedSubject(sub)}
-                  className={`px-3 py-1 rounded-lg text-[11px] font-medium transition-all ${
+                  className={`px-3 py-1 rounded-lg text-[11px] font-medium transition-all cursor-pointer ${
                     selectedSubject === sub
                       ? 'bg-red-600 text-white shadow-xs'
-                      : 'bg-slate-50 text-slate-500 hover:bg-slate-100 border border-slate-200/60'
+                      : 'bg-[#141418] text-white hover:bg-slate-800 border border-slate-800'
                   }`}
                 >
                   {sub}

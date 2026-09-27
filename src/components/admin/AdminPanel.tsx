@@ -21,6 +21,9 @@ import {
   Check,
   X,
   Eye,
+  EyeOff,
+  Film,
+  Image as ImageIcon,
   Plus,
   Trash2,
   Lock,
@@ -104,6 +107,12 @@ import {
   deleteMeritRecord,
   togglePublishMeritRecord,
   bulkImportMeritRecords,
+  getBanners,
+  saveBanners,
+  addBanner,
+  updateBanner,
+  toggleBannerVisibility,
+  deleteBanner,
 } from '../../services/storage';
 import {
   StudentProfile,
@@ -124,6 +133,7 @@ import {
   Course,
   CourseEnrollment,
   MeritRecord,
+  BannerItem,
 } from '../../types';
 import {
   SITE_CONFIG,
@@ -161,7 +171,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
   // Active Admin View (Sidebar navigation)
   const [activeTab, setActiveTab] = useState<
-    'overview' | 'students' | 'payments' | 'courses' | 'course_enrollments' | 'merit_list' | 'examinations' | 'venues' | 'cbt' | 'results' | 'syllabus' | 'qr' | 'pyqs' | 'classes' | 'webinar' | 'toppers' | 'pdf' | 'sheets' | 'audit'
+    'overview' | 'students' | 'payments' | 'banners' | 'courses' | 'course_enrollments' | 'merit_list' | 'examinations' | 'venues' | 'cbt' | 'results' | 'syllabus' | 'qr' | 'pyqs' | 'classes' | 'webinar' | 'toppers' | 'pdf' | 'sheets' | 'audit'
   >('overview');
 
   // Core Data States
@@ -181,8 +191,22 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const [courses, setCourses] = useState<Course[]>([]);
   const [courseEnrollments, setCourseEnrollments] = useState<CourseEnrollment[]>([]);
   const [meritRecords, setMeritRecords] = useState<MeritRecord[]>([]);
+  const [banners, setBanners] = useState<BannerItem[]>([]);
   const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null);
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
+
+  // Banner Carousel Admin States (Post, Edit, Visibility & Order)
+  const [showBannerModal, setShowBannerModal] = useState(false);
+  const [editingBannerId, setEditingBannerId] = useState<string | null>(null);
+  const [bannerTitle, setBannerTitle] = useState('');
+  const [bannerSubtitle, setBannerSubtitle] = useState('');
+  const [bannerBadgeText, setBannerBadgeText] = useState('OFFICIAL ANNOUNCEMENT');
+  const [bannerMediaType, setBannerMediaType] = useState<'image' | 'video'>('image');
+  const [bannerMediaUrl, setBannerMediaUrl] = useState('');
+  const [bannerCtaText, setBannerCtaText] = useState('Learn More');
+  const [bannerCtaLink, setBannerCtaLink] = useState('#mock-tests');
+  const [bannerIsVisible, setBannerIsVisible] = useState(true);
+  const [bannerOrderIndex, setBannerOrderIndex] = useState<number>(1);
 
   // Course Admin Modal & Form States (Phase 2 Section 1 - 7)
   const [showCourseModal, setShowCourseModal] = useState(false);
@@ -358,6 +382,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     setCourses(getCourses());
     setCourseEnrollments(getCourseEnrollments());
     setMeritRecords(getMeritList());
+    setBanners(getBanners());
 
     // Sync CBT results and Course Enrollments from server if active
     const adminToken = sessionStorage.getItem('ardm_admin_token') || '';
@@ -945,6 +970,116 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     document.body.removeChild(link);
   };
 
+  // ================= DYNAMIC BANNERS & SLIDING CAROUSEL HANDLERS =================
+  const handleOpenAddBanner = () => {
+    setEditingBannerId(null);
+    setBannerTitle('');
+    setBannerSubtitle('');
+    setBannerBadgeText('OFFICIAL ANNOUNCEMENT');
+    setBannerMediaType('image');
+    setBannerMediaUrl('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&auto=format&fit=crop&q=80');
+    setBannerCtaText('Register Now');
+    setBannerCtaLink('#mock-tests');
+    setBannerIsVisible(true);
+    setBannerOrderIndex(banners.length + 1);
+    setShowBannerModal(true);
+  };
+
+  const handleOpenEditBanner = (b: BannerItem) => {
+    setEditingBannerId(b.id);
+    setBannerTitle(b.title);
+    setBannerSubtitle(b.subtitle || '');
+    setBannerBadgeText(b.badgeText || '');
+    setBannerMediaType(b.mediaType);
+    setBannerMediaUrl(b.mediaUrl);
+    setBannerCtaText(b.ctaText || '');
+    setBannerCtaLink(b.ctaLink || '');
+    setBannerIsVisible(b.isVisible);
+    setBannerOrderIndex(b.orderIndex);
+    setShowBannerModal(true);
+  };
+
+  const handleSaveBanner = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!bannerTitle.trim() || !bannerMediaUrl.trim()) return;
+
+    if (editingBannerId) {
+      updateBanner(editingBannerId, {
+        title: bannerTitle.trim(),
+        subtitle: bannerSubtitle.trim(),
+        badgeText: bannerBadgeText.trim(),
+        mediaType: bannerMediaType,
+        mediaUrl: bannerMediaUrl.trim(),
+        ctaText: bannerCtaText.trim(),
+        ctaLink: bannerCtaLink.trim(),
+        isVisible: bannerIsVisible,
+        orderIndex: bannerOrderIndex,
+      });
+    } else {
+      addBanner({
+        title: bannerTitle.trim(),
+        subtitle: bannerSubtitle.trim(),
+        badgeText: bannerBadgeText.trim(),
+        mediaType: bannerMediaType,
+        mediaUrl: bannerMediaUrl.trim(),
+        ctaText: bannerCtaText.trim(),
+        ctaLink: bannerCtaLink.trim(),
+        isVisible: bannerIsVisible,
+        orderIndex: bannerOrderIndex,
+      });
+    }
+    const updated = getBanners();
+    setBanners(updated);
+    setShowBannerModal(false);
+    window.dispatchEvent(new Event('storage'));
+  };
+
+  const handleToggleBannerVisibility = (id: string) => {
+    toggleBannerVisibility(id);
+    setBanners(getBanners());
+    window.dispatchEvent(new Event('storage'));
+  };
+
+  const handleDeleteBanner = (id: string) => {
+    if (window.confirm('Are you sure you want to delete this banner from the slider?')) {
+      deleteBanner(id);
+      setBanners(getBanners());
+      window.dispatchEvent(new Event('storage'));
+    }
+  };
+
+  const handleMoveBanner = (index: number, direction: 'up' | 'down') => {
+    const targetIdx = direction === 'up' ? index - 1 : index + 1;
+    if (targetIdx < 0 || targetIdx >= banners.length) return;
+    const reordered = [...banners];
+    const temp = reordered[index].orderIndex;
+    reordered[index].orderIndex = reordered[targetIdx].orderIndex;
+    reordered[targetIdx].orderIndex = temp;
+    const swapped = reordered[index];
+    reordered[index] = reordered[targetIdx];
+    reordered[targetIdx] = swapped;
+    saveBanners(reordered);
+    setBanners(getBanners());
+    window.dispatchEvent(new Event('storage'));
+  };
+
+  const handleBannerFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        setBannerMediaUrl(reader.result);
+        if (file.type.startsWith('video/')) {
+          setBannerMediaType('video');
+        } else {
+          setBannerMediaType('image');
+        }
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
   // ================= DYNAMIC COURSES HANDLERS (Phase 2 Section 1 - 7) =================
   const handleOpenAddCourse = () => {
     setEditingCourseId(null);
@@ -1487,6 +1622,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 { id: 'overview', label: 'Dashboard Overview', icon: LayoutDashboard },
                 { id: 'students', label: 'Student Candidates', icon: Users },
                 { id: 'payments', label: 'Mock Test Payments', icon: CreditCard, badge: pendingPayments },
+                { id: 'banners', label: 'Banners & Slider', icon: Sliders, badge: banners.filter(b => b.isVisible).length },
                 { id: 'courses', label: 'Dynamic Courses', icon: BookOpen },
                 { id: 'course_enrollments', label: 'Course Enrollments', icon: UserCheck, badge: pendingCourseEnrollments },
                 { id: 'classes', label: 'Free Classes (5-10)', icon: Video },
@@ -1709,6 +1845,220 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     </table>
                   </div>
                 </div>
+              </div>
+            )}
+
+            {/* DYNAMIC BANNERS & SLIDING CAROUSEL VIEW */}
+            {activeTab === 'banners' && (
+              <div className="space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-xl font-bold text-white">Homepage Animated Banner Carousel</h3>
+                      <span className="px-2.5 py-0.5 rounded-full bg-red-950/80 text-red-300 font-mono text-xs font-bold border border-red-800/60">
+                        {banners.length} Banners Total
+                      </span>
+                      <span className="px-2.5 py-0.5 rounded-full bg-emerald-950/80 text-emerald-300 font-mono text-xs font-bold border border-emerald-800/60">
+                        {banners.filter((b) => b.isVisible).length} Active & Sliding
+                      </span>
+                    </div>
+                    <p className="text-xs text-white/90 mt-0.5">
+                      Admin controls all banner slides (images & videos). Active banners slide one-by-one with animated transitions on the homepage.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleOpenAddBanner}
+                    className="px-4 py-2.5 bg-gradient-to-r from-red-700 to-rose-600 hover:from-red-800 hover:to-rose-700 text-white rounded-xl text-xs font-bold flex items-center gap-2 cursor-pointer shadow-md transition-all hover:scale-102 active:scale-98 shrink-0"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>Post New Banner</span>
+                  </button>
+                </div>
+
+                {/* Information Card */}
+                <div className="p-4 rounded-2xl bg-[#141418] border border-slate-800 flex items-start gap-3">
+                  <div className="p-2 rounded-xl bg-red-950/80 text-red-400 border border-red-900/60 shrink-0">
+                    <Sliders className="w-5 h-5" />
+                  </div>
+                  <div className="space-y-1 text-xs text-white">
+                    <h4 className="font-bold text-white">How the Sliding Banner Works:</h4>
+                    <p className="text-white/90 leading-relaxed font-normal">
+                      Every banner marked with <strong className="text-emerald-400">Visible</strong> is automatically displayed in the top homepage slider.
+                      Slides transition smoothly one-by-one with automatic play, progress indicator dots, and previous/next controls. If visibility is turned off, the banner is hidden from visitors.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Banners List */}
+                {banners.length === 0 ? (
+                  <div className="bg-[#121215] rounded-2xl border border-slate-800 p-12 text-center text-white space-y-3">
+                    <Sliders className="w-10 h-10 text-slate-600 mx-auto" />
+                    <p className="font-semibold text-sm">No banners currently posted.</p>
+                    <button
+                      onClick={handleOpenAddBanner}
+                      className="px-4 py-2 rounded-xl bg-red-700 hover:bg-red-800 text-white text-xs font-bold"
+                    >
+                      Post First Banner
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {banners.map((b, index) => (
+                      <div
+                        key={b.id}
+                        className={`rounded-2xl border transition-all p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 ${
+                          b.isVisible
+                            ? 'bg-[#121215] border-slate-800 hover:border-slate-700 shadow-sm'
+                            : 'bg-[#0f0f12] border-slate-800/60 opacity-70'
+                        }`}
+                      >
+                        {/* Left: Order, Thumbnail & Details */}
+                        <div className="flex items-start sm:items-center gap-4 flex-1 min-w-0">
+                          {/* Order Index & Reorder Controls */}
+                          <div className="flex flex-col items-center gap-1 shrink-0">
+                            <button
+                              type="button"
+                              onClick={() => handleMoveBanner(index, 'up')}
+                              disabled={index === 0}
+                              className={`p-1 rounded-md transition-colors ${
+                                index === 0
+                                  ? 'text-slate-700 cursor-not-allowed'
+                                  : 'text-white hover:text-red-400 hover:bg-slate-800 cursor-pointer'
+                              }`}
+                              title="Move Slide Earlier"
+                            >
+                              <ArrowUp className="w-4 h-4" />
+                            </button>
+                            <span className="font-mono text-xs font-bold text-white bg-slate-800 px-2 py-0.5 rounded">
+                              #{index + 1}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleMoveBanner(index, 'down')}
+                              disabled={index === banners.length - 1}
+                              className={`p-1 rounded-md transition-colors ${
+                                index === banners.length - 1
+                                  ? 'text-slate-700 cursor-not-allowed'
+                                  : 'text-white hover:text-red-400 hover:bg-slate-800 cursor-pointer'
+                              }`}
+                              title="Move Slide Later"
+                            >
+                              <ArrowDown className="w-4 h-4" />
+                            </button>
+                          </div>
+
+                          {/* Media Thumbnail */}
+                          <div className="relative w-24 h-16 sm:w-32 sm:h-20 rounded-xl overflow-hidden bg-black shrink-0 border border-slate-800">
+                            {b.mediaType === 'video' ? (
+                              <div className="w-full h-full flex flex-col items-center justify-center bg-slate-900 text-red-400">
+                                <Film className="w-6 h-6" />
+                                <span className="text-[9px] font-mono mt-1 font-bold">VIDEO</span>
+                              </div>
+                            ) : (
+                              <img
+                                src={b.mediaUrl}
+                                alt={b.title}
+                                referrerPolicy="no-referrer"
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  (e.target as HTMLElement).style.display = 'none';
+                                }}
+                              />
+                            )}
+                            <div className="absolute top-1 left-1">
+                              <span className="px-1.5 py-0.2 rounded text-[9px] font-mono font-bold bg-black/80 text-white">
+                                {b.mediaType.toUpperCase()}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Title & Info */}
+                          <div className="min-w-0 flex-1 space-y-1">
+                            <div className="flex flex-wrap items-center gap-2">
+                              {b.badgeText && (
+                                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-red-950/80 text-red-300 border border-red-800/60">
+                                  {b.badgeText}
+                                </span>
+                              )}
+                              <span
+                                className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                                  b.isVisible
+                                    ? 'bg-emerald-950/80 text-emerald-300 border border-emerald-800/60'
+                                    : 'bg-slate-800 text-slate-400'
+                                }`}
+                              >
+                                {b.isVisible ? '● Live on Slider' : '○ Hidden'}
+                              </span>
+                            </div>
+
+                            <h4 className="text-sm font-bold text-white truncate">
+                              {b.title}
+                            </h4>
+
+                            {b.subtitle && (
+                              <p className="text-xs text-white/90 line-clamp-1 font-normal">
+                                {b.subtitle}
+                              </p>
+                            )}
+
+                            <div className="flex flex-wrap items-center gap-3 text-[11px] text-white/80 font-mono">
+                              <span>Action: <strong className="text-white">{b.ctaText || 'None'}</strong></span>
+                              <span>Target: <strong className="text-white">{b.ctaLink || '#'}</strong></span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Right: Instant Visibility Toggle & Actions */}
+                        <div className="flex items-center gap-2 justify-end pt-2 md:pt-0 border-t md:border-t-0 border-slate-800/80 shrink-0">
+                          {/* Direct Visibility Toggle (Admin can make this visible or not) */}
+                          <button
+                            type="button"
+                            onClick={() => handleToggleBannerVisibility(b.id)}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                              b.isVisible
+                                ? 'bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 border border-emerald-700/60'
+                                : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700'
+                            }`}
+                            title={b.isVisible ? 'Click to hide banner from slider' : 'Click to make banner visible in slider'}
+                          >
+                            {b.isVisible ? (
+                              <>
+                                <Eye className="w-3.5 h-3.5 text-emerald-400" />
+                                <span>Visible</span>
+                              </>
+                            ) : (
+                              <>
+                                <EyeOff className="w-3.5 h-3.5 text-slate-400" />
+                                <span>Hidden</span>
+                              </>
+                            )}
+                          </button>
+
+                          {/* Edit Button */}
+                          <button
+                            type="button"
+                            onClick={() => handleOpenEditBanner(b)}
+                            className="p-2 rounded-xl text-white hover:text-red-400 hover:bg-slate-800 border border-slate-800 transition-colors cursor-pointer"
+                            title="Edit Banner Details"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </button>
+
+                          {/* Delete Button */}
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteBanner(b.id)}
+                            className="p-2 rounded-xl text-white hover:text-rose-400 hover:bg-rose-950/60 border border-slate-800 transition-colors cursor-pointer"
+                            title="Delete Banner"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
@@ -3454,6 +3804,298 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl"
                 >
                   Save Question
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* DYNAMIC BANNER CREATE/EDIT MODAL */}
+      {showBannerModal && (
+        <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs overflow-y-auto">
+          <div className="bg-[#121215] text-white border border-slate-800 rounded-3xl max-w-2xl w-full p-6 sm:p-7 shadow-2xl space-y-4 text-xs my-8 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div>
+                <h4 className="font-extrabold text-base text-white">
+                  {editingBannerId ? 'Edit Announcement Banner' : 'Post New Announcement Banner'}
+                </h4>
+                <p className="text-[11px] text-white/80 mt-0.5">
+                  Controlled by Admin: Media (image/video), text, action link, order index, and visibility on the sliding banner.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowBannerModal(false)}
+                className="p-1.5 text-white hover:text-red-400 rounded-lg hover:bg-slate-800 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveBanner} className="space-y-4">
+              {/* Title & Badge */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="sm:col-span-2">
+                  <label className="block font-bold text-white mb-1">Banner Title *</label>
+                  <input
+                    type="text"
+                    required
+                    value={bannerTitle}
+                    onChange={(e) => setBannerTitle(e.target.value)}
+                    placeholder="e.g. PROSTUTI 2026: State-Level Class 10 Mock Exam Suite"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-700 bg-[#18181b] text-white placeholder-slate-500 focus:outline-none focus:border-red-500"
+                  />
+                </div>
+                <div>
+                  <label className="block font-bold text-white mb-1">Badge Text</label>
+                  <input
+                    type="text"
+                    value={bannerBadgeText}
+                    onChange={(e) => setBannerBadgeText(e.target.value)}
+                    placeholder="e.g. OFFICIAL MOCK EXAM"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-700 bg-[#18181b] text-white placeholder-slate-500 font-mono text-[11px] uppercase focus:outline-none focus:border-red-500"
+                  />
+                </div>
+              </div>
+
+              {/* Subtitle / Description */}
+              <div>
+                <label className="block font-bold text-white mb-1">Subtitle / Summary Text</label>
+                <textarea
+                  rows={2}
+                  value={bannerSubtitle}
+                  onChange={(e) => setBannerSubtitle(e.target.value)}
+                  placeholder="e.g. Comprehensive WBBSE & CBSE mock examination with 96%+ historical similarity, granular speed analytics, and real exam atmosphere."
+                  className="w-full px-3 py-2 rounded-xl border border-slate-700 bg-[#18181b] text-white placeholder-slate-500 focus:outline-none focus:border-red-500 leading-relaxed"
+                />
+              </div>
+
+              {/* Media Type & URL with Presets + File Upload */}
+              <div className="space-y-2 pt-1 border-t border-slate-800">
+                <div className="flex items-center justify-between">
+                  <label className="font-bold text-white">Media Type & Source *</label>
+                  <div className="flex items-center gap-1 bg-[#18181b] p-0.5 rounded-lg border border-slate-700">
+                    <button
+                      type="button"
+                      onClick={() => setBannerMediaType('image')}
+                      className={`px-3 py-1 rounded-md font-bold text-[11px] transition-all cursor-pointer ${
+                        bannerMediaType === 'image'
+                          ? 'bg-red-700 text-white'
+                          : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      Image
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setBannerMediaType('video')}
+                      className={`px-3 py-1 rounded-md font-bold text-[11px] transition-all cursor-pointer ${
+                        bannerMediaType === 'video'
+                          ? 'bg-red-700 text-white'
+                          : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      Video
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <input
+                    type="text"
+                    required
+                    value={bannerMediaUrl}
+                    onChange={(e) => setBannerMediaUrl(e.target.value)}
+                    placeholder={
+                      bannerMediaType === 'image'
+                        ? 'Image URL (e.g. https://... or data:...)'
+                        : 'Video URL (YouTube embed or direct .mp4)'
+                    }
+                    className="flex-1 px-3 py-2 rounded-xl border border-slate-700 bg-[#18181b] text-white font-mono text-[11px] placeholder-slate-500 focus:outline-none focus:border-red-500"
+                  />
+                  <label className="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-xl border border-slate-700 cursor-pointer flex items-center justify-center gap-1.5 shrink-0 transition-colors">
+                    <Upload className="w-3.5 h-3.5" />
+                    <span>Upload Media</span>
+                    <input
+                      type="file"
+                      accept={bannerMediaType === 'image' ? 'image/*' : 'video/*,image/*'}
+                      onChange={handleBannerFileUpload}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+
+                {/* Quick Presets */}
+                <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                  <span className="text-[10px] text-white/60 font-mono">Presets:</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setBannerMediaType('image');
+                      setBannerMediaUrl('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&auto=format&fit=crop&q=80');
+                    }}
+                    className="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-white text-[10px] rounded font-mono border border-slate-700"
+                  >
+                    Exam Suite
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setBannerMediaType('image');
+                      setBannerMediaUrl('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&auto=format&fit=crop&q=80');
+                    }}
+                    className="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-white text-[10px] rounded font-mono border border-slate-700"
+                  >
+                    Mentorship
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setBannerMediaType('image');
+                      setBannerMediaUrl('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200&auto=format&fit=crop&q=80');
+                    }}
+                    className="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-white text-[10px] rounded font-mono border border-slate-700"
+                  >
+                    AI Coding Lab
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setBannerMediaType('video');
+                      setBannerMediaUrl('https://www.youtube.com/embed/dQw4w9WgXcQ');
+                    }}
+                    className="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-white text-[10px] rounded font-mono border border-slate-700"
+                  >
+                    YouTube Video
+                  </button>
+                </div>
+              </div>
+
+              {/* CTA Button Text, Link, & Order */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1 border-t border-slate-800">
+                <div>
+                  <label className="block font-bold text-white mb-1">CTA Button Text</label>
+                  <input
+                    type="text"
+                    value={bannerCtaText}
+                    onChange={(e) => setBannerCtaText(e.target.value)}
+                    placeholder="e.g. Register for PROSTUTI"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-700 bg-[#18181b] text-white placeholder-slate-500 focus:outline-none focus:border-red-500"
+                  />
+                </div>
+                <div>
+                  <label className="block font-bold text-white mb-1">CTA Link / Action</label>
+                  <input
+                    type="text"
+                    value={bannerCtaLink}
+                    onChange={(e) => setBannerCtaLink(e.target.value)}
+                    placeholder="e.g. #mock-tests or registration"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-700 bg-[#18181b] text-white placeholder-slate-500 font-mono text-[11px] focus:outline-none focus:border-red-500"
+                  />
+                </div>
+                <div>
+                  <label className="block font-bold text-white mb-1">Slide Order (#)</label>
+                  <input
+                    type="number"
+                    min={1}
+                    value={bannerOrderIndex}
+                    onChange={(e) => setBannerOrderIndex(Number(e.target.value) || 1)}
+                    className="w-full px-3 py-2 rounded-xl border border-slate-700 bg-[#18181b] text-white font-mono focus:outline-none focus:border-red-500"
+                  />
+                </div>
+              </div>
+
+              {/* Admin Visibility Toggle */}
+              <div className="p-3 rounded-2xl bg-[#18181b] border border-slate-700 flex items-center justify-between gap-3">
+                <div className="space-y-0.5">
+                  <div className="font-bold text-white flex items-center gap-1.5">
+                    {bannerIsVisible ? (
+                      <Eye className="w-4 h-4 text-emerald-400" />
+                    ) : (
+                      <EyeOff className="w-4 h-4 text-slate-400" />
+                    )}
+                    <span>Banner Visibility in Slider</span>
+                  </div>
+                  <p className="text-[11px] text-white/80 font-normal">
+                    {bannerIsVisible
+                      ? 'This banner is active and will slide one-by-one in the homepage carousel.'
+                      : 'This banner is hidden and will NOT appear on the homepage.'}
+                  </p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={bannerIsVisible}
+                    onChange={(e) => setBannerIsVisible(e.target.checked)}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                </label>
+              </div>
+
+              {/* Live Preview Card */}
+              {bannerTitle && bannerMediaUrl && (
+                <div className="space-y-1.5 pt-1">
+                  <span className="text-[11px] font-mono text-white/80 font-bold uppercase tracking-wider">
+                    Slide Preview (As seen by students)
+                  </span>
+                  <div className="relative rounded-2xl overflow-hidden border border-slate-700 bg-black aspect-[21/9] flex items-center p-4 sm:p-6 shadow-inner">
+                    {bannerMediaType === 'video' ? (
+                      <div className="absolute inset-0 bg-slate-900 flex items-center justify-center opacity-60">
+                        <Film className="w-10 h-10 text-red-500" />
+                      </div>
+                    ) : (
+                      <img
+                        src={bannerMediaUrl}
+                        alt="Preview"
+                        className="absolute inset-0 w-full h-full object-cover opacity-60"
+                        onError={(e) => {
+                          (e.target as HTMLElement).style.display = 'none';
+                        }}
+                      />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent" />
+                    <div className="relative z-10 max-w-md space-y-1 text-white">
+                      {bannerBadgeText && (
+                        <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold uppercase bg-red-900 text-white">
+                          {bannerBadgeText}
+                        </span>
+                      )}
+                      <h5 className="text-sm sm:text-base font-extrabold text-white leading-tight">
+                        {bannerTitle}
+                      </h5>
+                      {bannerSubtitle && (
+                        <p className="text-[11px] text-white/90 line-clamp-2">
+                          {bannerSubtitle}
+                        </p>
+                      )}
+                      {bannerCtaText && (
+                        <div className="pt-1">
+                          <span className="inline-block px-3 py-1 rounded-lg bg-red-700 text-white text-[10px] font-bold">
+                            {bannerCtaText} →
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Form Buttons */}
+              <div className="pt-3 border-t border-slate-800 flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowBannerModal(false)}
+                  className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-semibold transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 bg-gradient-to-r from-red-700 to-rose-600 hover:from-red-800 hover:to-rose-700 text-white font-bold rounded-xl shadow-md transition-all cursor-pointer"
+                >
+                  {editingBannerId ? 'Update Banner Slide' : 'Post Banner to Slider'}
                 </button>
               </div>
             </form>

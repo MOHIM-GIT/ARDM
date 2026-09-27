@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { SplashScreen } from './components/common/SplashScreen';
 import { Navbar } from './components/layout/Navbar';
 import { HeroSection } from './components/home/HeroSection';
+import { AnimatedBannerSlider } from './components/home/AnimatedBannerSlider';
 import { AboutSection } from './components/home/AboutSection';
 import { WhatWeProvide } from './components/home/WhatWeProvide';
 import { Class10MockTestSection } from './components/home/Class10MockTestSection';
@@ -391,6 +392,15 @@ export default function App() {
             description="ARDM Academy provides academic classes, mock tests, Computer Science, Data Science, AI workshops and learning resources for students."
             canonical="https://ardmacademy.in/"
           />
+
+          {/* Dynamic Animated Sliding Banner (Controlled by Admin: Media & Visibility) */}
+          <div className="pt-20 sm:pt-24 pb-1">
+            <AnimatedBannerSlider
+              onNavigate={(target) => handleNavigate(target.startsWith('/') ? target : `/#${target}`)}
+              onOpenRegistration={() => handleRegisterWithSubject(undefined)}
+              onOpenTestEngine={() => setTestEngineOpen(true)}
+            />
+          </div>
 
           {/* Hero Section */}
           <HeroSection

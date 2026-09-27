@@ -58,31 +58,31 @@ export const Class10MockTestSection: React.FC<Class10MockTestSectionProps> = ({
             <Sparkles className="w-3.5 h-3.5" />
             <span>State-Level Exam Preparation</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
             PROSTUTI • The Ultimate Class 10 Mock Test Series
           </h2>
-          <p className="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+          <p className="text-base text-white/95 leading-relaxed">
             Designed for focused Class 10 board preparation with structured mock tests, subject-wise practice, performance analysis and state-level merit rankings.
           </p>
 
           {/* Historical Prediction Accuracy Stats */}
           <div className="max-w-xl mx-auto pt-2">
-            <div className="p-4 rounded-2xl bg-red-50/60 dark:bg-[#141012] border border-red-100 dark:border-red-900/40 flex flex-col items-center">
+            <div className="p-4 rounded-2xl bg-[#141012] border border-red-900/40 flex flex-col items-center">
               <div className="grid grid-cols-3 gap-3 w-full text-center">
-                <div className="bg-white dark:bg-[#1a1417] p-2.5 rounded-xl border border-red-100 dark:border-red-950 shadow-2xs">
-                  <span className="text-lg font-black text-red-600 dark:text-red-400 block font-mono">96.30%</span>
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">Common in 2024</span>
+                <div className="bg-[#1a1417] p-2.5 rounded-xl border border-red-950 shadow-2xs">
+                  <span className="text-lg font-black text-red-400 block font-mono">96.30%</span>
+                  <span className="text-[10px] text-white font-semibold">Common in 2024</span>
                 </div>
-                <div className="bg-white dark:bg-[#1a1417] p-2.5 rounded-xl border border-red-100 dark:border-red-950 shadow-2xs">
-                  <span className="text-lg font-black text-emerald-600 dark:text-emerald-400 block font-mono">97.10%</span>
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">Common in 2025</span>
+                <div className="bg-[#1a1417] p-2.5 rounded-xl border border-red-950 shadow-2xs">
+                  <span className="text-lg font-black text-emerald-400 block font-mono">97.10%</span>
+                  <span className="text-[10px] text-white font-semibold">Common in 2025</span>
                 </div>
-                <div className="bg-white dark:bg-[#1a1417] p-2.5 rounded-xl border border-red-100 dark:border-red-950 shadow-2xs">
-                  <span className="text-lg font-black text-rose-600 dark:text-rose-400 block font-mono">95%+</span>
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">Question Similarity</span>
+                <div className="bg-[#1a1417] p-2.5 rounded-xl border border-red-950 shadow-2xs">
+                  <span className="text-lg font-black text-rose-400 block font-mono">95%+</span>
+                  <span className="text-[10px] text-white font-semibold">Question Similarity</span>
                 </div>
               </div>
-              <p className="text-[9.5px] text-slate-500 dark:text-slate-400 italic mt-2">
+              <p className="text-[9.5px] text-white/80 italic mt-2">
                 *Historical analysis does not guarantee future examination questions.
               </p>
             </div>

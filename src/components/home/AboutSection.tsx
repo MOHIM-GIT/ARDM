@@ -12,10 +12,10 @@ export const AboutSection: React.FC = () => {
             <Sparkles className="w-3.5 h-3.5" />
             <span>About ARDM Academy</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
             Building Confidence Through Education & Mentorship
           </h2>
-          <p className="text-base text-slate-600 leading-relaxed">
+          <p className="text-base text-white/95 leading-relaxed">
             ARDM Academy is an educational initiative dedicated to providing structured academic coaching,
             state-standard Class 10 mock examinations, and practical technology education.
           </p>
@@ -25,9 +25,9 @@ export const AboutSection: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Column: Mission Narrative */}
           <div className="lg:col-span-6 space-y-6">
-            <div className="prose prose-slate max-w-none text-slate-600 text-base leading-relaxed space-y-4">
-              <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-                <GraduationCap className="w-6 h-6 text-indigo-600" />
+            <div className="prose prose-invert max-w-none text-white text-base leading-relaxed space-y-4">
+              <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                <GraduationCap className="w-6 h-6 text-indigo-400" />
                 <span>What is ARDM Academy? (ARDM Academy Ta Ki?)</span>
               </h3>
               <p>
@@ -36,7 +36,7 @@ export const AboutSection: React.FC = () => {
                 tests, providing in-depth analysis, and offering clear educational guidance.
               </p>
               <p>
-                Through our collaborative <span className="font-semibold text-slate-900">“Dada-Didi Class”</span> mentorship philosophy,
+                Through our collaborative <span className="font-semibold text-white">“Dada-Didi Class”</span> mentorship philosophy,
                 elder student mentors and passionate educators work closely with learners. We break down difficult
                 concepts in Mathematics, Physical Science, and Life Science into intuitive, memorable principles.
               </p>
@@ -54,13 +54,13 @@ export const AboutSection: React.FC = () => {
                 { title: 'CBT Exam Simulator', desc: 'Time-bound digital testing with instant scorecard evaluation.' },
                 { title: 'Transparent Leaderboard', desc: 'Merit list with top 10 rankings and downloadable PDF reports.' },
               ].map((item, idx) => (
-                <div key={idx} className="p-3.5 rounded-xl bg-slate-50 border border-slate-100 flex items-start gap-2.5">
-                  <div className="p-1 rounded-md bg-emerald-100 text-emerald-700 shrink-0 mt-0.5">
+                <div key={idx} className="p-3.5 rounded-xl bg-[#141418] border border-slate-800 flex items-start gap-2.5">
+                  <div className="p-1 rounded-md bg-emerald-950/80 text-emerald-400 shrink-0 mt-0.5">
                     <Check className="w-3.5 h-3.5" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-slate-900">{item.title}</h4>
-                    <p className="text-[11px] text-slate-500 mt-0.5">{item.desc}</p>
+                    <h4 className="text-xs font-bold text-white">{item.title}</h4>
+                    <p className="text-[11px] text-white/90 mt-0.5 font-normal">{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -71,39 +71,39 @@ export const AboutSection: React.FC = () => {
           <div className="lg:col-span-6 space-y-6">
             {/* Vision & Mission Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="p-6 rounded-2xl bg-gradient-to-br from-red-50/80 to-rose-50/50 dark:from-[#181013] dark:to-[#121215] border border-red-100/80 dark:border-slate-800 shadow-xs">
+              <div className="p-6 rounded-2xl bg-gradient-to-br from-[#181013] to-[#121215] border border-slate-800 shadow-xs">
                 <div className="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center mb-4">
                   <Target className="w-5 h-5" />
                 </div>
-                <h4 className="text-base font-bold text-slate-900 dark:text-white mb-2">Our Mission</h4>
-                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                <h4 className="text-base font-bold text-white mb-2">Our Mission</h4>
+                <p className="text-xs text-white leading-relaxed font-normal">
                   To democratize quality board exam preparation and digital literacy so that every student, regardless of background, can compete at the highest level.
                 </p>
               </div>
 
-              <div className="p-6 rounded-2xl bg-gradient-to-br from-rose-50/80 to-red-50/50 dark:from-[#181013] dark:to-[#121215] border border-rose-100/80 dark:border-slate-800 shadow-xs">
+              <div className="p-6 rounded-2xl bg-gradient-to-br from-[#181013] to-[#121215] border border-slate-800 shadow-xs">
                 <div className="w-10 h-10 rounded-xl bg-rose-600 text-white flex items-center justify-center mb-4">
                   <Compass className="w-5 h-5" />
                 </div>
-                <h4 className="text-base font-bold text-slate-900 dark:text-white mb-2">Our Vision</h4>
-                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                <h4 className="text-base font-bold text-white mb-2">Our Vision</h4>
+                <p className="text-xs text-white leading-relaxed font-normal">
                   To foster a generation of curious thinkers, skilled problem solvers, and board toppers equipped with both traditional academic strength and digital fluency.
                 </p>
               </div>
             </div>
 
             {/* Founders & Leadership Card */}
-            <div className="p-6 rounded-2xl bg-slate-900 text-white relative overflow-hidden shadow-lg border border-slate-800">
+            <div className="p-6 rounded-2xl bg-[#121215] text-white relative overflow-hidden shadow-lg border border-slate-800">
               <div className="relative z-10 space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono text-cyan-400 uppercase tracking-wider font-bold">Founders & Leadership</span>
-                  <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-indigo-900/60 text-indigo-300 border border-indigo-700/50 font-semibold">
+                  <span className="text-xs font-mono text-red-400 uppercase tracking-wider font-bold">Founders & Leadership</span>
+                  <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-red-950/60 text-red-300 border border-red-800/50 font-semibold">
                     ARDM Founders
                   </span>
                 </div>
                 <div>
                   <h4 className="text-lg font-bold text-white">Founded by Educators & Technologists</h4>
-                  <p className="text-xs text-slate-300 leading-relaxed mt-1">
+                  <p className="text-xs text-white leading-relaxed mt-1 font-normal">
                     United by a single vision: bringing top-tier Class 10 board preparation, Dada-Didi mentorship, and modern digital education to every student.
                   </p>
                 </div>
@@ -132,7 +132,7 @@ export const AboutSection: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
+                <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-[11px] text-white/80">
                   <span>Mentor Panel: Sciences, Humanities, Math & CS</span>
                   <span className="text-cyan-300 font-semibold">{SITE_CONFIG.name}</span>
                 </div>
@@ -167,9 +167,9 @@ export const AboutSection: React.FC = () => {
                   { title: 'Easy Notes & Blueprints', desc: 'Chapter-wise summary formulas, Madhyamik suggestions, and revision guides.' },
                   { title: 'Friendly Learning', desc: 'Zero intimidation: every doubt is treated with patience, kindness, and clarity.' },
                 ].map((item, idx) => (
-                  <div key={idx} className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#141418] border border-slate-200/80 dark:border-slate-800 hover:border-red-300 dark:hover:border-red-900/60 transition-colors">
-                    <h5 className="text-xs font-bold text-slate-900 dark:text-white mb-1">{item.title}</h5>
-                    <div className="text-[11px] text-slate-600 dark:text-slate-300 leading-normal">{item.desc}</div>
+                  <div key={idx} className="p-3.5 rounded-xl bg-[#141418] border border-slate-800 hover:border-red-900/60 transition-colors">
+                    <h5 className="text-xs font-bold text-white mb-1">{item.title}</h5>
+                    <div className="text-[11px] text-white/90 leading-normal font-normal">{item.desc}</div>
                   </div>
                 ))}
               </div>
