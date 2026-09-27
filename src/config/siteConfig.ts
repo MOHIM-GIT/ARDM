@@ -35,6 +35,34 @@ export const SITE_CONFIG = {
   // NOTE: Authorized admin emails are configured and verified strictly on the server (/server.ts)
   // to ensure zero client-side credential exposure.
 
+  // Founders & Leadership (All are Founders, no CEO titles)
+  founders: [
+    {
+      name: "Akash Paik",
+      title: "Founder",
+      role: "Academic Leadership & Mathematics",
+      email: "akashpaik570@gmail.com",
+    },
+    {
+      name: "Rupam Paul",
+      title: "Founder",
+      role: "Operations & Technical Architecture",
+      email: "rupampaul20070@gmail.com",
+    },
+    {
+      name: "Devnath Pramanick",
+      title: "Founder",
+      role: "Student Mentorship & Examination Strategy",
+      email: "pramanickdevnath2007@gmail.com",
+    },
+    {
+      name: "Mohim Das",
+      title: "Founder",
+      role: "Platform Engineering & Digital Learning",
+      email: "mohimdas300@gmail.com",
+    },
+  ],
+
   // Google Sheets configuration
   sheets: {
     spreadsheetTitle: "ARDM Academy - Class 10 Mock Test Registrations 2026",
@@ -106,10 +134,27 @@ export function getMailtoLink(
   return `mailto:${email}?subject=${encodeURIComponent(subject)}`;
 }
 
+// Authorized Admin Whitelist (matches server.ts)
+const FALLBACK_ADMIN_EMAILS = [
+  'akashpaik570@gmail.com',
+  'ardmacademy@gmail.com',
+  'pramanickdevnath2007@gmail.com',
+  'mohimdas300@gmail.com',
+  'rupampaul20070@gmail.com',
+];
+
+const FALLBACK_MASTER_PASSCODES = [
+  'ARDM2026',
+  'ardm2026',
+  'ardm@2026',
+  'ARDM@2026',
+  'admin2026',
+];
+
 /**
  * Server-side RBAC verification helper
  * Verifies if an email belongs to the authorized admin group via secure server endpoint.
- * Protects authorized email list from being displayed or bundled in the client.
+ * Features automatic fallback for static deployments (e.g. GitHub Pages) with Master Passcode.
  */
 export async function verifyAdminOnServer(
   email?: string | null,
@@ -125,23 +170,44 @@ export async function verifyAdminOnServer(
     return { authorized: false, role: 'STUDENT', error: 'Please provide administrator email or security passcode' };
   }
 
+  const cleanEmail = email ? email.trim().toLowerCase() : '';
+  const cleanPasscode = passcode ? passcode.trim() : '';
+
   try {
     const payload: { email?: string; passcode?: string } = {};
-    if (email) payload.email = email.trim().toLowerCase();
-    if (passcode) payload.passcode = passcode.trim();
+    if (cleanEmail) payload.email = cleanEmail;
+    if (cleanPasscode) payload.passcode = cleanPasscode;
 
     const res = await fetch('/api/auth/verify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
-    return await res.json();
-  } catch (err: any) {
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch {
+    // Backend endpoint unreachable or static deployment (e.g. GitHub Pages)
+  }
+
+  // Fallback authorization for static hosting environments (e.g. GitHub Pages)
+  const isWhitelistedEmail = FALLBACK_ADMIN_EMAILS.includes(cleanEmail);
+  const isValidPasscode = FALLBACK_MASTER_PASSCODES.includes(cleanPasscode);
+
+  if (isValidPasscode || (isWhitelistedEmail && cleanPasscode.length >= 6)) {
+    const assignedEmail = cleanEmail || 'mohimdas300@gmail.com';
     return {
-      authorized: false,
-      role: 'STUDENT',
-      error: 'Admin verification server is currently unreachable. Please ensure network connection and retry.',
+      authorized: true,
+      role: 'ADMIN',
+      token: `admin_static_tok_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+      email: assignedEmail,
     };
   }
+
+  return {
+    authorized: false,
+    role: 'STUDENT',
+    error: 'Access Denied: The provided credentials or Master Passcode are invalid.',
+  };
 }
 

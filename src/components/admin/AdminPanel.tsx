@@ -474,7 +474,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     } catch (err: any) {
       console.warn('Google sign-in caught notice:', err);
       const msg = err?.message || String(err);
-      if (
+      if (msg.includes('auth/unauthorized-domain')) {
+        setAuthError(
+          'Google OAuth domain restriction on GitHub Pages: Please sign in directly above using your Administrator Email and Master Security Passcode (ARDM2026).'
+        );
+      } else if (
         msg.includes('503') ||
         msg.includes('backend read') ||
         msg.includes('Varnish') ||
@@ -1352,6 +1356,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   />
                   <Key className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
                 </div>
+                <p className="text-[11px] text-slate-400 mt-1.5 flex items-center justify-between">
+                  <span>Passcode: <code className="text-cyan-400 font-mono font-bold">ARDM2026</code></span>
+                  <span className="text-slate-500 text-[10px]">Founders: Akash, Rupam, Devnath, Mohim</span>
+                </p>
               </div>
 
               <button

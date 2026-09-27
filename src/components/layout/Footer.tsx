@@ -291,7 +291,12 @@ export const Footer: React.FC<FooterProps> = ({
 
         {/* Bottom Strip */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>© {new Date().getFullYear()} ARDM Academy. BUILD • PROGRESS • TOGETHER. All rights reserved.</p>
+          <div className="space-y-1 text-center sm:text-left">
+            <p>© {new Date().getFullYear()} ARDM Academy. BUILD • PROGRESS • TOGETHER. All rights reserved.</p>
+            <p className="text-[11px] text-slate-400">
+              Founders: <span className="text-slate-300 font-semibold">Akash Paik</span> • <span className="text-slate-300 font-semibold">Rupam Paul</span> • <span className="text-slate-300 font-semibold">Devnath Pramanick</span> • <span className="text-slate-300 font-semibold">Mohim Das</span>
+            </p>
+          </div>
           <div className="flex items-center gap-4">
             <span className="font-semibold text-slate-400">PROSTUTI Class 10 Mock Test Platform</span>
           </div>

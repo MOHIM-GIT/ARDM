@@ -92,23 +92,48 @@ export const AboutSection: React.FC = () => {
               </div>
             </div>
 
-            {/* Team & Faculty Card (clearly marked placeholders) */}
-            <div className="p-6 rounded-2xl bg-slate-900 text-white relative overflow-hidden shadow-lg">
-              <div className="relative z-10 space-y-3">
+            {/* Founders & Leadership Card */}
+            <div className="p-6 rounded-2xl bg-slate-900 text-white relative overflow-hidden shadow-lg border border-slate-800">
+              <div className="relative z-10 space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono text-cyan-400 uppercase tracking-wider">Faculty & Mentors</span>
-                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">
-                    ARDM Core Team
+                  <span className="text-xs font-mono text-cyan-400 uppercase tracking-wider font-bold">Founders & Leadership</span>
+                  <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-indigo-900/60 text-indigo-300 border border-indigo-700/50 font-semibold">
+                    ARDM Founders
                   </span>
                 </div>
-                <h4 className="text-lg font-bold text-white">Dedicated Academic Mentors</h4>
-                <p className="text-xs text-slate-300 leading-relaxed">
-                  Guided by passionate subject teachers and experienced university scholars who believe in active problem solving over rote memorization.
-                </p>
+                <div>
+                  <h4 className="text-lg font-bold text-white">Founded by Educators & Technologists</h4>
+                  <p className="text-xs text-slate-300 leading-relaxed mt-1">
+                    United by a single vision: bringing top-tier Class 10 board preparation, Dada-Didi mentorship, and modern digital education to every student.
+                  </p>
+                </div>
 
-                {/* Team Placeholder Visual */}
-                <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
-                  <span>Mentor Panel: Sciences, Humanities, Mathematics & Computer Science</span>
+                {/* 4 Founders Grid (SEO Optimized with Schema.org Microdata) */}
+                <div className="grid grid-cols-2 gap-2.5 pt-1">
+                  <div itemScope itemType="https://schema.org/Person" className="p-2.5 rounded-xl bg-slate-800/90 border border-slate-700/70">
+                    <p itemProp="name" className="font-bold text-xs text-white">Akash Paik</p>
+                    <p itemProp="jobTitle" className="text-[10px] text-cyan-400 font-semibold uppercase tracking-wider">Founder</p>
+                    <meta itemProp="worksFor" content="ARDM Academy" />
+                  </div>
+                  <div itemScope itemType="https://schema.org/Person" className="p-2.5 rounded-xl bg-slate-800/90 border border-slate-700/70">
+                    <p itemProp="name" className="font-bold text-xs text-white">Rupam Paul</p>
+                    <p itemProp="jobTitle" className="text-[10px] text-cyan-400 font-semibold uppercase tracking-wider">Founder</p>
+                    <meta itemProp="worksFor" content="ARDM Academy" />
+                  </div>
+                  <div itemScope itemType="https://schema.org/Person" className="p-2.5 rounded-xl bg-slate-800/90 border border-slate-700/70">
+                    <p itemProp="name" className="font-bold text-xs text-white">Devnath Pramanick</p>
+                    <p itemProp="jobTitle" className="text-[10px] text-cyan-400 font-semibold uppercase tracking-wider">Founder</p>
+                    <meta itemProp="worksFor" content="ARDM Academy" />
+                  </div>
+                  <div itemScope itemType="https://schema.org/Person" className="p-2.5 rounded-xl bg-slate-800/90 border border-slate-700/70">
+                    <p itemProp="name" className="font-bold text-xs text-white">Mohim Das</p>
+                    <p itemProp="jobTitle" className="text-[10px] text-cyan-400 font-semibold uppercase tracking-wider">Founder</p>
+                    <meta itemProp="worksFor" content="ARDM Academy" />
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
+                  <span>Mentor Panel: Sciences, Humanities, Math & CS</span>
                   <span className="text-cyan-300 font-semibold">{SITE_CONFIG.name}</span>
                 </div>
               </div>

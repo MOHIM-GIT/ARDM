@@ -73,13 +73,61 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
     { number: '100%', label: 'Free Guidance Accessible' },
   ];
 
+  const aboutSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    name: 'About ARDM Academy & Founders',
+    description:
+      'Meet the Founders of ARDM Academy: Akash Paik, Rupam Paul, Devnath Pramanick, and Mohim Das. Educational leadership, Dada-Didi mentorship, and academic excellence.',
+    mainEntity: {
+      '@type': 'EducationalOrganization',
+      name: 'ARDM Academy',
+      url: 'https://ardmacademy.in/',
+      founder: [
+        {
+          '@type': 'Person',
+          name: 'Akash Paik',
+          jobTitle: 'Founder',
+          worksFor: { '@type': 'EducationalOrganization', name: 'ARDM Academy' },
+          knowsAbout: ['Mathematics', 'Physical Science', 'Board Exam Strategy', 'Curriculum Design'],
+          email: 'akashpaik570@gmail.com',
+        },
+        {
+          '@type': 'Person',
+          name: 'Rupam Paul',
+          jobTitle: 'Founder',
+          worksFor: { '@type': 'EducationalOrganization', name: 'ARDM Academy' },
+          knowsAbout: ['Operations Management', 'Systems Architecture', 'Educational Logistics', 'CBT Test Platforms'],
+          email: 'rupampaul20070@gmail.com',
+        },
+        {
+          '@type': 'Person',
+          name: 'Devnath Pramanick',
+          jobTitle: 'Founder',
+          worksFor: { '@type': 'EducationalOrganization', name: 'ARDM Academy' },
+          knowsAbout: ['Student Mentorship', 'Dada-Didi Mentorship Model', 'Examination Psychology', 'Academic Guidance'],
+          email: 'pramanickdevnath2007@gmail.com',
+        },
+        {
+          '@type': 'Person',
+          name: 'Mohim Das',
+          jobTitle: 'Founder',
+          worksFor: { '@type': 'EducationalOrganization', name: 'ARDM Academy' },
+          knowsAbout: ['Software Engineering', 'Artificial Intelligence', 'Web Architecture', 'Digital Education'],
+          email: 'mohimdas300@gmail.com',
+        },
+      ],
+    },
+  };
+
   return (
     <div className="pt-20 pb-20 bg-slate-50 min-h-screen">
       <SEOHead
-        title="About Us | ARDM Academy"
-        description="Learn about ARDM Academy's educational philosophy, Dada-Didi mentorship model, founder leadership, milestones, and student success testimonials."
+        title="About Us & Founders: Akash Paik, Rupam Paul, Devnath Pramanick, Mohim Das | ARDM Academy"
+        description="Meet the Founders of ARDM Academy: Akash Paik, Rupam Paul, Devnath Pramanick, and Mohim Das. Learn about our educational philosophy, Dada-Didi mentorship model, and comprehensive Class 10 board preparation."
         canonical="https://ardmacademy.in/about"
         breadcrumbs={[{ name: 'About Us', path: '/about' }]}
+        schema={aboutSchema}
       />
 
       <Breadcrumbs items={[{ name: 'About Us', path: '/about' }]} onNavigate={onNavigate} />
@@ -164,52 +212,149 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
           </div>
         </section>
 
-        {/* Academic Leadership */}
+        {/* Founders & Leadership */}
         <section className="bg-white rounded-3xl p-8 sm:p-10 border border-slate-200 shadow-2xs mb-16">
-          <div className="max-w-3xl mx-auto text-center space-y-4 mb-8">
+          <div className="max-w-3xl mx-auto text-center space-y-4 mb-10">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-semibold">
               <ShieldCheck className="w-3.5 h-3.5" />
-              <span>Academic Leadership</span>
+              <span>Founders & Leadership</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-950">
-              Guided by Experienced Educators & Innovators
+              Meet the Founders of ARDM Academy
             </h2>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Under the direct leadership of Founder Akash Paik, ARDM Academy combines decades of board exam teaching expertise with modern computational training.
+              ARDM Academy was founded by a united team of four educators and technologists dedicated to empowering students with conceptual clarity, affordable high-standard mock exams, and modern computational skills.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-center">
-            <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
-              <div className="flex items-center gap-3">
-                <div className="w-14 h-14 rounded-2xl bg-indigo-600 text-white font-black text-xl flex items-center justify-center shadow-md">
-                  AP
+          {/* 4 Founders Grid (SEO Optimized with Schema.org Microdata) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mb-10">
+            {/* Founder 1: AKASH PAIK */}
+            <article
+              itemScope
+              itemType="https://schema.org/Person"
+              className="p-6 rounded-2xl bg-slate-50 border border-slate-200/90 hover:border-indigo-300 hover:shadow-md transition-all flex flex-col justify-between space-y-4"
+            >
+              <meta itemProp="worksFor" content="ARDM Academy" />
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-13 h-13 rounded-2xl bg-indigo-600 text-white font-black text-lg flex items-center justify-center shadow-sm">
+                    AP
+                  </div>
+                  <div>
+                    <h3 itemProp="name" className="font-extrabold text-base text-slate-900 leading-tight">Akash Paik</h3>
+                    <span itemProp="jobTitle" className="text-xs font-bold text-indigo-700 uppercase tracking-wide block">Founder</span>
+                    <span className="text-[11px] text-slate-500 font-medium">Academic Lead</span>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-extrabold text-base text-slate-900">Akash Paik</h3>
-                  <span className="text-xs text-indigo-700 font-semibold block">Founder & Chief Academic Officer</span>
-                  <span className="text-[11px] text-slate-400 font-mono">ARDM Academy of Education</span>
-                </div>
+                <p itemProp="description" className="text-xs text-slate-600 leading-relaxed">
+                  Specializing in Mathematics, Physical Science pedagogy, and examination strategy. Champions student-first curriculum design and personalized doubt clearing.
+                </p>
               </div>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Specializing in Mathematics, Physical Science, and Computer Programming. Committed to providing accessible coaching, state-level competitive mock platforms, and modern digital education for all students regardless of financial background.
+              <div className="pt-2 border-t border-slate-200/80 text-[10px] font-mono text-slate-400">
+                Mathematics & Physical Science
+              </div>
+            </article>
+
+            {/* Founder 2: RUPAM PAUL */}
+            <article
+              itemScope
+              itemType="https://schema.org/Person"
+              className="p-6 rounded-2xl bg-slate-50 border border-slate-200/90 hover:border-blue-300 hover:shadow-md transition-all flex flex-col justify-between space-y-4"
+            >
+              <meta itemProp="worksFor" content="ARDM Academy" />
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-13 h-13 rounded-2xl bg-blue-600 text-white font-black text-lg flex items-center justify-center shadow-sm">
+                    RP
+                  </div>
+                  <div>
+                    <h3 itemProp="name" className="font-extrabold text-base text-slate-900 leading-tight">Rupam Paul</h3>
+                    <span itemProp="jobTitle" className="text-xs font-bold text-blue-700 uppercase tracking-wide block">Founder</span>
+                    <span className="text-[11px] text-slate-500 font-medium">Operations & Tech Architecture</span>
+                  </div>
+                </div>
+                <p itemProp="description" className="text-xs text-slate-600 leading-relaxed">
+                  Steering administrative operations, exam center logistics, and digital platform reliability. Ensures seamless nationwide examination delivery.
+                </p>
+              </div>
+              <div className="pt-2 border-t border-slate-200/80 text-[10px] font-mono text-slate-400">
+                Operations & Systems Infrastructure
+              </div>
+            </article>
+
+            {/* Founder 3: DEVNATH PRAMANICK */}
+            <article
+              itemScope
+              itemType="https://schema.org/Person"
+              className="p-6 rounded-2xl bg-slate-50 border border-slate-200/90 hover:border-emerald-300 hover:shadow-md transition-all flex flex-col justify-between space-y-4"
+            >
+              <meta itemProp="worksFor" content="ARDM Academy" />
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-13 h-13 rounded-2xl bg-emerald-600 text-white font-black text-lg flex items-center justify-center shadow-sm">
+                    DP
+                  </div>
+                  <div>
+                    <h3 itemProp="name" className="font-extrabold text-base text-slate-900 leading-tight">Devnath Pramanick</h3>
+                    <span itemProp="jobTitle" className="text-xs font-bold text-emerald-700 uppercase tracking-wide block">Founder</span>
+                    <span className="text-[11px] text-slate-500 font-medium">Student Mentorship & Guidance</span>
+                  </div>
+                </div>
+                <p itemProp="description" className="text-xs text-slate-600 leading-relaxed">
+                  Architect of the Dada-Didi Mentorship philosophy. Focuses on student psychology, stress-free board preparation, and career roadmap counseling.
+                </p>
+              </div>
+              <div className="pt-2 border-t border-slate-200/80 text-[10px] font-mono text-slate-400">
+                Student Welfare & Mentorship
+              </div>
+            </article>
+
+            {/* Founder 4: MOHIM DAS */}
+            <article
+              itemScope
+              itemType="https://schema.org/Person"
+              className="p-6 rounded-2xl bg-slate-50 border border-slate-200/90 hover:border-purple-300 hover:shadow-md transition-all flex flex-col justify-between space-y-4"
+            >
+              <meta itemProp="worksFor" content="ARDM Academy" />
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-13 h-13 rounded-2xl bg-purple-600 text-white font-black text-lg flex items-center justify-center shadow-sm">
+                    MD
+                  </div>
+                  <div>
+                    <h3 itemProp="name" className="font-extrabold text-base text-slate-900 leading-tight">Mohim Das</h3>
+                    <span itemProp="jobTitle" className="text-xs font-bold text-purple-700 uppercase tracking-wide block">Founder</span>
+                    <span className="text-[11px] text-slate-500 font-medium">Digital Learning & Innovation</span>
+                  </div>
+                </div>
+                <p itemProp="description" className="text-xs text-slate-600 leading-relaxed">
+                  Driving digital learning technology, AI education integration, and web engineering. Dedicated to modernizing educational access for aspiring learners.
+                </p>
+              </div>
+              <div className="pt-2 border-t border-slate-200/80 text-[10px] font-mono text-slate-400">
+                Software Engineering & AI Labs
+              </div>
+            </article>
+          </div>
+
+          {/* Senior Faculty & Board Paper Reviewers Panel */}
+          <div className="max-w-4xl mx-auto p-6 rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white border border-slate-800 shadow-md flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-0.5 rounded-full bg-indigo-500/30 text-indigo-300 text-[10px] font-mono font-bold uppercase tracking-wider border border-indigo-400/30">
+                  Verified Academic Suite
+                </span>
+                <span className="text-xs text-slate-400 font-mono">ARDM Academy</span>
+              </div>
+              <h3 className="text-lg font-bold text-white">Board Examiners & Senior Subject Specialists</h3>
+              <p className="text-xs text-slate-300 max-w-xl leading-relaxed">
+                Working hand-in-hand with Founders Akash Paik, Rupam Paul, Devnath Pramanick, and Mohim Das, our curriculum panel includes veteran school educators who rigorously review every PROSTUTI mock test and study blueprint.
               </p>
             </div>
-
-            <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
-              <div className="flex items-center gap-3">
-                <div className="w-14 h-14 rounded-2xl bg-blue-600 text-white font-black text-xl flex items-center justify-center shadow-md">
-                  SF
-                </div>
-                <div>
-                  <h3 className="font-extrabold text-base text-slate-900">Senior Faculty & Board Examiners</h3>
-                  <span className="text-xs text-blue-700 font-semibold block">Subject Specialists Suite</span>
-                  <span className="text-[11px] text-slate-400 font-mono">Bengali, English, Life Science, History, Geography</span>
-                </div>
-              </div>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Our curriculum panel includes veteran school teachers and verified board paper examiners who review every mock question statement, model answer key, and formula summary sheet.
-              </p>
+            <div className="shrink-0 text-center sm:text-right">
+              <span className="text-2xl font-black text-cyan-400 font-mono">100%</span>
+              <span className="block text-[11px] text-slate-400">Curriculum Syllabus Mapped</span>
             </div>
           </div>
         </section>
