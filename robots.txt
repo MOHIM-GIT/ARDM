@@ -1,0 +1,28 @@
+# ARDM Academy Robots.txt
+User-agent: *
+Allow: /
+Allow: /about
+Allow: /mock-tests
+Allow: /pyqs
+Allow: /free-classes
+Allow: /courses
+Allow: /courses/*
+Allow: /classes/*
+Allow: /webinars
+Allow: /ai
+Allow: /computer-science
+Allow: /workshops
+Allow: /results
+Allow: /results/*
+Allow: /contact
+
+# Disallow Private & Admin Sensitive Paths
+Disallow: /admin
+Disallow: /student
+Disallow: /portal
+Disallow: /cbt
+Disallow: /api/admin/
+Disallow: /api/students/payment
+
+# Official Sitemap Location
+Sitemap: https://ardmacademy.in/sitemap.xml
