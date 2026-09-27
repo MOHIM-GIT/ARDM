@@ -58,10 +58,10 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
             cx="50"
             cy="50"
             r="40"
-            stroke={light ? '#38BDF8' : '#2563EB'}
+            stroke={light ? '#F87171' : '#DC2626'}
             strokeWidth="1"
             strokeDasharray="10 80 40 40"
-            opacity={0.5}
+            opacity={0.6}
           />
 
           {/* ARDM Stylized Monogram */}
@@ -113,22 +113,20 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
             </span>
             <span
               className={`font-semibold tracking-wider font-sans ${textSizes[size]} ${
-                light ? 'text-cyan-300' : 'text-indigo-600'
+                light ? 'text-red-400' : 'text-red-700'
               }`}
             >
               ACADEMY
             </span>
           </div>
           <span
-            className={`font-bold uppercase ${subTextSizes[size]} mt-1 flex items-center gap-1 ${
-              light ? 'text-slate-300' : 'text-slate-600'
-            }`}
+            className={`font-bold uppercase ${subTextSizes[size]} mt-1 flex items-center gap-1.5`}
           >
-            <span>LEARN</span>
-            <span className="text-rose-500 font-bold">•</span>
-            <span>PRACTICE</span>
-            <span className="text-rose-500 font-bold">•</span>
-            <span>IMPROVE</span>
+            <span className="text-[#FF671F]">LEARN</span>
+            <span className="text-slate-400 font-bold">•</span>
+            <span className={light ? 'text-white' : 'text-slate-900 dark:text-white'}>PRACTICE</span>
+            <span className="text-slate-400 font-bold">•</span>
+            <span className="text-[#16A34A] dark:text-[#22C55E]">IMPROVE</span>
           </span>
         </div>
       )}

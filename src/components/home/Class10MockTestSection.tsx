@@ -50,39 +50,39 @@ export const Class10MockTestSection: React.FC<Class10MockTestSectionProps> = ({
   ];
 
   return (
-    <section id="mock-test" className="py-20 bg-gradient-to-b from-slate-50 to-white relative">
+    <section id="mock-test" className="py-20 bg-slate-50/60 dark:bg-[#09090b] relative transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-300 text-xs font-semibold border border-red-200/60 dark:border-red-900/60">
             <Sparkles className="w-3.5 h-3.5" />
             <span>State-Level Exam Preparation</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             PROSTUTI • The Ultimate Class 10 Mock Test Series
           </h2>
-          <p className="text-base text-slate-600 leading-relaxed">
+          <p className="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
             Designed for focused Class 10 board preparation with structured mock tests, subject-wise practice, performance analysis and state-level merit rankings.
           </p>
 
           {/* Historical Prediction Accuracy Stats */}
           <div className="max-w-xl mx-auto pt-2">
-            <div className="p-4 rounded-2xl bg-indigo-50/70 border border-indigo-100 flex flex-col items-center">
+            <div className="p-4 rounded-2xl bg-red-50/60 dark:bg-[#141012] border border-red-100 dark:border-red-900/40 flex flex-col items-center">
               <div className="grid grid-cols-3 gap-3 w-full text-center">
-                <div className="bg-white p-2.5 rounded-xl border border-indigo-100 shadow-2xs">
-                  <span className="text-lg font-black text-indigo-700 block font-mono">96.30%</span>
-                  <span className="text-[10px] text-slate-500 font-semibold">Common in 2024</span>
+                <div className="bg-white dark:bg-[#1a1417] p-2.5 rounded-xl border border-red-100 dark:border-red-950 shadow-2xs">
+                  <span className="text-lg font-black text-red-600 dark:text-red-400 block font-mono">96.30%</span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">Common in 2024</span>
                 </div>
-                <div className="bg-white p-2.5 rounded-xl border border-indigo-100 shadow-2xs">
-                  <span className="text-lg font-black text-emerald-700 block font-mono">97.10%</span>
-                  <span className="text-[10px] text-slate-500 font-semibold">Common in 2025</span>
+                <div className="bg-white dark:bg-[#1a1417] p-2.5 rounded-xl border border-red-100 dark:border-red-950 shadow-2xs">
+                  <span className="text-lg font-black text-emerald-600 dark:text-emerald-400 block font-mono">97.10%</span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">Common in 2025</span>
                 </div>
-                <div className="bg-white p-2.5 rounded-xl border border-indigo-100 shadow-2xs">
-                  <span className="text-lg font-black text-blue-700 block font-mono">95%+</span>
-                  <span className="text-[10px] text-slate-500 font-semibold">Question Similarity</span>
+                <div className="bg-white dark:bg-[#1a1417] p-2.5 rounded-xl border border-red-100 dark:border-red-950 shadow-2xs">
+                  <span className="text-lg font-black text-rose-600 dark:text-rose-400 block font-mono">95%+</span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">Question Similarity</span>
                 </div>
               </div>
-              <p className="text-[9.5px] text-slate-500 italic mt-2">
+              <p className="text-[9.5px] text-slate-500 dark:text-slate-400 italic mt-2">
                 *Historical analysis does not guarantee future examination questions.
               </p>
             </div>
@@ -91,7 +91,7 @@ export const Class10MockTestSection: React.FC<Class10MockTestSectionProps> = ({
           <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
             <button
               onClick={onStartRegistration}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-md transition-all active:scale-98"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-red-700 hover:bg-red-800 text-white font-bold text-sm shadow-md transition-all active:scale-98 cursor-pointer"
             >
               <span>Start PROSTUTI Registration</span>
               <ArrowRight className="w-4 h-4" />
@@ -99,9 +99,9 @@ export const Class10MockTestSection: React.FC<Class10MockTestSectionProps> = ({
 
             <button
               onClick={onLaunchPracticeTest}
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white hover:bg-slate-50 text-slate-800 font-semibold text-sm border border-slate-200 shadow-2xs transition-colors"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 font-semibold text-sm border border-slate-800 shadow-2xs transition-colors cursor-pointer"
             >
-              <Clock className="w-4 h-4 text-indigo-600" />
+              <Clock className="w-4 h-4 text-red-400" />
               <span>Launch Live CBT Simulator</span>
             </button>
           </div>
@@ -112,16 +112,16 @@ export const Class10MockTestSection: React.FC<Class10MockTestSectionProps> = ({
           {steps.map((step) => (
             <div
               key={step.num}
-              className="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs hover:border-indigo-200 transition-all space-y-2"
+              className="p-5 rounded-2xl bg-white dark:bg-[#121215] border border-slate-200 dark:border-slate-800 shadow-2xs hover:border-red-300 dark:hover:border-red-900/60 transition-all space-y-2"
             >
               <div className="flex items-center justify-between">
-                <span className="font-mono text-xs font-extrabold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">
+                <span className="font-mono text-xs font-extrabold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/60 px-2 py-0.5 rounded-md">
                   Step {step.num}
                 </span>
-                <CheckCircle2 className="w-4 h-4 text-slate-300" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
               </div>
-              <h3 className="text-sm font-bold text-slate-900">{step.title}</h3>
-              <p className="text-xs text-slate-500 leading-relaxed">{step.desc}</p>
+              <h3 className="text-sm font-bold text-white">{step.title}</h3>
+              <p className="text-xs text-white leading-relaxed font-normal">{step.desc}</p>
             </div>
           ))}
         </div>
@@ -129,11 +129,11 @@ export const Class10MockTestSection: React.FC<Class10MockTestSectionProps> = ({
         {/* VERIFICATION & SEARCH SECTION (Section 8 - Fixed completely!) */}
         <div id="check-registration" className="bg-slate-900 text-white rounded-3xl p-8 sm:p-10 shadow-xl relative overflow-hidden">
           <div className="max-w-2xl mx-auto text-center space-y-3 mb-8">
-            <span className="text-xs font-mono uppercase tracking-wider text-cyan-400 font-semibold">
+            <span className="text-xs font-mono uppercase tracking-wider text-red-400 font-semibold">
               Candidate Verification Desk
             </span>
-            <h3 className="text-2xl sm:text-3xl font-bold">Check Your Registration & Admit Card</h3>
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            <h3 className="text-2xl sm:text-3xl font-bold text-white">Check Your Registration & Admit Card</h3>
+            <p className="text-xs sm:text-sm text-white leading-relaxed font-normal">
               Already submitted your application? Enter your Unique Registration ID, registered mobile number, or email to verify your application.
             </p>
 

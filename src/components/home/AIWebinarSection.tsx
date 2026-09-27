@@ -24,15 +24,15 @@ export const AIWebinarSection: React.FC = () => {
   const hasJoinLink = Boolean(webinar.meetingLink && webinar.meetingLink.trim().length > 5 && webinar.isPublished);
 
   return (
-    <section id="webinar" className="py-20 bg-gradient-to-br from-indigo-950 via-slate-900 to-blue-950 text-white relative overflow-hidden">
+    <section id="webinar" className="py-20 bg-gradient-to-br from-[#1c080b] via-[#0e090b] to-[#180a0c] text-white relative overflow-hidden border-y border-red-950/40">
       {/* Decorative Glow */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 right-0 w-96 h-96 bg-red-600/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-rose-600/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-4xl mx-auto">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 text-xs font-semibold mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/20 text-red-300 border border-red-400/30 text-xs font-semibold mb-6">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Open Access Tech Masterclass</span>
           </div>
@@ -48,7 +48,7 @@ export const AIWebinarSection: React.FC = () => {
           {/* Details Card */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md mb-8">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-indigo-600/30 text-cyan-400 flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-red-950/60 text-red-400 flex items-center justify-center shrink-0 border border-red-900/40">
                 <Calendar className="w-5 h-5" />
               </div>
               <div>
@@ -58,7 +58,7 @@ export const AIWebinarSection: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-indigo-600/30 text-cyan-400 flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-red-950/60 text-red-400 flex items-center justify-center shrink-0 border border-red-900/40">
                 <Clock className="w-5 h-5" />
               </div>
               <div>
@@ -68,7 +68,7 @@ export const AIWebinarSection: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-indigo-600/30 text-cyan-400 flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-red-950/60 text-red-400 flex items-center justify-center shrink-0 border border-red-900/40">
                 <User className="w-5 h-5" />
               </div>
               <div>
@@ -85,7 +85,7 @@ export const AIWebinarSection: React.FC = () => {
                 href={webinar.meetingLink}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold text-xs tracking-wide shadow-lg transition-all active:scale-98"
+                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-extrabold text-xs tracking-wide shadow-lg transition-all active:scale-98"
               >
                 <Video className="w-4 h-4" />
                 <span>Join AI & Coding Webinar</span>

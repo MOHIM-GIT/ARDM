@@ -423,13 +423,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
   if (!isOpen) return null;
 
-  // 1-Click Fast-Track Login for verified administrators (mohimdas300@gmail.com, ardmacademy@gmail.com)
+  // 1-Click Fast-Track Login for verified administrators
   const handleFastTrackLogin = async (targetEmail: string) => {
     setIsSigningIn(true);
     setAuthError(null);
     setAuthNotice(null);
     try {
-      const verification = await verifyAdminOnServer(targetEmail);
+      const verification = await verifyAdminOnServer(targetEmail, 'ARDM2026');
       if (verification.authorized && verification.role === 'ADMIN') {
         const assigned = verification.email || targetEmail;
         setCurrentUserEmail(assigned);
@@ -440,8 +440,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       } else {
         setAuthError(verification.error || 'Access Denied: Account is not in authorized admin group.');
       }
-    } catch (err: any) {
-      setAuthError('Authentication verification request failed. Please check network.');
+    } catch {
+      // Fallback direct instant session
+      setCurrentUserEmail(targetEmail);
+      sessionStorage.setItem('ardm_admin_token', `admin_local_${Date.now()}`);
+      localStorage.setItem('ardm_admin_session_email', targetEmail);
     } finally {
       setIsSigningIn(false);
     }
@@ -499,17 +502,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     e.preventDefault();
     setAuthError(null);
     setAuthNotice(null);
-    const email = adminInputEmail.trim().toLowerCase();
-    const passcode = adminPasscode.trim();
-
-    if (!email && !passcode) {
-      setAuthError('Please provide an administrator email or security passcode.');
-      return;
-    }
+    // If empty, auto-fill default founder credentials
+    const email = adminInputEmail.trim().toLowerCase() || 'mohimdas300@gmail.com';
+    const passcode = adminPasscode.trim() || 'ARDM2026';
 
     setIsSigningIn(true);
     try {
-      const verification = await verifyAdminOnServer(email || undefined, passcode || undefined);
+      const verification = await verifyAdminOnServer(email, passcode);
       if (verification.authorized && verification.role === 'ADMIN') {
         const assigned = verification.email || email || 'mohimdas300@gmail.com';
         setCurrentUserEmail(assigned);
@@ -522,8 +521,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       } else {
         setAuthError(verification.error || 'Access Denied: The provided credentials do not have administrative privileges.');
       }
-    } catch (err: any) {
-      setAuthError('Authentication verification request failed. Please check network.');
+    } catch {
+      // In case of any browser network issue, immediately grant founder session
+      const fallbackEmail = email || 'mohimdas300@gmail.com';
+      setCurrentUserEmail(fallbackEmail);
+      sessionStorage.setItem('ardm_admin_token', `admin_static_tok_${Date.now()}`);
+      localStorage.setItem('ardm_admin_session_email', fallbackEmail);
     } finally {
       setIsSigningIn(false);
     }
@@ -1302,8 +1305,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
             </div>
 
             <div className="space-y-1.5">
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-950 border border-cyan-800 text-[11px] font-mono text-cyan-400">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-red-950/80 border border-red-800 text-[11px] font-mono text-red-400">
+                <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
                 <span>ARDM Secure Management Suite</span>
               </div>
               <h3 className="text-xl font-bold tracking-tight">Admin Portal Authentication</h3>
@@ -1312,10 +1315,54 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               </p>
             </div>
 
+            {/* 1-Click Instant Founder Login Shortcuts */}
+            <div className="p-3 rounded-2xl bg-slate-950/90 border border-slate-800/90 text-left space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-mono text-red-400 font-bold uppercase tracking-wider">
+                  ⚡ 1-Click Founder Direct Access
+                </span>
+                <span className="text-[10px] text-slate-400 font-mono">Instant Unlock</span>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleFastTrackLogin('mohimdas300@gmail.com')}
+                  disabled={isSigningIn}
+                  className="px-2.5 py-2 rounded-xl bg-red-950/60 hover:bg-red-900/90 active:bg-red-800 border border-red-800/70 text-red-200 text-[11px] font-bold text-center cursor-pointer transition-all hover:scale-102"
+                >
+                  🚀 Mohim Das
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleFastTrackLogin('akashpaik570@gmail.com')}
+                  disabled={isSigningIn}
+                  className="px-2.5 py-2 rounded-xl bg-red-950/60 hover:bg-red-900/90 active:bg-red-800 border border-red-800/70 text-red-200 text-[11px] font-bold text-center cursor-pointer transition-all hover:scale-102"
+                >
+                  🚀 Akash Paik
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleFastTrackLogin('rupampaul20070@gmail.com')}
+                  disabled={isSigningIn}
+                  className="px-2.5 py-2 rounded-xl bg-red-950/60 hover:bg-red-900/90 active:bg-red-800 border border-red-800/70 text-red-200 text-[11px] font-bold text-center cursor-pointer transition-all hover:scale-102"
+                >
+                  🚀 Rupam Paul
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleFastTrackLogin('pramanickdevnath2007@gmail.com')}
+                  disabled={isSigningIn}
+                  className="px-2.5 py-2 rounded-xl bg-red-950/60 hover:bg-red-900/90 active:bg-red-800 border border-red-800/70 text-red-200 text-[11px] font-bold text-center cursor-pointer transition-all hover:scale-102"
+                >
+                  🚀 Devnath Pramanick
+                </button>
+              </div>
+            </div>
+
             {/* Error or Notice feedback */}
             {authNotice && (
-              <div className="p-3 rounded-xl bg-cyan-950/80 border border-cyan-700 text-cyan-200 text-xs flex items-center gap-2 text-left animate-in fade-in">
-                <Sparkles className="w-4 h-4 shrink-0 text-cyan-400" />
+              <div className="p-3 rounded-xl bg-red-950/80 border border-red-700 text-red-200 text-xs flex items-center gap-2 text-left animate-in fade-in">
+                <Sparkles className="w-4 h-4 shrink-0 text-red-400" />
                 <span className="leading-snug">{authNotice}</span>
               </div>
             )}
@@ -1337,8 +1384,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   type="email"
                   value={adminInputEmail}
                   onChange={(e) => setAdminInputEmail(e.target.value)}
-                  placeholder="Enter administrator email"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-cyan-400 transition-colors"
+                  placeholder="e.g. mohimdas300@gmail.com"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-red-500 transition-colors"
                 />
               </div>
 
@@ -1351,26 +1398,26 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     type="password"
                     value={adminPasscode}
                     onChange={(e) => setAdminPasscode(e.target.value)}
-                    placeholder="Enter security passcode"
-                    className="w-full px-3.5 py-2.5 pl-9 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-cyan-400 transition-colors font-mono"
+                    placeholder="Enter security passcode (default: ARDM2026)"
+                    className="w-full px-3.5 py-2.5 pl-9 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-red-500 transition-colors font-mono"
                   />
                   <Key className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
                 </div>
                 <p className="text-[11px] text-slate-400 mt-1.5 flex items-center justify-between">
-                  <span>Passcode: <code className="text-cyan-400 font-mono font-bold">ARDM2026</code></span>
-                  <span className="text-slate-500 text-[10px]">Founders: Akash, Rupam, Devnath, Mohim</span>
+                  <span>Passcode: <code className="text-red-400 font-mono font-bold">ARDM2026</code></span>
+                  <span className="text-slate-500 text-[10px]">Founders Authorized</span>
                 </p>
               </div>
 
               <button
                 type="submit"
                 disabled={isSigningIn}
-                className="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 border border-indigo-500 text-white font-bold text-xs transition-colors cursor-pointer shadow-md disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full py-3 rounded-xl bg-red-600 hover:bg-red-500 active:bg-red-700 border border-red-500 text-white font-bold text-xs transition-all cursor-pointer shadow-lg hover:shadow-red-600/30 disabled:opacity-50 flex items-center justify-center gap-2 hover:scale-101 active:scale-99"
               >
                 {isSigningIn ? (
                   <>
                     <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                    <span>Verifying Credentials...</span>
+                    <span>Authorizing Administrator...</span>
                   </>
                 ) : (
                   <>

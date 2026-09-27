@@ -163,15 +163,32 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
 
         {/* Philosophy & Mentorship Pillars */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-          <div className="bg-white p-8 rounded-3xl border border-slate-200/90 shadow-2xs space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
+          <div className="bg-white dark:bg-[#121215] p-8 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-4">
+            <div className="w-12 h-12 rounded-2xl bg-red-50 dark:bg-red-950/60 text-red-600 dark:text-red-400 flex items-center justify-center font-bold">
               <Compass className="w-6 h-6" />
             </div>
-            <h2 className="text-xl font-bold text-slate-900">Our Core Philosophy: "Learn. Practice. Improve."</h2>
-            <p className="text-sm text-slate-600 leading-relaxed">
+            <div>
+              <span className="text-xs font-mono font-bold text-red-700 dark:text-red-400 uppercase tracking-wider block mb-1">
+                Our Core Philosophy
+              </span>
+              <div className="space-y-2 pt-1">
+                <div className="p-3.5 rounded-2xl bg-black border border-slate-800 shadow-xl inline-flex flex-col gap-0.5">
+                  <span className="text-[#FF9933] font-black text-2xl leading-tight drop-shadow-[0_2px_8px_rgba(255,153,51,0.4)]">
+                    Learn.
+                  </span>
+                  <span className="text-white font-black text-2xl leading-tight drop-shadow-[0_2px_8px_rgba(255,255,255,0.6)]">
+                    Practice.
+                  </span>
+                  <span className="text-[#22C55E] font-black text-2xl leading-tight drop-shadow-[0_2px_8px_rgba(34,197,94,0.4)]">
+                    Improve.
+                  </span>
+                </div>
+              </div>
+            </div>
+            <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
               Examinations are not filters of fear — they are milestones of self-realization. By offering structured mock examinations, chapter blueprints, and detailed step-by-step scoring analytics, we transform examination anxiety into proven competence.
             </p>
-            <ul className="space-y-2 text-xs text-slate-600 pt-2">
+            <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-300 pt-2">
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
                 <span>Zero superficial memorization — concepts are taught through real-world applications.</span>
@@ -187,15 +204,15 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
             </ul>
           </div>
 
-          <div className="bg-white p-8 rounded-3xl border border-slate-200/90 shadow-2xs space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+          <div className="bg-white dark:bg-[#121215] p-8 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-4">
+            <div className="w-12 h-12 rounded-2xl bg-red-50 dark:bg-red-950/60 text-red-600 dark:text-red-400 flex items-center justify-center font-bold">
               <HeartHandshake className="w-6 h-6" />
             </div>
-            <h2 className="text-xl font-bold text-slate-900">The "Dada-Didi" Mentorship Tradition</h2>
-            <p className="text-sm text-slate-600 leading-relaxed">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white">The "Dada-Didi" Mentorship Tradition</h2>
+            <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
               Rather than distant lectures, our students are guided by empathetic elder brothers and sisters ("Dada" & "Didi") who have recently mastered these examinations with top marks. They share real exam-hall tips, memory mnemonics, and honest psychological reassurance.
             </p>
-            <ul className="space-y-2 text-xs text-slate-600 pt-2">
+            <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-300 pt-2">
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-blue-500 shrink-0" />
                 <span>One-on-one doubt clearing sessions where no question is considered too basic.</span>
@@ -415,7 +432,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
         </section>
 
         {/* Bottom CTA */}
-        <section className="bg-gradient-to-r from-blue-900 to-indigo-900 rounded-3xl p-8 sm:p-10 text-white text-center space-y-4 shadow-xl">
+        <section className="bg-gradient-to-r from-red-900 via-rose-950 to-red-950 dark:from-[#180a0c] dark:via-[#14080a] dark:to-[#180a0c] rounded-3xl p-8 sm:p-10 text-white text-center space-y-4 shadow-xl border border-red-900/40">
           <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
             Ready to Accelerate Your Academic Journey?
           </h2>
@@ -425,13 +442,13 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
           <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
             <button
               onClick={() => onNavigate('/courses')}
-              className="px-6 py-3 bg-white text-slate-950 font-bold rounded-xl text-xs shadow-md hover:bg-slate-100 transition-colors cursor-pointer"
+              className="px-6 py-3 bg-white text-red-950 hover:bg-slate-100 font-bold rounded-xl text-xs shadow-md transition-colors cursor-pointer"
             >
               Explore Dynamic Courses
             </button>
             <a
               href={getTelLink()}
-              className="px-5 py-3 bg-indigo-700/80 hover:bg-indigo-600 text-white font-bold rounded-xl text-xs flex items-center gap-2 transition-colors"
+              className="px-5 py-3 bg-red-700 hover:bg-red-800 text-white font-bold rounded-xl text-xs flex items-center gap-2 transition-colors shadow-md"
             >
               <PhoneCall className="w-3.5 h-3.5" />
               <span>Call Helpline: 6289139984</span>

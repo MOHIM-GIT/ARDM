@@ -218,8 +218,8 @@ export const FreeClassesSection: React.FC = () => {
                       onClick={() => setActiveVideo(item)}
                       className={`w-full text-left p-3 rounded-2xl transition-all flex items-start gap-3 cursor-pointer ${
                         isPlaying
-                          ? 'bg-red-50/80 border border-red-200 text-red-950 shadow-xs'
-                          : 'bg-white hover:bg-slate-100 border border-slate-200/60 text-slate-800'
+                          ? 'bg-red-950/80 border border-red-800 text-red-200 shadow-xs'
+                          : 'bg-slate-900/80 hover:bg-slate-800 border border-slate-800 text-slate-200'
                       }`}
                     >
                       <div className="relative w-16 h-12 rounded-xl bg-slate-900 overflow-hidden shrink-0 flex items-center justify-center text-white">

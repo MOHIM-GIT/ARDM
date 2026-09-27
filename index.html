@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark theme-black" data-theme="dark" style="color-scheme: dark;">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -182,7 +182,17 @@
     }
     </script>
   </head>
-  <body class="bg-[#F8FAFC] text-[#0F172A] antialiased selection:bg-indigo-500 selection:text-white font-sans">
+  <body class="dark theme-black bg-[#09090b] text-[#f8fafc] antialiased selection:bg-red-600 selection:text-white font-sans">
+    <script>
+      (function() {
+        document.documentElement.classList.add('dark', 'theme-black');
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.documentElement.style.colorScheme = 'dark';
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem('ardm_color_theme', 'black');
+        }
+      })();
+    </script>
     <div id="root"></div>
     <script>
       // Restore SPA path if redirected by 404.html on GitHub Pages

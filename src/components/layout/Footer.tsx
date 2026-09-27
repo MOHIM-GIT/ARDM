@@ -35,13 +35,13 @@ export const Footer: React.FC<FooterProps> = ({
   const [legalModal, setLegalModal] = useState<'privacy' | 'terms' | 'refund' | null>(null);
 
   return (
-    <footer className="bg-slate-950 text-slate-300 pt-16 pb-12 border-t border-slate-800">
+    <footer className="bg-slate-950 text-white pt-16 pb-12 border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-slate-800">
           {/* Col 1 & 2: Brand & Description */}
           <div className="lg:col-span-2 space-y-4">
             <BrandLogo size="md" light />
-            <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
+            <p className="text-xs text-white leading-relaxed max-w-sm font-normal">
               ARDM Academy is a premier modern educational institute focused on secondary education,
               standardized PROSTUTI Class 10 mock test series, technology empowerment, and free mentor guidance.
             </p>
@@ -263,26 +263,26 @@ export const Footer: React.FC<FooterProps> = ({
             <h4 className="text-xs font-mono font-bold text-white uppercase tracking-wider">
               Contact ARDM Academy
             </h4>
-            <div className="space-y-2.5 text-xs text-slate-400">
+            <div className="space-y-2.5 text-xs text-white">
               <div>
-                <strong className="text-slate-200 block text-[11px]">Helpline:</strong>
-                <a href={getTelLink()} className="hover:text-cyan-400 font-mono font-bold text-white">
+                <strong className="text-white block text-[11px]">Helpline:</strong>
+                <a href={getTelLink()} className="hover:text-red-400 font-mono font-bold text-white">
                   6289139984
                 </a>
               </div>
               <div>
-                <strong className="text-slate-200 block text-[11px]">Email:</strong>
-                <a href={getMailtoLink()} className="hover:text-cyan-400 font-mono text-slate-300 break-all">
+                <strong className="text-white block text-[11px]">Email:</strong>
+                <a href={getMailtoLink()} className="hover:text-red-400 font-mono text-white break-all">
                   ardmacademy@gmail.com
                 </a>
               </div>
               <div>
-                <strong className="text-slate-200 block text-[11px]">WhatsApp Channel:</strong>
+                <strong className="text-white block text-[11px]">WhatsApp Channel:</strong>
                 <a href={SITE_CONFIG.social.whatsappChannel} target="_blank" rel="noreferrer" className="text-emerald-400 hover:underline">
                   Join Official Broadcast
                 </a>
               </div>
-              <p className="text-[10px] text-slate-500 pt-1">
+              <p className="text-[10px] text-white/90 pt-1">
                 Kolkata, West Bengal • Support: Mon–Sun 8 AM–9 PM IST
               </p>
             </div>
@@ -290,15 +290,15 @@ export const Footer: React.FC<FooterProps> = ({
         </div>
 
         {/* Bottom Strip */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white">
           <div className="space-y-1 text-center sm:text-left">
             <p>© {new Date().getFullYear()} ARDM Academy. BUILD • PROGRESS • TOGETHER. All rights reserved.</p>
-            <p className="text-[11px] text-slate-400">
-              Founders: <span className="text-slate-300 font-semibold">Akash Paik</span> • <span className="text-slate-300 font-semibold">Rupam Paul</span> • <span className="text-slate-300 font-semibold">Devnath Pramanick</span> • <span className="text-slate-300 font-semibold">Mohim Das</span>
+            <p className="text-[11px] text-white/90">
+              Founders: <span className="text-white font-semibold">Akash Paik</span> • <span className="text-white font-semibold">Rupam Paul</span> • <span className="text-white font-semibold">Devnath Pramanick</span> • <span className="text-white font-semibold">Mohim Das</span>
             </p>
           </div>
           <div className="flex items-center gap-4">
-            <span className="font-semibold text-slate-400">PROSTUTI Class 10 Mock Test Platform</span>
+            <span className="font-semibold text-white">PROSTUTI Class 10 Mock Test Platform</span>
           </div>
         </div>
       </div>

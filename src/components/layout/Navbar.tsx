@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { BrandLogo } from '../common/BrandLogo';
 import {
   Menu,
   X,
@@ -58,8 +57,8 @@ export const Navbar: React.FC<NavbarProps> = ({
         isSidebarExpanded ? 'lg:left-64' : 'lg:left-20'
       } left-0 ${
         isScrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-xs border-b border-slate-200/90 py-2.5'
-          : 'bg-white/80 backdrop-blur-xs py-3 border-b border-slate-100'
+          ? 'bg-white/95 dark:bg-[#09090b]/95 backdrop-blur-md shadow-xs border-b border-slate-200/90 dark:border-slate-800 py-2.5'
+          : 'bg-white/80 dark:bg-[#09090b]/80 backdrop-blur-xs py-3 border-b border-slate-100 dark:border-slate-800/60'
       }`}
     >
       <div className="max-w-[1440px] mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between gap-3">
@@ -68,7 +67,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Mobile Menu Button (Opens Left-Side Animated Drawer) */}
           <button
             onClick={onOpenMobileSidebar}
-            className="p-2 rounded-xl text-slate-700 hover:text-indigo-600 hover:bg-slate-100 focus:outline-hidden lg:hidden border border-slate-200/60 shadow-2xs"
+            className="p-2 rounded-xl text-white hover:text-red-400 hover:bg-slate-800 focus:outline-hidden lg:hidden border border-slate-800 shadow-2xs cursor-pointer"
             aria-label="Open Left Navigation Menu"
             title="Open Navigation Menu"
           >
@@ -78,35 +77,20 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Desktop Sidebar Collapse / Expand Toggle */}
           <button
             onClick={onToggleSidebar}
-            className="hidden lg:flex items-center justify-center p-2 rounded-xl text-slate-500 hover:text-indigo-600 hover:bg-slate-100 border border-slate-200/60 transition-all hover:scale-102 active:scale-98"
+            className="hidden lg:flex items-center justify-center p-2 rounded-xl text-white hover:text-red-400 hover:bg-slate-800 border border-slate-800 transition-all hover:scale-102 active:scale-98 cursor-pointer"
             title={isSidebarExpanded ? 'Collapse Navigation Bar' : 'Expand Navigation Bar'}
             aria-label="Toggle Side Bar"
           >
             {isSidebarExpanded ? (
               <PanelLeftClose className="w-4 h-4" />
             ) : (
-              <PanelLeft className="w-4 h-4 text-indigo-600" />
+              <PanelLeft className="w-4 h-4 text-red-400" />
             )}
           </button>
 
-          {/* Mobile Logo View (When sidebar is off-canvas) */}
-          <div className="lg:hidden">
-            <a
-              href="/"
-              onClick={(e) => {
-                e.preventDefault();
-                onNavigate('/');
-              }}
-              className="focus:outline-hidden"
-              title="ARDM Academy Home"
-            >
-              <BrandLogo size="sm" />
-            </a>
-          </div>
-
           {/* Slogan Pill (Desktop) */}
           <div className="hidden xl:flex items-center gap-2 pl-2">
-            <span className="text-[11px] font-mono text-slate-400 font-semibold uppercase tracking-wider">
+            <span className="text-[11px] font-mono text-white/90 font-semibold uppercase tracking-wider">
               West Bengal Board & CBSE Excellence
             </span>
           </div>
@@ -117,30 +101,30 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Check Registration Status */}
           <button
             onClick={onOpenCheckRegistration}
-            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-700 bg-slate-100/90 hover:bg-slate-200/90 border border-slate-200/80 transition-all hover:scale-102 active:scale-98 shadow-2xs"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-white bg-[#18181b] hover:bg-slate-800 border border-slate-800 transition-all hover:scale-102 active:scale-98 shadow-2xs cursor-pointer"
             title="Check Student Registration Status"
           >
-            <Search className="w-3.5 h-3.5 text-slate-500" />
+            <Search className="w-3.5 h-3.5 text-white" />
             <span className="whitespace-nowrap">Check Registration</span>
           </button>
 
           {/* Practice CBT */}
           <button
             onClick={onOpenTestEngine}
-            className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-indigo-700 bg-indigo-50/90 hover:bg-indigo-100 border border-indigo-200/70 transition-all hover:scale-102 active:scale-98 shadow-2xs"
+            className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-red-400 bg-red-950/50 hover:bg-red-900/60 border border-red-900/60 transition-all hover:scale-102 active:scale-98 shadow-2xs cursor-pointer"
             title="Live CBT Computer Based Exam Simulator"
           >
-            <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+            <Sparkles className="w-3.5 h-3.5 text-red-400" />
             <span className="whitespace-nowrap">Practice CBT</span>
           </button>
 
           {/* Download Admit Card */}
           <button
             onClick={onOpenDownloadAdmitCard}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-blue-700 bg-blue-50/90 hover:bg-blue-100 border border-blue-200/70 transition-all hover:scale-102 active:scale-98 shadow-2xs"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:text-red-400 transition-all hover:scale-102 active:scale-98 shadow-2xs cursor-pointer"
             title="Download Official Admit Card"
           >
-            <Download className="w-3.5 h-3.5 text-blue-600" />
+            <Download className="w-3.5 h-3.5 text-red-500" />
             <span className="whitespace-nowrap hidden sm:inline">Download Admit Card</span>
             <span className="whitespace-nowrap sm:hidden">Admit Card</span>
           </button>
@@ -148,7 +132,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Take Mock Test */}
           <button
             onClick={onOpenRegistration}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-blue-700 via-indigo-600 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-white text-xs font-bold shadow-xs hover:shadow-sm transition-all hover:scale-102 active:scale-98"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-red-700 via-rose-600 to-red-700 hover:from-red-800 hover:to-rose-800 text-white text-xs font-bold shadow-xs hover:shadow-md transition-all hover:scale-102 active:scale-98 cursor-pointer"
           >
             <span className="hidden xs:inline">Take Mock Test</span>
             <span className="xs:hidden">Mock Test</span>
@@ -158,7 +142,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Student Portal & Status Link */}
           <button
             onClick={onOpenStudentPortal}
-            className="p-2 text-slate-600 hover:text-indigo-600 rounded-xl hover:bg-slate-100 transition-colors border border-slate-200/60 shadow-2xs"
+            className="p-2 text-white hover:text-red-400 rounded-xl hover:bg-slate-800 transition-colors border border-slate-800 shadow-2xs cursor-pointer"
             title="Student Portal & Status Check"
             aria-label="Student Portal"
           >
@@ -166,15 +150,15 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
 
           {/* Visually Separated Admin Gateway */}
-          <div className="pl-2 border-l border-slate-200 ml-0.5">
+          <div className="pl-2 border-l border-slate-800 ml-0.5">
             <button
               onClick={onOpenAdmin}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-slate-500 hover:text-slate-900 rounded-xl hover:bg-slate-100 transition-colors text-xs font-semibold border border-transparent hover:border-slate-200"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-white hover:text-red-400 rounded-xl hover:bg-slate-800 transition-colors text-xs font-semibold border border-transparent hover:border-slate-700 cursor-pointer"
               title="Admin Portal"
               aria-label="Admin Portal"
             >
-              <ShieldCheck className="w-4 h-4 text-slate-500" />
-              <span className="hidden 2xl:inline text-[11px] text-slate-500">Admin</span>
+              <ShieldCheck className="w-4 h-4" />
+              <span className="hidden 2xl:inline text-[11px]">Admin</span>
             </button>
           </div>
         </div>

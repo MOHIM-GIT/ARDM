@@ -160,7 +160,7 @@ export const SideMenuBar: React.FC<SideMenuBarProps> = ({
 
       {/* 2. Left Side Animated Navigation Bar */}
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-40 flex flex-col bg-white border-r border-slate-200/90 shadow-xl transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        className={`fixed top-0 bottom-0 left-0 z-40 flex flex-col bg-white dark:bg-[#09090b] border-r border-slate-200/90 dark:border-slate-800 shadow-xl transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
           /* Mobile Drawer Position */
           isOpenMobile ? 'translate-x-0 w-72' : '-translate-x-full lg:translate-x-0'
         } ${
@@ -170,7 +170,7 @@ export const SideMenuBar: React.FC<SideMenuBarProps> = ({
         aria-label="Side Navigation Bar"
       >
         {/* Brand Header */}
-        <div className="h-16 px-4 flex items-center justify-between border-b border-slate-100 shrink-0">
+        <div className="h-16 px-4 flex items-center justify-between border-b border-slate-100 dark:border-slate-800/80 shrink-0">
           <a
             href="/"
             onClick={(e) => {
@@ -186,7 +186,7 @@ export const SideMenuBar: React.FC<SideMenuBarProps> = ({
           {/* Mobile Close Button */}
           <button
             onClick={onCloseMobile}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 lg:hidden"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 lg:hidden cursor-pointer"
             aria-label="Close menu"
           >
             <X className="w-5 h-5" />
@@ -195,23 +195,23 @@ export const SideMenuBar: React.FC<SideMenuBarProps> = ({
           {/* Desktop Toggle Button */}
           <button
             onClick={onToggleExpand}
-            className="hidden lg:flex items-center justify-center w-7 h-7 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 border border-slate-200/60 transition-all hover:scale-105 active:scale-95"
+            className="hidden lg:flex items-center justify-center w-7 h-7 rounded-lg text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950 border border-slate-200/60 dark:border-slate-800 transition-all hover:scale-105 active:scale-95 cursor-pointer"
             title={isExpanded ? 'Collapse Navigation Bar' : 'Expand Navigation Bar'}
             aria-label={isExpanded ? 'Collapse Navigation Bar' : 'Expand Navigation Bar'}
           >
             {isExpanded ? (
-              <ChevronLeft className="w-4 h-4 text-slate-600" />
+              <ChevronLeft className="w-4 h-4 text-white" />
             ) : (
-              <ChevronRight className="w-4 h-4 text-slate-600" />
+              <ChevronRight className="w-4 h-4 text-white" />
             )}
           </button>
         </div>
 
         {/* Navigation Label Indicator (Expanded Only) */}
         {isExpanded && (
-          <div className="px-5 pt-3 pb-1 flex items-center justify-between text-[10px] font-mono uppercase tracking-wider font-bold text-slate-400">
+          <div className="px-5 pt-3 pb-1 flex items-center justify-between text-[10px] font-mono uppercase tracking-wider font-bold text-white/90">
             <span>Navigation Menu</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
           </div>
         )}
 
@@ -229,23 +229,23 @@ export const SideMenuBar: React.FC<SideMenuBarProps> = ({
                     e.preventDefault();
                     handleItemClick(item.path, item.id);
                   }}
-                  className={`relative flex items-center gap-3.5 px-3 py-2.5 rounded-xl text-xs font-semibold tracking-tight transition-all duration-200 select-none ${
+                  className={`relative flex items-center gap-3.5 px-3 py-2.5 rounded-xl text-xs font-semibold tracking-tight transition-all duration-200 select-none cursor-pointer ${
                     active
-                      ? 'bg-gradient-to-r from-indigo-50 via-indigo-50/70 to-blue-50/40 text-indigo-700 font-bold shadow-2xs'
-                      : 'text-slate-600 hover:text-indigo-700 hover:bg-slate-50'
+                      ? 'bg-gradient-to-r from-red-950/60 via-red-950/40 to-transparent text-red-400 font-bold shadow-2xs'
+                      : 'text-white hover:text-red-400 hover:bg-[#151518]'
                   } ${!isExpanded ? 'lg:justify-center lg:px-2' : ''}`}
                 >
                   {/* Active Left Indicator Bar */}
                   {active && (
-                    <span className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-gradient-to-b from-indigo-600 to-blue-600 rounded-r-full shadow-xs" />
+                    <span className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-gradient-to-b from-red-600 to-rose-600 rounded-r-full shadow-xs" />
                   )}
 
                   {/* Icon with animated micro-bounce on hover */}
                   <div
                     className={`shrink-0 flex items-center justify-center w-8 h-8 rounded-lg transition-transform duration-200 group-hover:scale-110 ${
                       active
-                        ? 'bg-indigo-600 text-white shadow-xs'
-                        : 'bg-slate-100 text-slate-500 group-hover:bg-indigo-100 group-hover:text-indigo-600'
+                        ? 'bg-red-600 text-white shadow-xs'
+                        : 'bg-[#18181d] text-white group-hover:bg-red-950 group-hover:text-red-400'
                     }`}
                   >
                     <Icon className="w-4 h-4" />
@@ -293,7 +293,7 @@ export const SideMenuBar: React.FC<SideMenuBarProps> = ({
         </nav>
 
         {/* Footer Section of Left Bar (Quick Action Shortcuts) */}
-        <div className="p-3 border-t border-slate-100 bg-slate-50/60 shrink-0 space-y-2">
+        <div className="p-3 border-t border-slate-800/80 bg-[#0c0c0e] shrink-0 space-y-2">
           {/* Check Registration Shortcut */}
           {onOpenCheckRegistration && (
             <button
@@ -301,12 +301,12 @@ export const SideMenuBar: React.FC<SideMenuBarProps> = ({
                 onCloseMobile();
                 onOpenCheckRegistration();
               }}
-              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-indigo-600 hover:bg-white border border-transparent hover:border-slate-200 transition-all ${
+              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-white hover:text-red-400 hover:bg-[#18181d] border border-transparent hover:border-slate-700 transition-all cursor-pointer ${
                 !isExpanded ? 'lg:justify-center lg:px-2' : ''
               }`}
               title="Check Registration Status"
             >
-              <Search className="w-4 h-4 text-slate-400 shrink-0" />
+              <Search className="w-4 h-4 text-white shrink-0" />
               <span className={`truncate ${!isExpanded ? 'lg:hidden' : 'block'}`}>
                 Check Status
               </span>
@@ -320,12 +320,12 @@ export const SideMenuBar: React.FC<SideMenuBarProps> = ({
                 onCloseMobile();
                 onOpenDownloadAdmitCard();
               }}
-              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-blue-700 bg-blue-50/70 hover:bg-blue-100/80 border border-blue-200/60 transition-all ${
+              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-white bg-red-950/60 hover:bg-red-900/80 border border-red-900/60 transition-all cursor-pointer ${
                 !isExpanded ? 'lg:justify-center lg:px-2' : ''
               }`}
               title="Download Official Admit Card"
             >
-              <Download className="w-4 h-4 text-blue-600 shrink-0" />
+              <Download className="w-4 h-4 text-red-400 shrink-0" />
               <span className={`truncate ${!isExpanded ? 'lg:hidden' : 'block'}`}>
                 Admit Card
               </span>
@@ -334,11 +334,11 @@ export const SideMenuBar: React.FC<SideMenuBarProps> = ({
 
           {/* Helpline Quick Link */}
           {isExpanded && (
-            <div className="pt-1 px-1 flex items-center justify-between text-[11px] text-slate-400">
+            <div className="pt-1 px-1 flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-500">
               <span className="font-mono">Helpline:</span>
               <a
                 href={getTelLink()}
-                className="font-bold text-indigo-600 hover:underline font-mono"
+                className="font-bold text-red-600 dark:text-red-400 hover:underline font-mono"
               >
                 {SITE_CONFIG.contact.phoneNumber}
               </a>

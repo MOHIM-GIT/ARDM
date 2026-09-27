@@ -71,22 +71,22 @@ export const AboutSection: React.FC = () => {
           <div className="lg:col-span-6 space-y-6">
             {/* Vision & Mission Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="p-6 rounded-2xl bg-gradient-to-br from-blue-50/80 to-indigo-50/50 border border-blue-100/80 shadow-xs">
-                <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center mb-4">
+              <div className="p-6 rounded-2xl bg-gradient-to-br from-red-50/80 to-rose-50/50 dark:from-[#181013] dark:to-[#121215] border border-red-100/80 dark:border-slate-800 shadow-xs">
+                <div className="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center mb-4">
                   <Target className="w-5 h-5" />
                 </div>
-                <h4 className="text-base font-bold text-slate-900 mb-2">Our Mission</h4>
-                <p className="text-xs text-slate-600 leading-relaxed">
+                <h4 className="text-base font-bold text-slate-900 dark:text-white mb-2">Our Mission</h4>
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                   To democratize quality board exam preparation and digital literacy so that every student, regardless of background, can compete at the highest level.
                 </p>
               </div>
 
-              <div className="p-6 rounded-2xl bg-gradient-to-br from-cyan-50/80 to-blue-50/50 border border-cyan-100/80 shadow-xs">
-                <div className="w-10 h-10 rounded-xl bg-cyan-600 text-white flex items-center justify-center mb-4">
+              <div className="p-6 rounded-2xl bg-gradient-to-br from-rose-50/80 to-red-50/50 dark:from-[#181013] dark:to-[#121215] border border-rose-100/80 dark:border-slate-800 shadow-xs">
+                <div className="w-10 h-10 rounded-xl bg-rose-600 text-white flex items-center justify-center mb-4">
                   <Compass className="w-5 h-5" />
                 </div>
-                <h4 className="text-base font-bold text-slate-900 mb-2">Our Vision</h4>
-                <p className="text-xs text-slate-600 leading-relaxed">
+                <h4 className="text-base font-bold text-slate-900 dark:text-white mb-2">Our Vision</h4>
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                   To foster a generation of curious thinkers, skilled problem solvers, and board toppers equipped with both traditional academic strength and digital fluency.
                 </p>
               </div>
@@ -140,12 +140,24 @@ export const AboutSection: React.FC = () => {
             </div>
             {/* 9 Pillars from Section 15 SEO Audit */}
             <div className="pt-6">
-              <h4 className="text-sm font-bold uppercase tracking-wider text-indigo-700 mb-4 font-mono">
+              <h4 className="text-sm font-bold uppercase tracking-wider text-red-700 dark:text-red-400 mb-4 font-mono">
                 The ARDM Learning Ecosystem & Philosophy
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                 {[
-                  { title: 'Our Core Philosophy', desc: '"Learn. Practice. Improve." Structured repetition and conceptual mastery.' },
+                  {
+                    title: 'Our Core Philosophy',
+                    desc: (
+                      <span>
+                        <span className="inline-flex items-center gap-1 font-bold px-2 py-0.5 rounded-lg bg-black text-[11px] mr-1 border border-slate-800 shadow-xs">
+                          <span className="text-[#FF9933]">Learn.</span>
+                          <span className="text-white">Practice.</span>
+                          <span className="text-[#22C55E]">Improve.</span>
+                        </span>
+                        Structured repetition and conceptual mastery.
+                      </span>
+                    ),
+                  },
                   { title: 'Dada-Didi Mentorship', desc: 'Empathetic guidance from high-scoring seniors who understand exam pressure.' },
                   { title: 'Top Exam Analytics', desc: 'Granular speed, accuracy, and negative marking feedback on every mock test.' },
                   { title: 'Free Education', desc: 'Curriculum video classes and notes for Classes 5 to 10 with zero fee barriers.' },
@@ -155,9 +167,9 @@ export const AboutSection: React.FC = () => {
                   { title: 'Easy Notes & Blueprints', desc: 'Chapter-wise summary formulas, Madhyamik suggestions, and revision guides.' },
                   { title: 'Friendly Learning', desc: 'Zero intimidation: every doubt is treated with patience, kindness, and clarity.' },
                 ].map((item, idx) => (
-                  <div key={idx} className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-indigo-200 transition-colors">
-                    <h5 className="text-xs font-bold text-slate-900 mb-1">{item.title}</h5>
-                    <p className="text-[11px] text-slate-600 leading-normal">{item.desc}</p>
+                  <div key={idx} className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#141418] border border-slate-200/80 dark:border-slate-800 hover:border-red-300 dark:hover:border-red-900/60 transition-colors">
+                    <h5 className="text-xs font-bold text-slate-900 dark:text-white mb-1">{item.title}</h5>
+                    <div className="text-[11px] text-slate-600 dark:text-slate-300 leading-normal">{item.desc}</div>
                   </div>
                 ))}
               </div>

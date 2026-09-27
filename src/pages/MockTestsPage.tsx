@@ -109,17 +109,17 @@ export const MockTestsPage: React.FC<MockTestsPageProps> = ({
 
             <button
               onClick={onOpenTestEngine}
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white hover:bg-slate-50 text-slate-800 font-semibold text-sm border border-slate-200 shadow-2xs transition-colors"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 font-semibold text-sm border border-slate-800 shadow-2xs transition-colors cursor-pointer"
             >
-              <Clock className="w-4 h-4 text-indigo-600" />
+              <Clock className="w-4 h-4 text-red-400" />
               <span>Launch Live CBT Simulator</span>
             </button>
 
             <button
               onClick={onOpenDownloadAdmitCard}
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold text-sm border border-blue-200 shadow-2xs transition-colors"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 font-semibold text-sm border border-slate-800 shadow-2xs transition-colors cursor-pointer"
             >
-              <Download className="w-4 h-4 text-blue-600" />
+              <Download className="w-4 h-4 text-red-400" />
               <span>Download Admit Card</span>
             </button>
           </div>
