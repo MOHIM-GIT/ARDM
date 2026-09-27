@@ -4,30 +4,27 @@ import path from 'path';
 import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
-  const repoName = process.env.GITHUB_REPOSITORY
-    ? `/${process.env.GITHUB_REPOSITORY.split('/')[1]}/`
-    : (process.env.BASE_URL || './');
-
   return {
-    base: repoName,
+    base: process.env.VITE_BASE_URL || './',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, '.'),
+        '@': path.resolve(import.meta.dirname, '.'),
       },
     },
     build: {
+      outDir: 'dist',
       rollupOptions: {
         input: {
-          main: path.resolve(__dirname, 'index.html'),
-          courses: path.resolve(__dirname, 'courses.html'),
-          mockTests: path.resolve(__dirname, 'mock-tests.html'),
-          results: path.resolve(__dirname, 'results.html'),
-          computerScience: path.resolve(__dirname, 'computer-science.html'),
-          ai: path.resolve(__dirname, 'ai.html'),
-          workshops: path.resolve(__dirname, 'workshops.html'),
-          about: path.resolve(__dirname, 'about.html'),
-          contact: path.resolve(__dirname, 'contact.html'),
+          main: path.resolve(import.meta.dirname, 'index.html'),
+          courses: path.resolve(import.meta.dirname, 'courses.html'),
+          mockTests: path.resolve(import.meta.dirname, 'mock-tests.html'),
+          results: path.resolve(import.meta.dirname, 'results.html'),
+          computerScience: path.resolve(import.meta.dirname, 'computer-science.html'),
+          ai: path.resolve(import.meta.dirname, 'ai.html'),
+          workshops: path.resolve(import.meta.dirname, 'workshops.html'),
+          about: path.resolve(import.meta.dirname, 'about.html'),
+          contact: path.resolve(import.meta.dirname, 'contact.html'),
         },
       },
     },

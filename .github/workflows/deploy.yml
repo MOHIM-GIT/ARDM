@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -28,21 +28,32 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'npm'
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v4
 
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
       - name: Build Vite application
-        run: npx vite build
-
-      - name: Setup GitHub Pages
-        uses: actions/configure-pages@v4
+        run: |
+          npx vite build
+          cp dist/index.html dist/404.html || true
+          touch dist/.nojekyll
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: './dist'
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages (Actions Source)
         id: deployment
         uses: actions/deploy-pages@v4
+        continue-on-error: true
+
+      - name: Deploy to gh-pages branch (Branch Source Fallback)
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist
+          branch: gh-pages

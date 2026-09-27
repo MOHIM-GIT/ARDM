@@ -143,6 +143,23 @@
   </head>
   <body class="bg-[#F8FAFC] text-[#0F172A] antialiased selection:bg-indigo-500 selection:text-white font-sans">
     <div id="root"></div>
+    <script>
+      // Restore SPA path if redirected by 404.html on GitHub Pages
+      (function() {
+        var redirect = sessionStorage.getItem('ardm_spa_redirect');
+        if (redirect) {
+          sessionStorage.removeItem('ardm_spa_redirect');
+          try {
+            var parts = window.location.pathname.split('/').filter(Boolean);
+            var repoPrefix = (window.location.hostname.endsWith('github.io') && parts.length > 0) ? '/' + parts[0] : '';
+            var target = repoPrefix + (redirect.startsWith('/') ? redirect : '/' + redirect);
+            if (window.location.pathname + window.location.search + window.location.hash !== target) {
+              window.history.replaceState(null, '', target);
+            }
+          } catch (e) {}
+        }
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -1385,12 +1385,26 @@ export async function syncFromDatabase(): Promise<void> {
 // Initialize live Server-Sent Events sync
 if (typeof window !== 'undefined') {
   syncFromDatabase();
-  try {
-    const eventSource = new EventSource('/api/events');
-    eventSource.onmessage = () => {
-      syncFromDatabase();
-    };
-  } catch {}
+  const isStaticHost =
+    window.location.hostname.endsWith('github.io') ||
+    window.location.protocol === 'file:' ||
+    window.location.hostname.includes('vercel.app') ||
+    window.location.hostname.includes('netlify.app');
+
+  if (!isStaticHost) {
+    try {
+      const eventSource = new EventSource('/api/events');
+      eventSource.onmessage = () => {
+        syncFromDatabase();
+      };
+      eventSource.onerror = () => {
+        // Silently close on backend disconnect or static deployment to prevent browser console retry spam
+        eventSource.close();
+      };
+    } catch {
+      // EventSource not supported or blocked
+    }
+  }
 }
 
 // Password Generator & Hash Helper

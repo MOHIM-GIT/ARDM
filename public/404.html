@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>ARDM Academy</title>
+    <script>
+      // Single Page Application redirect script for GitHub Pages
+      // Encodes requested path and parameters into query string, redirecting to SPA root
+      var pathSegmentsToKeep = 1;
+      var l = window.location;
+      
+      // Determine base URL if on user.github.io/repo/
+      var parts = l.pathname.split('/').filter(Boolean);
+      var isUserPage = l.hostname.endsWith('github.io') && (parts.length === 0 || l.pathname === '/');
+      var repoPrefix = (l.hostname.endsWith('github.io') && parts.length > 0) ? '/' + parts[0] : '';
+      
+      var route = l.pathname.slice(repoPrefix.length);
+      if (!route.startsWith('/')) route = '/' + route;
+      
+      sessionStorage.setItem('ardm_spa_redirect', route + l.search + l.hash);
+      window.location.replace(repoPrefix + '/');
+    </script>
+  </head>
+  <body>
+    <p>Redirecting to ARDM Academy...</p>
+  </body>
+</html>
