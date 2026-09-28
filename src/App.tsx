@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { SplashScreen } from './components/common/SplashScreen';
 import { Navbar } from './components/layout/Navbar';
 import { HeroSection } from './components/home/HeroSection';
@@ -32,14 +32,17 @@ import { ContactPage } from './pages/ContactPage';
 import { ClassDetailsPage } from './pages/ClassDetailsPage';
 import { FreeClassesPage } from './pages/FreeClassesPage';
 import { PYQsPage } from './pages/PYQsPage';
+import { SubjectDiagramPage } from './pages/SubjectDiagramPage';
+import { SubjectUltraDiagramSection } from './components/home/SubjectUltraDiagramSection';
 
-// Modals & Panels
+// Modals & Panels (Code-split for 1 Lakh+ concurrent users performance)
 import { MockTestRegistrationModal } from './components/mockTest/MockTestRegistrationModal';
-import { MockTestEngine } from './components/mockTest/MockTestEngine';
-import { AdminPanel } from './components/admin/AdminPanel';
-import { AdmitCardModal } from './components/admitCard/AdmitCardModal';
 import { StudentPortalModal } from './components/student/StudentPortalModal';
 import { SideMenuBar } from './components/layout/SideMenuBar';
+
+const MockTestEngine = lazy(() => import('./components/mockTest/MockTestEngine').then(m => ({ default: m.MockTestEngine })));
+const AdminPanel = lazy(() => import('./components/admin/AdminPanel').then(m => ({ default: m.AdminPanel })));
+const AdmitCardModal = lazy(() => import('./components/admitCard/AdmitCardModal').then(m => ({ default: m.AdmitCardModal })));
 
 import { StudentProfile } from './types';
 import { getStudents } from './services/storage';
@@ -152,6 +155,9 @@ export default function App() {
       'courses': '/courses',
       'what-we-provide': '/#what-we-provide',
       'mock-test': '/mock-tests',
+      'subject-diagram': '/subject-diagram',
+      'ultra-diagram': '/subject-diagram',
+      'diagram': '/subject-diagram',
       'pyqs': '/pyqs',
       'free-classes': '/free-classes',
       'results': '/results',
@@ -303,6 +309,16 @@ export default function App() {
         />
       )}
 
+      {(currentPath === '/subject-diagram' || currentPath === '/diagram') && (
+        <SubjectDiagramPage
+          onNavigate={handleNavigate}
+          onOpenTestEngine={(subId?: string) => {
+            if (subId) setPreselectedSubjectId(subId);
+            setTestEngineOpen(true);
+          }}
+        />
+      )}
+
       {currentPath === '/pyqs' && (
         <PYQsPage
           onNavigate={handleNavigate}
@@ -373,6 +389,8 @@ export default function App() {
         (![
           '/courses',
           '/mock-tests',
+          '/subject-diagram',
+          '/diagram',
           '/pyqs',
           '/free-classes',
           '/results',
@@ -424,8 +442,20 @@ export default function App() {
             onOpenAdmitCard={handleOpenAdmitCardForStudent}
           />
 
+          {/* Subject-Wise Ultra Diagram (Interactive Blueprint & Mastery Radar) */}
+          <SubjectUltraDiagramSection
+            onOpenTestEngine={(subId?: string) => {
+              if (subId) setPreselectedSubjectId(subId);
+              setTestEngineOpen(true);
+            }}
+            onNavigate={handleNavigate}
+          />
+
           {/* Subject-wise PYQ Section */}
-          <SubjectPYQSection onOpenAdmin={() => setAdminPanelOpen(true)} />
+          <SubjectPYQSection
+            onOpenAdmin={() => setAdminPanelOpen(true)}
+            onNavigate={handleNavigate}
+          />
 
           {/* Free Classes */}
           <FreeClassesSection />
@@ -485,15 +515,19 @@ export default function App() {
       />
 
       {/* 2. Official Admit Card Modal (Print / Save A4 PDF) */}
-      <AdmitCardModal
-        isOpen={admitCardModalOpen}
-        onClose={() => {
-          setAdmitCardModalOpen(false);
-          setIsAdminAdmitCardView(false);
-        }}
-        student={admitCardStudent}
-        isAdminView={isAdminAdmitCardView}
-      />
+      <Suspense fallback={null}>
+        {admitCardModalOpen && (
+          <AdmitCardModal
+            isOpen={admitCardModalOpen}
+            onClose={() => {
+              setAdmitCardModalOpen(false);
+              setIsAdminAdmitCardView(false);
+            }}
+            student={admitCardStudent}
+            isAdminView={isAdminAdmitCardView}
+          />
+        )}
+      </Suspense>
 
       {/* 3. Student Portal Modal (Profile, Rank, Status) */}
       <StudentPortalModal
@@ -504,18 +538,26 @@ export default function App() {
       />
 
       {/* 4. Interactive CBT Mock Test Simulator */}
-      <MockTestEngine
-        isOpen={testEngineOpen}
-        onClose={() => setTestEngineOpen(false)}
-        candidateRegId={candidateRollId}
-      />
+      <Suspense fallback={null}>
+        {testEngineOpen && (
+          <MockTestEngine
+            isOpen={testEngineOpen}
+            onClose={() => setTestEngineOpen(false)}
+            candidateRegId={candidateRollId}
+          />
+        )}
+      </Suspense>
 
       {/* 5. Full-Screen Admin Control Portal (Secure & Whitelisted) */}
-      <AdminPanel
-        isOpen={adminPanelOpen}
-        onClose={() => setAdminPanelOpen(false)}
-        onViewCandidateAdmitCard={(st) => handleOpenAdmitCardForStudent(st, true)}
-      />
+      <Suspense fallback={null}>
+        {adminPanelOpen && (
+          <AdminPanel
+            isOpen={adminPanelOpen}
+            onClose={() => setAdminPanelOpen(false)}
+            onViewCandidateAdmitCard={(st) => handleOpenAdmitCardForStudent(st, true)}
+          />
+        )}
+      </Suspense>
     </div>
   );
 }

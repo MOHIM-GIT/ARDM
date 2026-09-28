@@ -19,6 +19,7 @@ import {
   ShieldCheck,
   X,
   ExternalLink,
+  Activity,
 } from 'lucide-react';
 import { BrandLogo } from '../common/BrandLogo';
 import { SITE_CONFIG, getTelLink } from '../../config/siteConfig';
@@ -86,6 +87,14 @@ export const SideMenuBar: React.FC<SideMenuBarProps> = ({
       badgeColor: 'bg-indigo-100 text-indigo-700 border-indigo-200',
     },
     {
+      id: 'subject-diagram',
+      path: '/subject-diagram',
+      label: 'Ultra Diagram',
+      icon: Activity,
+      badge: 'Ultra',
+      badgeColor: 'bg-rose-100 text-rose-700 border-rose-200',
+    },
+    {
       id: 'pyqs',
       path: '/pyqs',
       label: 'PYQs',
@@ -141,6 +150,7 @@ export const SideMenuBar: React.FC<SideMenuBarProps> = ({
     if (item.path === '/' && activeSection === 'home') return true;
     if (item.path === '/#what-we-provide' && (activeSection === 'what-we-provide' || activeSection === '/#what-we-provide')) return true;
     if (item.path === '/mock-tests' && (activeSection === 'mock-test' || activeSection === '/mock-tests')) return true;
+    if (item.path === '/subject-diagram' && (activeSection === 'subject-diagram' || activeSection === '/subject-diagram' || activeSection === 'ultra-diagram' || activeSection === '/#subject-diagram')) return true;
     if (item.path === '/courses' && activeSection.startsWith('/courses')) return true;
     if (item.path === '/results' && activeSection.startsWith('/results')) return true;
     if (item.path === '/free-classes' && activeSection === '/free-classes') return true;

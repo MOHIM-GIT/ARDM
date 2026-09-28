@@ -53,7 +53,9 @@ import {
   Cpu,
   Layers,
   ListChecks,
+  Activity,
 } from 'lucide-react';
+import { SubjectUltraDiagramSection } from '../home/SubjectUltraDiagramSection';
 import {
   getStudents,
   saveStudents,
@@ -186,7 +188,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
   // Active Admin View (Sidebar navigation)
   const [activeTab, setActiveTab] = useState<
-    'overview' | 'students' | 'payments' | 'banners' | 'courses' | 'course_enrollments' | 'merit_list' | 'examinations' | 'venues' | 'cbt' | 'results' | 'syllabus' | 'qr' | 'pyqs' | 'classes' | 'webinar' | 'toppers' | 'tech_dept' | 'pdf' | 'sheets' | 'audit'
+    'overview' | 'students' | 'payments' | 'banners' | 'courses' | 'course_enrollments' | 'merit_list' | 'examinations' | 'venues' | 'cbt' | 'results' | 'syllabus' | 'qr' | 'pyqs' | 'classes' | 'webinar' | 'toppers' | 'tech_dept' | 'pdf' | 'sheets' | 'audit' | 'diagram'
   >('overview');
 
   // Core Data States
@@ -521,33 +523,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
   if (!isOpen) return null;
 
-  // 1-Click Fast-Track Login for verified administrators
-  const handleFastTrackLogin = async (targetEmail: string) => {
-    setIsSigningIn(true);
-    setAuthError(null);
-    setAuthNotice(null);
-    try {
-      const verification = await verifyAdminOnServer(targetEmail, 'ARDM2026');
-      if (verification.authorized && verification.role === 'ADMIN') {
-        const assigned = verification.email || targetEmail;
-        setCurrentUserEmail(assigned);
-        if (verification.token) {
-          sessionStorage.setItem('ardm_admin_token', verification.token);
-          localStorage.setItem('ardm_admin_session_email', assigned);
-        }
-      } else {
-        setAuthError(verification.error || 'Access Denied: Account is not in authorized admin group.');
-      }
-    } catch {
-      // Fallback direct instant session
-      setCurrentUserEmail(targetEmail);
-      sessionStorage.setItem('ardm_admin_token', `admin_local_${Date.now()}`);
-      localStorage.setItem('ardm_admin_session_email', targetEmail);
-    } finally {
-      setIsSigningIn(false);
-    }
-  };
-
   // Google Sign-In with auto 503 Varnish protection
   const handleGoogleSignIn = async () => {
     setIsSigningIn(true);
@@ -577,7 +552,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       const msg = err?.message || String(err);
       if (msg.includes('auth/unauthorized-domain')) {
         setAuthError(
-          'Google OAuth domain restriction on GitHub Pages: Please sign in directly above using your Administrator Email and Master Security Passcode (ARDM2026).'
+          'Google OAuth domain restriction: Please sign in using your authorized Administrator Email and Master Security Passcode.'
         );
       } else if (
         msg.includes('503') ||
@@ -586,7 +561,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
         msg.includes('popup') ||
         msg.includes('network')
       ) {
-        setAuthError('Google Sign-In connection was interrupted (503). Please sign in using your administrator email and passcode below.');
+        setAuthError('Google Sign-In connection was interrupted. Please sign in using your administrator email and passcode below.');
       } else {
         setAuthError(err?.message || 'Google Authentication failed. Please sign in using your administrator credentials below.');
       }
@@ -601,17 +576,21 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     setAuthError(null);
     setAuthNotice(null);
     if (!adminInputEmail.trim()) {
-      setAuthError('Please enter your authorized administrator Gmail address (e.g. ardmacademy@gmail.com).');
+      setAuthError('Please enter your authorized administrator email address.');
+      return;
+    }
+    if (!adminPasscode.trim()) {
+      setAuthError('Please enter your master security passcode.');
       return;
     }
     const email = adminInputEmail.trim().toLowerCase();
-    const passcode = adminPasscode.trim() || 'ARDM2026';
+    const passcode = adminPasscode.trim();
 
     setIsSigningIn(true);
     try {
       const verification = await verifyAdminOnServer(email, passcode);
       if (verification.authorized && verification.role === 'ADMIN') {
-        const assigned = verification.email || email || 'ardmacademy@gmail.com';
+        const assigned = verification.email || email;
         setCurrentUserEmail(assigned);
         setAdminInputEmail('');
         setAdminPasscode('');
@@ -620,14 +599,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           localStorage.setItem('ardm_admin_session_email', assigned);
         }
       } else {
-        setAuthError(verification.error || 'Access Denied: The provided credentials do not have administrative privileges.');
+        setAuthError(verification.error || 'Access Denied: Invalid credentials or account does not have administrative privileges.');
       }
     } catch {
-      // In case of any browser network issue, immediately grant verified session
-      const fallbackEmail = email || 'ardmacademy@gmail.com';
-      setCurrentUserEmail(fallbackEmail);
-      sessionStorage.setItem('ardm_admin_token', `admin_static_tok_${Date.now()}`);
-      localStorage.setItem('ardm_admin_session_email', fallbackEmail);
+      setAuthError('Authentication service could not be reached. Please check your network and credentials.');
     } finally {
       setIsSigningIn(false);
     }
@@ -1819,33 +1794,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               </div>
               <h3 className="text-xl font-bold tracking-tight">Admin Portal Authentication</h3>
               <p className="text-xs text-slate-400 leading-relaxed max-w-sm mx-auto">
-                Sign in with your verified administrator account to manage candidate registrations, admit cards, exams, and payments.
-              </p>
-            </div>
-
-            {/* Direct Official Academy Gmail Connection */}
-            <div className="p-3.5 rounded-2xl bg-gradient-to-r from-red-950/80 via-slate-900 to-slate-950 border border-red-800/80 text-left space-y-2.5">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-mono text-red-300 font-bold uppercase tracking-wider flex items-center gap-1.5">
-                  <Mail className="w-3.5 h-3.5 text-red-400" />
-                  Official Academy Gmail
-                </span>
-                <span className="text-[10px] text-emerald-400 font-mono font-bold flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  Direct Connection
-                </span>
-              </div>
-              <button
-                type="button"
-                onClick={() => handleFastTrackLogin('ardmacademy@gmail.com')}
-                disabled={isSigningIn}
-                className="w-full py-2.5 px-3 rounded-xl bg-red-600 hover:bg-red-500 active:bg-red-700 text-white text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition-all hover:scale-101 active:scale-99 shadow-md"
-              >
-                <Mail className="w-4 h-4 text-white" />
-                <span>Direct Access: ardmacademy@gmail.com</span>
-              </button>
-              <p className="text-[10px] text-slate-400 text-center">
-                Individual founders must sign in strictly through their authorized individual Gmail credentials.
+                Sign in with your authorized administrator credentials to access the ARDM administration suite.
               </p>
             </div>
 
@@ -1874,7 +1823,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   type="email"
                   value={adminInputEmail}
                   onChange={(e) => setAdminInputEmail(e.target.value)}
-                  placeholder="Enter authorized administrator Gmail (e.g. name@gmail.com)"
+                  placeholder="Enter administrator email address"
                   className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-red-500 transition-colors"
                 />
               </div>
@@ -1888,15 +1837,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     type="password"
                     value={adminPasscode}
                     onChange={(e) => setAdminPasscode(e.target.value)}
-                    placeholder="Enter security passcode (default: ARDM2026)"
+                    placeholder="Enter security passcode"
                     className="w-full px-3.5 py-2.5 pl-9 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-red-500 transition-colors font-mono"
                   />
                   <Key className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
                 </div>
-                <p className="text-[11px] text-slate-400 mt-1.5 flex items-center justify-between">
-                  <span>Passcode: <code className="text-red-400 font-mono font-bold">ARDM2026</code></span>
-                  <span className="text-slate-500 text-[10px]">Verified Administrators</span>
-                </p>
               </div>
 
               <button
@@ -1988,6 +1933,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 { id: 'syllabus', label: 'Syllabus Management', icon: GraduationCap },
                 { id: 'qr', label: 'Admit Card QR', icon: QrCode },
                 { id: 'pyqs', label: 'Subject-wise PYQs', icon: FileText },
+                { id: 'diagram', label: 'Subject Ultra Diagram', icon: Activity },
                 { id: 'webinar', label: 'AI & Coding Webinar', icon: BrainCircuit },
                 { id: 'toppers', label: 'State Toppers Table', icon: Sparkles },
                 { id: 'tech_dept', label: 'Tech Dept Editor', icon: Cpu },
@@ -3895,6 +3841,33 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+            )}
+
+            {/* VIEW: SUBJECT ULTRA DIAGRAM PREVIEW */}
+            {activeTab === 'diagram' && (
+              <div className="space-y-4">
+                <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div>
+                    <h3 className="text-lg font-bold text-slate-900">Subject-Wise Ultra Diagram Live Hub</h3>
+                    <p className="text-xs text-slate-500">
+                      Live interactive preview of radial blueprints, 6-axis mastery radar, knowledge mind maps, and mark predictors.
+                    </p>
+                  </div>
+                  <a
+                    href="#subject-diagram"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-colors inline-flex items-center gap-1.5"
+                  >
+                    <span>Open in Live Page</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+
+                <div className="rounded-3xl overflow-hidden shadow-sm border border-slate-800">
+                  <SubjectUltraDiagramSection />
                 </div>
               </div>
             )}

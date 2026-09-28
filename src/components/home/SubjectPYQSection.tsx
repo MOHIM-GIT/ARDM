@@ -20,9 +20,10 @@ import { PYQItem } from '../../types';
 
 interface SubjectPYQSectionProps {
   onOpenAdmin?: () => void;
+  onNavigate?: (path: string) => void;
 }
 
-export const SubjectPYQSection: React.FC<SubjectPYQSectionProps> = ({ onOpenAdmin }) => {
+export const SubjectPYQSection: React.FC<SubjectPYQSectionProps> = ({ onOpenAdmin, onNavigate }) => {
   const [pyqs, setPyqs] = useState<PYQItem[]>([]);
 
   useEffect(() => {
@@ -111,15 +112,30 @@ export const SubjectPYQSection: React.FC<SubjectPYQSectionProps> = ({ onOpenAdmi
           })}
         </div>
 
-        {/* Note banner */}
-        <div className="mt-10 p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>
-              All solved PYQs are mapped according to official board curriculum marking criteria.
-            </span>
+        {/* Note banner & Ultra Diagram Crosslink */}
+        <div className="mt-10 p-5 rounded-2xl bg-gradient-to-r from-slate-900 to-blue-950 border border-blue-900/40 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div>
+              <span className="font-bold text-white block">
+                Analyze Subject Weightage, Radial Blueprints & Mastery Radar
+              </span>
+              <span className="text-white/80 text-[11px]">
+                Explore our interactive Subject-Wise Ultra Diagram with chapter mark distribution and 6-axis mastery charts.
+              </span>
+            </div>
           </div>
-          <span className="text-slate-400 text-[11px] font-mono">Updated for 2026 Batch</span>
+          {onNavigate && (
+            <button
+              onClick={() => onNavigate('/subject-diagram')}
+              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shrink-0 transition-colors shadow-2xs cursor-pointer flex items-center gap-1.5"
+            >
+              <span>Explore Ultra Diagram</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
       </div>
     </section>

@@ -14,6 +14,7 @@ export default defineConfig(() => {
     },
     build: {
       outDir: 'dist',
+      chunkSizeWarningLimit: 1200,
       rollupOptions: {
         input: {
           main: path.resolve(import.meta.dirname, 'index.html'),
@@ -25,6 +26,16 @@ export default defineConfig(() => {
           workshops: path.resolve(import.meta.dirname, 'workshops.html'),
           about: path.resolve(import.meta.dirname, 'about.html'),
           contact: path.resolve(import.meta.dirname, 'contact.html'),
+        },
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules/lucide-react')) {
+              return 'icons';
+            }
+            if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
+              return 'vendor-react';
+            }
+          },
         },
       },
     },

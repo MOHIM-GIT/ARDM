@@ -190,38 +190,20 @@ export async function verifyAdminOnServer(
   }
 
   // 1. Check if email is an authorized Founder / Admin
-  const isWhitelistedEmail =
-    FALLBACK_ADMIN_EMAILS.includes(cleanEmail) ||
-    cleanEmail.includes('mohimdas') ||
-    cleanEmail.includes('akashpaik') ||
-    cleanEmail.includes('rupampaul') ||
-    cleanEmail.includes('pramanick') ||
-    cleanEmail.includes('ardmacademy');
+  const isWhitelistedEmail = FALLBACK_ADMIN_EMAILS.includes(cleanEmail);
 
   // 2. Check if passcode matches Master Passcode
   const isValidPasscode =
-    FALLBACK_MASTER_PASSCODES.some((p) => p.toLowerCase() === cleanPasscode.toLowerCase()) ||
-    cleanPasscode.toLowerCase().includes('ardm') ||
-    cleanPasscode.includes('2026');
+    cleanPasscode &&
+    FALLBACK_MASTER_PASSCODES.some((p) => p.toLowerCase() === cleanPasscode.toLowerCase());
 
-  // If either email is a founder OR passcode is provided OR default requested
-  if (isWhitelistedEmail || isValidPasscode || (!cleanEmail && !cleanPasscode)) {
-    const assignedEmail = cleanEmail || 'mohimdas300@gmail.com';
+  // Strictly require BOTH whitelisted email AND valid passcode if verifying in fallback mode
+  if (cleanEmail && isWhitelistedEmail && isValidPasscode) {
     const token = `admin_static_tok_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
     return {
       authorized: true,
       role: 'ADMIN',
       token,
-      email: assignedEmail,
-    };
-  }
-
-  // If user entered some other email with any passcode 6+ chars
-  if (cleanEmail && cleanPasscode.length >= 4) {
-    return {
-      authorized: true,
-      role: 'ADMIN',
-      token: `admin_static_tok_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
       email: cleanEmail,
     };
   }
@@ -229,7 +211,7 @@ export async function verifyAdminOnServer(
   return {
     authorized: false,
     role: 'STUDENT',
-    error: 'Access Denied: The provided email or passcode is invalid. Use Master Passcode: ARDM2026 or click Founder Quick Login.',
+    error: 'Access Denied: Invalid administrator email or security passcode.',
   };
 }
 

@@ -11,6 +11,7 @@ import {
   PanelLeftClose,
   PanelLeft,
   GraduationCap,
+  Activity,
 } from 'lucide-react';
 import { SITE_CONFIG, getTelLink } from '../../config/siteConfig';
 
@@ -116,6 +117,16 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <Sparkles className="w-3.5 h-3.5 text-red-400" />
             <span className="whitespace-nowrap">Practice CBT</span>
+          </button>
+
+          {/* Subject Ultra Diagram */}
+          <button
+            onClick={() => onNavigate('/subject-diagram')}
+            className="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-blue-400 bg-blue-950/40 hover:bg-blue-900/50 border border-blue-800/60 transition-all hover:scale-102 active:scale-98 shadow-2xs cursor-pointer"
+            title="Subject-Wise Ultra Diagram & Mastery Blueprint"
+          >
+            <Activity className="w-3.5 h-3.5 text-blue-400" />
+            <span className="whitespace-nowrap">Ultra Diagram</span>
           </button>
 
           {/* Download Admit Card */}
