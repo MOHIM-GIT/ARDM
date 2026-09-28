@@ -67,10 +67,10 @@ export const SocialMediaSection: React.FC = () => {
             <Share2 className="w-3.5 h-3.5" />
             <span>Connect Across Platforms</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
             Follow ARDM Academy on Social Media
           </h2>
-          <p className="text-xs sm:text-sm text-slate-400">
+          <p className="text-xs sm:text-sm text-slate-100 font-medium">
             Join thousands of Class 10 candidates receiving daily syllabus updates, free formula cards, and video guidance.
           </p>
         </div>
@@ -89,16 +89,16 @@ export const SocialMediaSection: React.FC = () => {
                   <div className={`w-11 h-11 rounded-xl bg-gradient-to-tr ${ch.color} text-white flex items-center justify-center shadow-xs`}>
                     {ch.icon}
                   </div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider bg-slate-900 px-2 py-0.5 rounded">
+                  <span className="text-[10px] font-bold text-white uppercase tracking-wider bg-slate-900 px-2 py-0.5 rounded border border-slate-700">
                     {ch.badge}
                   </span>
                 </div>
 
-                <h3 className="text-sm font-bold text-white mb-1.5 flex items-center gap-1 group-hover:text-cyan-400 transition-colors">
+                <h3 className="text-sm font-bold text-white mb-1.5 flex items-center gap-1 group-hover:text-red-400 transition-colors">
                   <span>{ch.name}</span>
                   <ExternalLink className="w-3 h-3 opacity-60" />
                 </h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <p className="text-xs text-slate-100 leading-relaxed font-normal">
                   {ch.desc}
                 </p>
               </div>

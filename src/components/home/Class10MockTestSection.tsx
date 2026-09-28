@@ -139,22 +139,22 @@ export const Class10MockTestSection: React.FC<Class10MockTestSectionProps> = ({
 
             <form
               onSubmit={handleSearch}
-              className="mt-6 flex flex-col sm:flex-row gap-2 max-w-md mx-auto"
+              className="mt-6 flex flex-col sm:flex-row gap-2 max-w-lg mx-auto"
             >
               <input
                 type="text"
                 required
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Enter Registration ID, Mobile, or Email"
-                className="flex-1 px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 text-xs focus:outline-none focus:bg-white/20 font-mono"
+                placeholder="Search by Unique ID, Reg ID, Mobile, or Email..."
+                className="flex-1 px-4 py-3 rounded-xl bg-white/10 border border-white/25 text-white placeholder:text-white/70 text-xs focus:outline-none focus:bg-white/20 font-mono shadow-inner"
               />
               <button
                 type="submit"
-                className="px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs rounded-xl shadow-md transition-colors flex items-center justify-center gap-1.5"
+                className="px-6 py-3 bg-red-600 hover:bg-red-500 active:bg-red-700 text-white font-bold text-xs rounded-xl shadow-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer hover:scale-102"
               >
                 <Search className="w-3.5 h-3.5" />
-                <span>Search Record</span>
+                <span>Search Unique ID / Reg</span>
               </button>
             </form>
           </div>
@@ -166,7 +166,7 @@ export const Class10MockTestSection: React.FC<Class10MockTestSectionProps> = ({
                 <div className="bg-white text-slate-900 rounded-2xl p-6 shadow-xl border border-slate-200 space-y-4">
                   <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                     <div>
-                      <span className="text-[10px] font-mono text-slate-400 uppercase">
+                      <span className="text-[10px] font-mono text-slate-500 uppercase font-bold">
                         Candidate Record Found
                       </span>
                       <h4 className="text-base font-bold text-slate-900">{searchResult.fullName}</h4>
@@ -186,28 +186,28 @@ export const Class10MockTestSection: React.FC<Class10MockTestSectionProps> = ({
 
                   <div className="grid grid-cols-2 gap-3 text-xs">
                     <div>
-                      <span className="text-slate-400 block text-[10px]">Registration ID:</span>
-                      <strong className="font-mono text-indigo-700 text-sm">
+                      <span className="text-slate-500 block text-[10px] font-semibold">Unique Registration ID:</span>
+                      <strong className="font-mono text-red-600 text-sm font-bold">
                         {searchResult.registrationId}
                       </strong>
                     </div>
 
                     <div>
-                      <span className="text-slate-400 block text-[10px]">Contact Mobile:</span>
-                      <span className="font-mono text-slate-800">
+                      <span className="text-slate-500 block text-[10px] font-semibold">Contact Mobile:</span>
+                      <span className="font-mono text-slate-900 font-bold">
                         +91 {searchResult.mobile}
                       </span>
                     </div>
 
                     <div>
-                      <span className="text-slate-400 block text-[10px]">School & Board:</span>
+                      <span className="text-slate-500 block text-[10px] font-semibold">School & Board:</span>
                       <span className="text-slate-800 font-medium">
                         {searchResult.school} ({searchResult.board})
                       </span>
                     </div>
 
                     <div>
-                      <span className="text-slate-400 block text-[10px]">Admit Card Status:</span>
+                      <span className="text-slate-500 block text-[10px] font-semibold">Admit Card Status:</span>
                       <span
                         className={`font-bold ${
                           searchResult.admitCardStatus === 'Available'

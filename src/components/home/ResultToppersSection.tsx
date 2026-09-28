@@ -11,6 +11,7 @@ import {
   KeyRound,
   ShieldCheck,
   UserCheck,
+  Sparkles,
 } from 'lucide-react';
 import { getToppers, getSiteSettings, getStudents } from '../../services/storage';
 import { TopperRecord, SiteSettings, StudentProfile } from '../../types';
@@ -27,9 +28,10 @@ export const ResultToppersSection: React.FC<ResultToppersSectionProps> = ({
   const [toppers, setToppers] = useState<TopperRecord[]>([]);
   const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null);
 
-  // Search Scorecard
+  // Search Scorecard & Unique ID
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResult, setSearchResult] = useState<StudentProfile | null>(null);
+  const [matchedTopper, setMatchedTopper] = useState<TopperRecord | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
 
   useEffect(() => {
@@ -43,20 +45,35 @@ export const ResultToppersSection: React.FC<ResultToppersSectionProps> = ({
     const query = searchQuery.trim().toLowerCase();
     if (!query) {
       setSearchResult(null);
+      setMatchedTopper(null);
       return;
     }
 
     const all = getStudents();
     const cleanPhone = query.replace(/[^0-9]/g, '');
 
-    const found = all.find(
+    // 1. Search registered students by Unique Registration ID, internal ID, mobile, or email
+    const foundStudent = all.find(
       (s) =>
         s.registrationId.toLowerCase() === query ||
+        (s.id && s.id.toLowerCase() === query) ||
         (cleanPhone.length >= 10 && s.mobile.replace(/[^0-9]/g, '') === cleanPhone) ||
-        s.email.toLowerCase() === query
+        s.email.toLowerCase() === query ||
+        s.fullName.toLowerCase() === query
     );
 
-    setSearchResult(found || null);
+    // 2. Search official State Top 10 Merit List by Unique ID or Student Name
+    const currentToppers = getToppers();
+    const foundTopper = currentToppers.find(
+      (t) =>
+        (t.uniqueId && t.uniqueId.toLowerCase() === query) ||
+        t.studentName.toLowerCase() === query ||
+        `rank ${t.rank}` === query ||
+        `#${t.rank}` === query
+    );
+
+    setSearchResult(foundStudent || null);
+    setMatchedTopper(foundTopper || null);
   };
 
   const renderBadge = (badge: string) => {
@@ -240,46 +257,106 @@ export const ResultToppersSection: React.FC<ResultToppersSectionProps> = ({
           </div>
         </div>
 
-        {/* Individual Candidate Scorecard Checker */}
-        <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 rounded-3xl p-8 sm:p-10 text-white shadow-xl">
+        {/* Individual Candidate & Unique ID Scorecard Checker */}
+        <div className="bg-gradient-to-r from-red-950 via-slate-900 to-slate-950 rounded-3xl p-8 sm:p-10 text-white shadow-xl border border-red-900/60">
           <div className="max-w-2xl mx-auto text-center space-y-3 mb-8">
-            <span className="text-xs font-mono uppercase tracking-wider text-cyan-400 font-semibold">
-              Candidate Scorecard Portal
+            <span className="text-xs font-mono uppercase tracking-wider text-red-300 font-semibold flex items-center justify-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>Candidate Scorecard & Unique ID Search Portal</span>
             </span>
-            <h3 className="text-2xl font-bold">Search Your Rank & Verified Scorecard</h3>
-            <p className="text-xs sm:text-sm text-slate-300">
-              Enter your Registration ID (e.g. ARDM-2026-8942), mobile number, or email to view your result details.
+            <h3 className="text-2xl font-bold text-white">Search Your State Rank & Verified Scorecard</h3>
+            <p className="text-xs sm:text-sm text-slate-100 font-medium">
+              Enter your Unique ID (e.g. ARDM-2026-XXXX / ARDM-2025-XXXX), Roll Number, registered mobile number, or candidate name.
             </p>
 
             <form
               onSubmit={handleSearchScorecard}
-              className="mt-6 flex flex-col sm:flex-row gap-2 max-w-md mx-auto"
+              className="mt-6 flex flex-col sm:flex-row gap-2 max-w-lg mx-auto"
             >
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Enter Registration ID or Mobile"
-                className="flex-1 px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 text-xs focus:outline-none focus:bg-white/20 font-mono"
+                placeholder="Search by Unique ID, Reg ID, Mobile..."
+                className="flex-1 px-4 py-3 rounded-xl bg-white/10 border border-white/25 text-white placeholder:text-white/70 text-xs focus:outline-none focus:bg-white/20 font-mono shadow-inner"
               />
               <button
                 type="submit"
-                className="px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs rounded-xl shadow-md transition-colors"
+                className="px-6 py-3 bg-red-600 hover:bg-red-500 active:bg-red-700 text-white font-bold text-xs rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer hover:scale-102"
               >
-                Search Scorecard
+                <Search className="w-4 h-4" />
+                <span>Search by Unique ID</span>
               </button>
             </form>
           </div>
 
           {/* Search Result Card */}
           {hasSearched && (
-            <div className="max-w-xl mx-auto animate-in fade-in duration-200">
-              {searchResult ? (
+            <div className="max-w-xl mx-auto space-y-4 animate-in fade-in duration-200">
+              {/* If official state topper matched */}
+              {matchedTopper && (
+                <div className="bg-white text-slate-900 rounded-2xl p-6 shadow-xl border-2 border-amber-400 space-y-4">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-mono font-bold text-amber-600 uppercase bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                          Official State Top 10 Merit List
+                        </span>
+                        <span className="font-mono text-xs font-bold text-slate-500">
+                          {matchedTopper.year || '2025 Mock Test Series'}
+                        </span>
+                      </div>
+                      <h4 className="text-xl font-black text-slate-900 mt-1">{matchedTopper.studentName}</h4>
+                    </div>
+                    {renderBadge(matchedTopper.badge)}
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 text-xs">
+                    <div>
+                      <span className="text-slate-500 block text-[10px] font-semibold">Unique Candidate ID:</span>
+                      <strong className="font-mono font-bold text-red-600 text-sm">
+                        {matchedTopper.uniqueId}
+                      </strong>
+                    </div>
+
+                    <div>
+                      <span className="text-slate-500 block text-[10px] font-semibold">Official State Rank:</span>
+                      <span className="font-mono font-black text-amber-600 text-base">
+                        #{matchedTopper.rank} In State
+                      </span>
+                    </div>
+
+                    <div>
+                      <span className="text-slate-500 block text-[10px] font-semibold">Score Achieved:</span>
+                      <span className="font-black text-slate-900 text-sm">
+                        {matchedTopper.score} / {matchedTopper.totalMarks} ({matchedTopper.percentage}%)
+                      </span>
+                    </div>
+
+                    <div>
+                      <span className="text-slate-500 block text-[10px] font-semibold">School & Center:</span>
+                      <span className="font-medium text-slate-800 truncate block">
+                        {matchedTopper.schoolName || 'ARDM Mentorship Academy'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-600">
+                    <span>Mentorship: {matchedTopper.teachingInstituteName}</span>
+                    <span className="text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                      State Top Merit Verified
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* If candidate registered profile matched */}
+              {searchResult && (
                 <div className="bg-white text-slate-900 rounded-2xl p-6 shadow-xl border border-slate-200 space-y-4">
                   <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                     <div>
-                      <span className="text-[10px] font-mono text-slate-400 uppercase">
-                        Candidate Found
+                      <span className="text-[10px] font-mono text-slate-500 uppercase font-bold">
+                        Candidate Registration Found
                       </span>
                       <h4 className="text-lg font-bold text-slate-900">{searchResult.fullName}</h4>
                     </div>
@@ -290,28 +367,28 @@ export const ResultToppersSection: React.FC<ResultToppersSectionProps> = ({
 
                   <div className="grid grid-cols-2 gap-3 text-xs">
                     <div>
-                      <span className="text-slate-400 block text-[10px]">Registration ID:</span>
-                      <strong className="font-mono font-bold text-indigo-700 text-sm">
+                      <span className="text-slate-500 block text-[10px] font-semibold">Unique Registration ID:</span>
+                      <strong className="font-mono font-bold text-red-600 text-sm">
                         {searchResult.registrationId}
                       </strong>
                     </div>
 
                     <div>
-                      <span className="text-slate-400 block text-[10px]">CBT State Rank:</span>
-                      <span className="font-mono font-extrabold text-indigo-700 text-sm">
+                      <span className="text-slate-500 block text-[10px] font-semibold">CBT State Rank:</span>
+                      <span className="font-mono font-extrabold text-red-600 text-sm">
                         {searchResult.examRank ? `#${searchResult.examRank}` : 'Pending Exam'}
                       </span>
                     </div>
 
                     <div>
-                      <span className="text-slate-400 block text-[10px]">Total Score:</span>
+                      <span className="text-slate-500 block text-[10px] font-semibold">Total Score:</span>
                       <span className="font-bold text-slate-900">
                         {searchResult.totalMarks || 'N/A'}
                       </span>
                     </div>
 
                     <div>
-                      <span className="text-slate-400 block text-[10px]">Assigned Venue:</span>
+                      <span className="text-slate-500 block text-[10px] font-semibold">Assigned Venue:</span>
                       <span className="font-medium text-slate-800">
                         {searchResult.venueName || 'ARDM Central Hub'}
                       </span>
@@ -319,22 +396,25 @@ export const ResultToppersSection: React.FC<ResultToppersSectionProps> = ({
                   </div>
 
                   <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
-                    <span className="text-[11px] text-slate-500">
+                    <span className="text-[11px] text-slate-600">
                       Subjects: {searchResult.selectedSubjectNames.join(', ')}
                     </span>
                     {onOpenStudentPortal && (
                       <button
                         onClick={onOpenStudentPortal}
-                        className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-xs"
+                        className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold shadow-xs cursor-pointer"
                       >
                         Open Student Portal
                       </button>
                     )}
                   </div>
                 </div>
-              ) : (
-                <div className="p-4 bg-white/10 rounded-2xl border border-white/20 text-center text-xs text-slate-300">
-                  Registration not found. Please check your details and try again.
+              )}
+
+              {/* If no match found */}
+              {!searchResult && !matchedTopper && (
+                <div className="p-5 bg-white/10 rounded-2xl border border-white/25 text-center text-xs text-white font-medium shadow-md">
+                  No record found for <span className="font-mono font-bold text-amber-300">"{searchQuery}"</span>. Please check your Unique ID, Registration number, or Mobile and try again.
                 </div>
               )}
             </div>

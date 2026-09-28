@@ -16,6 +16,9 @@ import {
   PhoneCall,
   Share2,
   Check,
+  Video,
+  Play,
+  X,
 } from 'lucide-react';
 import { getCourses, enrollInCourse } from '../services/storage';
 import { Course } from '../types';
@@ -35,6 +38,20 @@ export const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
 }) => {
   const [course, setCourse] = useState<Course | null>(null);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [activeVideoModal, setActiveVideoModal] = useState<{ title: string; url: string } | null>(null);
+
+  const formatVideoEmbed = (url: string) => {
+    if (!url) return '';
+    if (url.includes('youtube.com/watch?v=')) {
+      const id = url.split('v=')[1]?.split('&')[0];
+      return `https://www.youtube.com/embed/${id}?autoplay=1`;
+    }
+    if (url.includes('youtu.be/')) {
+      const id = url.split('youtu.be/')[1]?.split('?')[0];
+      return `https://www.youtube.com/embed/${id}?autoplay=1`;
+    }
+    return url;
+  };
 
   useEffect(() => {
     const allCourses = getCourses().filter((c) => c.publishStatus === 'Published');
@@ -194,8 +211,8 @@ export const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
                 </div>
               )}
 
-              {/* Course Curriculum Modules */}
-              {course.courseContent && course.courseContent.length > 0 && (
+              {/* Course Curriculum & Video Lessons Modules */}
+              {((course.modules && course.modules.length > 0) || (course.courseContent && course.courseContent.length > 0)) && (
                 <div className="pt-5 border-t border-slate-100 space-y-4">
                   <div className="flex items-center justify-between">
                     <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
@@ -203,25 +220,90 @@ export const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
                       <span>Curriculum & Learning Modules</span>
                     </h2>
                     <span className="text-xs font-mono font-bold text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded-full">
-                      {course.courseContent.length} Modules
+                      {course.modules?.length || course.courseContent.length} Modules
                     </span>
                   </div>
 
-                  <div className="space-y-2.5">
-                    {course.courseContent.map((moduleText, idx) => (
-                      <div
-                        key={idx}
-                        className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-start gap-3"
-                      >
-                        <span className="w-6 h-6 rounded-lg bg-indigo-600 text-white font-mono text-xs font-bold flex items-center justify-center shrink-0">
-                          {idx + 1}
-                        </span>
-                        <div className="text-xs text-slate-800 font-medium pt-0.5 leading-snug">
-                          {moduleText}
+                  {course.modules && course.modules.length > 0 ? (
+                    <div className="space-y-4">
+                      {course.modules.map((mod, modIdx) => (
+                        <div
+                          key={mod.id || modIdx}
+                          className="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-3"
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2.5">
+                              <span className="w-6 h-6 rounded-lg bg-indigo-600 text-white font-mono text-xs font-bold flex items-center justify-center shrink-0">
+                                {modIdx + 1}
+                              </span>
+                              <h3 className="text-sm font-bold text-slate-900">{mod.moduleTitle}</h3>
+                            </div>
+                            <span className="text-[10px] font-mono font-bold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full">
+                              {mod.videos?.length || 0} Lessons
+                            </span>
+                          </div>
+
+                          {mod.description && (
+                            <p className="text-xs text-slate-500 pl-8">{mod.description}</p>
+                          )}
+
+                          {mod.videos && mod.videos.length > 0 && (
+                            <div className="space-y-2 pl-3 sm:pl-8 pt-1">
+                              {mod.videos.map((vid, vidIdx) => (
+                                <div
+                                  key={vid.id || vidIdx}
+                                  className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between gap-3 hover:bg-indigo-50/40 transition-colors"
+                                >
+                                  <div className="flex items-center gap-2.5 min-w-0">
+                                    <div className="w-7 h-7 rounded-lg bg-red-100 text-red-600 flex items-center justify-center shrink-0">
+                                      <Video className="w-3.5 h-3.5" />
+                                    </div>
+                                    <div className="min-w-0">
+                                      <div className="text-xs font-bold text-slate-800 truncate">
+                                        {vid.topicTitle}
+                                      </div>
+                                      {vid.duration && (
+                                        <span className="text-[10px] text-slate-400 font-mono">
+                                          Duration: {vid.duration}
+                                        </span>
+                                      )}
+                                    </div>
+                                  </div>
+
+                                  {vid.videoUrl && (
+                                    <button
+                                      type="button"
+                                      onClick={() => setActiveVideoModal({ title: vid.topicTitle, url: vid.videoUrl })}
+                                      className="px-3 py-1 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white text-[11px] font-bold rounded-lg flex items-center gap-1 cursor-pointer shrink-0 shadow-2xs"
+                                    >
+                                      <Play className="w-3 h-3 fill-current" />
+                                      <span>Watch</span>
+                                    </button>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="space-y-2.5">
+                      {course.courseContent.map((moduleText, idx) => (
+                        <div
+                          key={idx}
+                          className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-start gap-3"
+                        >
+                          <span className="w-6 h-6 rounded-lg bg-indigo-600 text-white font-mono text-xs font-bold flex items-center justify-center shrink-0">
+                            {idx + 1}
+                          </span>
+                          <div className="text-xs text-slate-800 font-medium pt-0.5 leading-snug">
+                            {moduleText}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
 

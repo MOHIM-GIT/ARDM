@@ -127,7 +127,7 @@ export const FreeClassesSection: React.FC = () => {
                         {activeVideo.studentClass} • {activeVideo.subject}
                       </span>
                       {activeVideo.board && (
-                        <span className="text-slate-400 text-xs font-mono">({activeVideo.board})</span>
+                        <span className="text-white/90 text-xs font-mono font-medium">({activeVideo.board})</span>
                       )}
                     </div>
 
@@ -135,7 +135,7 @@ export const FreeClassesSection: React.FC = () => {
                       href={activeVideo.youtubeUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-1 text-slate-400 hover:text-white text-xs font-semibold transition-colors"
+                      className="inline-flex items-center gap-1 text-white/90 hover:text-white text-xs font-semibold transition-colors"
                     >
                       <span>Watch on YouTube</span>
                       <ExternalLink className="w-3.5 h-3.5" />
@@ -146,12 +146,12 @@ export const FreeClassesSection: React.FC = () => {
                     {activeVideo.title}
                   </h3>
 
-                  <p className="text-xs text-slate-300 leading-relaxed">
+                  <p className="text-xs text-slate-100 leading-relaxed font-normal">
                     {activeVideo.description}
                   </p>
 
                   <div className="pt-3 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs">
-                    <div className="text-slate-400">
+                    <div className="text-slate-100">
                       <span>Chapter: <strong className="text-white">{activeVideo.chapter || 'Foundations'}</strong></span>
                       <span className="mx-2">•</span>
                       <span>Faculty: <strong className="text-white">{activeVideo.teacher || 'ARDM Faculty Mentor'}</strong></span>
@@ -242,11 +242,11 @@ export const FreeClassesSection: React.FC = () => {
                       </div>
 
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono mb-0.5">
-                          <span className="text-red-600 font-bold uppercase">{item.studentClass}</span>
-                          <span className="truncate">{item.subject}</span>
+                        <div className="flex items-center justify-between text-[10px] text-white/90 font-mono mb-0.5">
+                          <span className="text-red-400 font-bold uppercase">{item.studentClass}</span>
+                          <span className="truncate text-white/90">{item.subject}</span>
                         </div>
-                        <h5 className="font-bold text-xs line-clamp-2 leading-tight">
+                        <h5 className="font-bold text-xs line-clamp-2 leading-tight text-white">
                           {item.title}
                         </h5>
                       </div>

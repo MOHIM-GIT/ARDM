@@ -164,6 +164,21 @@ export interface FreeClassVideo {
 
 export type FreeEducationItem = FreeClassVideo;
 
+export interface CourseModuleVideo {
+  id: string;
+  topicTitle: string;
+  videoUrl: string; // YouTube, MP4, drive or embed URL
+  duration?: string;
+  description?: string;
+}
+
+export interface CourseModuleItem {
+  id: string;
+  moduleTitle: string;
+  description?: string;
+  videos: CourseModuleVideo[];
+}
+
 // Dynamic Course Management System (Phase 2 Section 1, 2, 3, 4, 5, 6, 7)
 export interface Course {
   id: string;
@@ -181,11 +196,18 @@ export interface Course {
   certificateAvailable: boolean;
   bannerUrl: string;
   courseContent: string[];
+  modules?: CourseModuleItem[]; // Multiple video posting per module/topic
   courseLink?: string; // Access portal or classroom link
   publishStatus: 'Published' | 'Draft';
   orderIndex: number;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface TechDepartmentSettings {
+  title: string;
+  subtitle: string;
+  badgeText?: string;
 }
 
 export type CoursePaymentStatus = 'Pending' | 'Under Review' | 'Approved' | 'Rejected' | 'Reverification' | 'Active';

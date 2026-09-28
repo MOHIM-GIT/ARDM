@@ -52,7 +52,7 @@ export const AIWebinarSection: React.FC = () => {
                 <Calendar className="w-5 h-5" />
               </div>
               <div>
-                <span className="text-[10px] text-slate-400 uppercase font-mono block">Date</span>
+                <span className="text-[10px] text-white/90 uppercase font-mono block font-semibold">Date</span>
                 <span className="text-xs font-bold text-white">{webinar.date}</span>
               </div>
             </div>
@@ -62,7 +62,7 @@ export const AIWebinarSection: React.FC = () => {
                 <Clock className="w-5 h-5" />
               </div>
               <div>
-                <span className="text-[10px] text-slate-400 uppercase font-mono block">Schedule</span>
+                <span className="text-[10px] text-white/90 uppercase font-mono block font-semibold">Schedule</span>
                 <span className="text-xs font-bold text-white">{webinar.time}</span>
               </div>
             </div>
@@ -72,7 +72,7 @@ export const AIWebinarSection: React.FC = () => {
                 <User className="w-5 h-5" />
               </div>
               <div>
-                <span className="text-[10px] text-slate-400 uppercase font-mono block">Mentor & Speaker</span>
+                <span className="text-[10px] text-white/90 uppercase font-mono block font-semibold">Mentor & Speaker</span>
                 <span className="text-xs font-bold text-white">{webinar.speaker}</span>
               </div>
             </div>
@@ -92,13 +92,13 @@ export const AIWebinarSection: React.FC = () => {
                 <ExternalLink className="w-3.5 h-3.5 ml-1" />
               </a>
             ) : (
-              <div className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/10 text-slate-400 border border-white/15 text-xs font-semibold">
+              <div className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/10 text-white border border-white/20 text-xs font-semibold">
                 <Clock className="w-4 h-4" />
                 <span>Webinar Registration Coming Soon</span>
               </div>
             )}
 
-            <div className="flex items-center gap-2 text-xs text-slate-400">
+            <div className="flex items-center gap-2 text-xs text-white/95 font-medium">
               <CheckCircle2 className="w-4 h-4 text-emerald-400" />
               <span>100% Free • Interactive Q&A • Certificate of Participation</span>
             </div>

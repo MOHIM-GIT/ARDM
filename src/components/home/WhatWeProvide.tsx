@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Calculator,
   Atom,
@@ -19,7 +19,8 @@ import {
   X,
   GraduationCap,
 } from 'lucide-react';
-import { DEFAULT_SUBJECTS, TECH_EDUCATION_COURSES } from '../../services/storage';
+import { DEFAULT_SUBJECTS, TECH_EDUCATION_COURSES, getTechDepartmentSettings } from '../../services/storage';
+import { TechDepartmentSettings } from '../../types';
 
 interface WhatWeProvideProps {
   onRegisterSubject: (subjectId: string) => void;
@@ -27,6 +28,20 @@ interface WhatWeProvideProps {
 
 export const WhatWeProvide: React.FC<WhatWeProvideProps> = ({ onRegisterSubject }) => {
   const [activeTab, setActiveTab] = useState<'all' | 'academic' | 'tech'>('all');
+  const [techDept, setTechDept] = useState<TechDepartmentSettings>(getTechDepartmentSettings());
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      setTechDept(getTechDepartmentSettings());
+    };
+    window.addEventListener('ardm_tech_dept_updated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+    return () => {
+      window.removeEventListener('ardm_tech_dept_updated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
+  }, []);
+
   const [selectedItem, setSelectedItem] = useState<{
     title: string;
     category: string;
@@ -214,10 +229,10 @@ export const WhatWeProvide: React.FC<WhatWeProvideProps> = ({ onRegisterSubject 
               <div>
                 <h3 className="text-xl font-extrabold text-white flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-rose-600" />
-                  <span>Technology Education & Digital Skills</span>
+                  <span>{techDept.title || 'Technology Education & Digital Skills'}</span>
                 </h3>
                 <p className="text-xs text-white/90 mt-0.5">
-                  Computer Science, Python, Artificial Intelligence, Data awareness and hands-on tech labs for young innovators.
+                  {techDept.subtitle || 'Computer Science, Python, Artificial Intelligence, Data awareness and hands-on tech labs for young innovators.'}
                 </p>
               </div>
             </div>

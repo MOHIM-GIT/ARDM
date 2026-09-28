@@ -75,9 +75,9 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         {/* 4. Official Slogan: LEARN • PRACTICE • IMPROVE (Indian Tricolor) */}
         <div className="mt-3 flex items-center gap-2.5 text-xs sm:text-sm font-bold tracking-[0.25em] uppercase font-mono">
           <span className="text-[#FF671F]">LEARN</span>
-          <span className="text-slate-500 font-black">•</span>
+          <span className="text-white/80 font-black">•</span>
           <span className="text-white drop-shadow-sm">PRACTICE</span>
-          <span className="text-slate-500 font-black">•</span>
+          <span className="text-white/80 font-black">•</span>
           <span className="text-[#22C55E]">IMPROVE</span>
         </div>
 
@@ -89,7 +89,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
               style={{ width: `${progress}%` }}
             />
           </div>
-          <span className="text-[10px] text-slate-400 font-mono tracking-wider">
+          <span className="text-[10px] text-white/90 font-mono tracking-wider font-semibold">
             PREPARING ACADEMIC SUITE
           </span>
         </div>
@@ -97,7 +97,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         {/* Quick Skip Button */}
         <button
           onClick={onComplete}
-          className="mt-6 inline-flex items-center gap-1 text-[11px] text-slate-500 hover:text-slate-300 transition-colors py-1 px-3 rounded-full hover:bg-slate-900 border border-transparent hover:border-slate-800"
+          className="mt-6 inline-flex items-center gap-1 text-[11px] text-white/90 hover:text-white transition-colors py-1 px-3 rounded-full hover:bg-slate-900 border border-transparent hover:border-slate-800"
         >
           <span>Skip to Website</span>
           <ArrowRight className="w-3 h-3" />

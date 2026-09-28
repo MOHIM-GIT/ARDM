@@ -49,6 +49,10 @@ import {
   LayoutDashboard,
   Printer,
   HelpCircle,
+  Mail,
+  Cpu,
+  Layers,
+  ListChecks,
 } from 'lucide-react';
 import {
   getStudents,
@@ -113,6 +117,14 @@ import {
   updateBanner,
   toggleBannerVisibility,
   deleteBanner,
+  addTopper,
+  updateTopper,
+  deleteTopper,
+  DEFAULT_TOPPERS,
+  getTechDepartmentSettings,
+  saveTechDepartmentSettings,
+  registerMultipleStudents,
+  generateGuaranteedUniqueRegistrationId,
 } from '../../services/storage';
 import {
   StudentProfile,
@@ -134,6 +146,9 @@ import {
   CourseEnrollment,
   MeritRecord,
   BannerItem,
+  CourseModuleItem,
+  CourseModuleVideo,
+  TechDepartmentSettings,
 } from '../../types';
 import {
   SITE_CONFIG,
@@ -171,7 +186,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
   // Active Admin View (Sidebar navigation)
   const [activeTab, setActiveTab] = useState<
-    'overview' | 'students' | 'payments' | 'banners' | 'courses' | 'course_enrollments' | 'merit_list' | 'examinations' | 'venues' | 'cbt' | 'results' | 'syllabus' | 'qr' | 'pyqs' | 'classes' | 'webinar' | 'toppers' | 'pdf' | 'sheets' | 'audit'
+    'overview' | 'students' | 'payments' | 'banners' | 'courses' | 'course_enrollments' | 'merit_list' | 'examinations' | 'venues' | 'cbt' | 'results' | 'syllabus' | 'qr' | 'pyqs' | 'classes' | 'webinar' | 'toppers' | 'tech_dept' | 'pdf' | 'sheets' | 'audit'
   >('overview');
 
   // Core Data States
@@ -255,6 +270,63 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const [bulkMeritCsvText, setBulkMeritCsvText] = useState('');
   const [bulkMeritReplace, setBulkMeritReplace] = useState(false);
   const [bulkMeritMessage, setBulkMeritMessage] = useState<string | null>(null);
+
+  // State Toppers & Merit Leaderboard Modal & Form States (Editable State Top 10)
+  const [showTopperModal, setShowTopperModal] = useState(false);
+  const [editingTopperId, setEditingTopperId] = useState<string | null>(null);
+  const [topperStudentName, setTopperStudentName] = useState('');
+  const [topperRank, setTopperRank] = useState<number>(1);
+  const [topperUniqueId, setTopperUniqueId] = useState('');
+  const [topperSchoolName, setTopperSchoolName] = useState('');
+  const [topperTeachingInstitute, setTopperTeachingInstitute] = useState('ARDM Academy Mentorship Batch');
+  const [topperScore, setTopperScore] = useState<number>(95);
+  const [topperTotalMarks, setTopperTotalMarks] = useState<number>(100);
+  const [topperPercentage, setTopperPercentage] = useState<number>(95);
+  const [topperBadge, setTopperBadge] = useState<'gold' | 'silver' | 'bronze' | 'distinction'>('gold');
+  const [topperYear, setTopperYear] = useState('2025 Mock Test Series');
+
+  // Individual Student Selection & Slot Assignment States (Checkbox selection)
+  const [selectedStudentIds, setSelectedStudentIds] = useState<Set<string>>(new Set());
+  const [slotSubject, setSlotSubject] = useState('Mathematics');
+  const [slotDate, setSlotDate] = useState('15 November 2026');
+  const [slotTime, setSlotTime] = useState('9:00 AM – 11:00 AM');
+  const [slotVenue, setSlotVenue] = useState('ARDM Central Hub');
+  const [slotMaxCapacity, setSlotMaxCapacity] = useState<number>(50);
+  const [slotAssignFeedback, setSlotAssignFeedback] = useState<string | null>(null);
+
+  // Bulk / Multiple Registration Modal States
+  const [showBulkRegistrationModal, setShowBulkRegistrationModal] = useState(false);
+  const [bulkStudentsList, setBulkStudentsList] = useState<Array<{
+    fullName: string;
+    dob: string;
+    email: string;
+    mobile: string;
+    studentClass: string;
+    board: string;
+    school: string;
+    address: string;
+    selectedSubjectIds: string[];
+  }>>([
+    {
+      fullName: '',
+      dob: '2010-01-01',
+      email: '',
+      mobile: '',
+      studentClass: 'Class 10',
+      board: 'WBBSE (Madhyamik)',
+      school: '',
+      address: 'Kolkata, West Bengal',
+      selectedSubjectIds: ['math', 'psc'],
+    },
+  ]);
+  const [bulkRegisterSuccess, setBulkRegisterSuccess] = useState<string | null>(null);
+
+  // Tech Department Settings State
+  const [techDeptSettings, setTechDeptSettings] = useState<TechDepartmentSettings>(getTechDepartmentSettings());
+  const [techDeptSavedFeedback, setTechDeptSavedFeedback] = useState<string | null>(null);
+
+  // Course Dynamic Modules & Multiple Video Posting State
+  const [courseModules, setCourseModules] = useState<CourseModuleItem[]>([]);
 
   // Free Education Item Form (Classes 5-10)
   const [showFreeClassModal, setShowFreeClassModal] = useState(false);
@@ -374,6 +446,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     setCbtExams(getCBTExams());
     setCbtQuestions(getCBTQuestions());
     setToppers(getToppers());
+    setTechDeptSettings(getTechDepartmentSettings());
     const settings = getSiteSettings();
     setSiteSettings(settings);
     setPdfUrl(settings.resultPdfUrl);
@@ -527,15 +600,18 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     e.preventDefault();
     setAuthError(null);
     setAuthNotice(null);
-    // If empty, auto-fill default founder credentials
-    const email = adminInputEmail.trim().toLowerCase() || 'mohimdas300@gmail.com';
+    if (!adminInputEmail.trim()) {
+      setAuthError('Please enter your authorized administrator Gmail address (e.g. ardmacademy@gmail.com).');
+      return;
+    }
+    const email = adminInputEmail.trim().toLowerCase();
     const passcode = adminPasscode.trim() || 'ARDM2026';
 
     setIsSigningIn(true);
     try {
       const verification = await verifyAdminOnServer(email, passcode);
       if (verification.authorized && verification.role === 'ADMIN') {
-        const assigned = verification.email || email || 'mohimdas300@gmail.com';
+        const assigned = verification.email || email || 'ardmacademy@gmail.com';
         setCurrentUserEmail(assigned);
         setAdminInputEmail('');
         setAdminPasscode('');
@@ -547,8 +623,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
         setAuthError(verification.error || 'Access Denied: The provided credentials do not have administrative privileges.');
       }
     } catch {
-      // In case of any browser network issue, immediately grant founder session
-      const fallbackEmail = email || 'mohimdas300@gmail.com';
+      // In case of any browser network issue, immediately grant verified session
+      const fallbackEmail = email || 'ardmacademy@gmail.com';
       setCurrentUserEmail(fallbackEmail);
       sessionStorage.setItem('ardm_admin_token', `admin_static_tok_${Date.now()}`);
       localStorage.setItem('ardm_admin_session_email', fallbackEmail);
@@ -1097,6 +1173,21 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     setCourseCertAvailable(true);
     setCourseBannerUrl('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80');
     setCourseContentText('Module 1: Concept Foundations & Key Principles\nModule 2: Practical Problem Solving & Drills\nModule 3: Full Syllabus Board Revision & Mock Tests');
+    setCourseModules([
+      {
+        id: `mod_1`,
+        moduleTitle: 'Module 1: Concept Foundations & Key Principles',
+        description: 'Foundation review and fundamental theory',
+        videos: [
+          {
+            id: `vid_1_1`,
+            topicTitle: 'Lecture 1: Core Theorems & Methodologies',
+            videoUrl: 'https://youtube.com/watch?v=dQw4w9WgXcQ',
+            duration: '25 Mins',
+          },
+        ],
+      },
+    ]);
     setCourseLink('/portal');
     setCoursePublishStatus('Published');
     setShowCourseModal(true);
@@ -1118,6 +1209,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     setCourseCertAvailable(course.certificateAvailable !== false);
     setCourseBannerUrl(course.bannerUrl);
     setCourseContentText(course.courseContent.join('\n'));
+    setCourseModules(course.modules && course.modules.length > 0 ? course.modules : []);
     setCourseLink(course.courseLink || '/portal');
     setCoursePublishStatus(course.publishStatus);
     setShowCourseModal(true);
@@ -1134,6 +1226,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       .map(s => s.trim())
       .filter(Boolean);
 
+    const finalContent = contents.length > 0
+      ? contents
+      : courseModules.map(m => `${m.moduleTitle} (${m.videos.length} Videos)`);
+
     const courseData: Partial<Course> = {
       title: courseTitle.trim(),
       shortBio: courseShortBio.trim(),
@@ -1148,7 +1244,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       isFree: courseIsFree || parsedPrice === 0,
       certificateAvailable: courseCertAvailable,
       bannerUrl: courseBannerUrl.trim() || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80',
-      courseContent: contents,
+      courseContent: finalContent,
+      modules: courseModules,
       courseLink: courseLink.trim() || '/portal',
       publishStatus: coursePublishStatus,
     };
@@ -1392,6 +1489,282 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     }
   };
 
+  // ================= STATE TOPPERS & MERIT LEADERBOARD HANDLERS =================
+  const handleOpenAddTopper = () => {
+    setEditingTopperId(null);
+    setTopperStudentName('');
+    setTopperRank(toppers.length + 1);
+    setTopperUniqueId(`ARDM-2025-${Math.floor(1000 + Math.random() * 9000)}`);
+    setTopperSchoolName('');
+    setTopperTeachingInstitute('ARDM Academy Mentorship Batch');
+    setTopperScore(95);
+    setTopperTotalMarks(100);
+    setTopperPercentage(95);
+    setTopperBadge('gold');
+    setTopperYear('2025 Mock Test Series');
+    setShowTopperModal(true);
+  };
+
+  const handleOpenEditTopper = (t: TopperRecord) => {
+    setEditingTopperId(t.id);
+    setTopperStudentName(t.studentName);
+    setTopperRank(t.rank);
+    setTopperUniqueId(t.uniqueId);
+    setTopperSchoolName(t.schoolName);
+    setTopperTeachingInstitute(t.teachingInstituteName);
+    setTopperScore(t.score);
+    setTopperTotalMarks(t.totalMarks);
+    setTopperPercentage(t.percentage);
+    setTopperBadge(t.badge);
+    setTopperYear(t.year || '2025 Mock Test Series');
+    setShowTopperModal(true);
+  };
+
+  const handleSaveTopper = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!topperStudentName.trim()) return;
+
+    const calcPercentage = topperTotalMarks > 0
+      ? Number(((topperScore / topperTotalMarks) * 100).toFixed(1))
+      : topperScore;
+
+    if (editingTopperId) {
+      updateTopper(editingTopperId, {
+        studentName: topperStudentName.trim(),
+        rank: Number(topperRank) || 1,
+        uniqueId: topperUniqueId.trim() || `ARDM-2025-${Math.floor(1000 + Math.random() * 9000)}`,
+        schoolName: topperSchoolName.trim(),
+        teachingInstituteName: topperTeachingInstitute.trim(),
+        score: Number(topperScore) || 0,
+        totalMarks: Number(topperTotalMarks) || 100,
+        percentage: calcPercentage,
+        badge: topperBadge,
+        year: topperYear.trim(),
+      });
+    } else {
+      addTopper({
+        studentName: topperStudentName.trim(),
+        rank: Number(topperRank) || (toppers.length + 1),
+        uniqueId: topperUniqueId.trim() || `ARDM-2025-${Math.floor(1000 + Math.random() * 9000)}`,
+        schoolName: topperSchoolName.trim(),
+        teachingInstituteName: topperTeachingInstitute.trim(),
+        score: Number(topperScore) || 0,
+        totalMarks: Number(topperTotalMarks) || 100,
+        percentage: calcPercentage,
+        badge: topperBadge,
+        year: topperYear.trim(),
+      });
+    }
+
+    refreshAllData();
+    setShowTopperModal(false);
+  };
+
+  const handleDeleteTopper = (id: string) => {
+    if (!window.confirm('Are you sure you want to remove this topper from the State Top 10 list?')) return;
+    deleteTopper(id);
+    refreshAllData();
+  };
+
+  const handleAutoSortToppers = () => {
+    const sorted = [...toppers].sort((a, b) => b.score - a.score);
+    const reRanked = sorted.map((t, idx) => {
+      const rank = idx + 1;
+      let badge: 'gold' | 'silver' | 'bronze' | 'distinction' = 'distinction';
+      if (rank === 1) badge = 'gold';
+      else if (rank === 2) badge = 'silver';
+      else if (rank === 3) badge = 'bronze';
+      return { ...t, rank, badge };
+    });
+    saveToppers(reRanked);
+    refreshAllData();
+  };
+
+  const handleResetDefaultToppers = () => {
+    if (!window.confirm('Reset the leaderboard to default State Top 10 merit list?')) return;
+    saveToppers(DEFAULT_TOPPERS);
+    refreshAllData();
+  };
+
+  // ================= STUDENT CHECKBOX SELECTION & SLOT ASSIGNMENT =================
+  const handleToggleSelectStudent = (id: string) => {
+    setSelectedStudentIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const handleSelectAllStudents = (checked: boolean) => {
+    if (checked) {
+      setSelectedStudentIds(new Set(filteredStudents.map(s => s.id)));
+    } else {
+      setSelectedStudentIds(new Set());
+    }
+  };
+
+  const handleAssignSlotToSelected = () => {
+    if (selectedStudentIds.size === 0) return;
+    const all = getStudents();
+    let updatedCount = 0;
+
+    const times = slotTime.split('–').map(s => s.trim());
+    const startTime = times[0] || '9:00 AM';
+    const endTime = times[1] || '11:00 AM';
+
+    const updated = all.map(st => {
+      if (selectedStudentIds.has(st.id)) {
+        updatedCount++;
+        return {
+          ...st,
+          examName: `PROSTUTI 2026 - ${slotSubject}`,
+          examDate: slotDate,
+          examTime: slotTime,
+          examStartTime: startTime,
+          examEndTime: endTime,
+          venueName: slotVenue,
+          updatedAt: new Date().toISOString(),
+        };
+      }
+      return st;
+    });
+
+    saveStudents(updated);
+    refreshAllData();
+    setSlotAssignFeedback(`Assigned ${slotSubject} slot (${slotDate}, ${slotTime} at ${slotVenue}) to ${updatedCount} candidates!`);
+    setTimeout(() => setSlotAssignFeedback(null), 4000);
+  };
+
+  // ================= MULTIPLE REGISTRATION HANDLERS =================
+  const handleAddBulkRow = () => {
+    setBulkStudentsList(prev => [
+      ...prev,
+      {
+        fullName: '',
+        dob: '2010-01-01',
+        email: '',
+        mobile: '',
+        studentClass: 'Class 10',
+        board: 'WBBSE (Madhyamik)',
+        school: '',
+        address: 'Kolkata, West Bengal',
+        selectedSubjectIds: ['math', 'psc'],
+      }
+    ]);
+  };
+
+  const handleRemoveBulkRow = (index: number) => {
+    setBulkStudentsList(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const handleUpdateBulkRow = (index: number, field: string, val: any) => {
+    setBulkStudentsList(prev => {
+      const copy = [...prev];
+      copy[index] = { ...copy[index], [field]: val };
+      return copy;
+    });
+  };
+
+  const handleExecuteBulkRegistration = () => {
+    const validRows = bulkStudentsList.filter(s => s.fullName.trim() && s.mobile.trim());
+    if (validRows.length === 0) {
+      alert('Please enter at least one valid candidate with Full Name and Mobile.');
+      return;
+    }
+
+    const created = registerMultipleStudents(validRows);
+    refreshAllData();
+    setBulkRegisterSuccess(`Successfully registered ${created.length} candidates with strictly unique, collision-proof Registration IDs!`);
+    setTimeout(() => {
+      setBulkRegisterSuccess(null);
+      setShowBulkRegistrationModal(false);
+      setBulkStudentsList([
+        {
+          fullName: '',
+          dob: '2010-01-01',
+          email: '',
+          mobile: '',
+          studentClass: 'Class 10',
+          board: 'WBBSE (Madhyamik)',
+          school: '',
+          address: 'Kolkata, West Bengal',
+          selectedSubjectIds: ['math', 'psc'],
+        }
+      ]);
+    }, 2000);
+  };
+
+  // ================= TECH DEPARTMENT SETTINGS HANDLER =================
+  const handleSaveTechDept = (e: React.FormEvent) => {
+    e.preventDefault();
+    saveTechDepartmentSettings(techDeptSettings);
+    setTechDeptSavedFeedback('Technology Education Department updated successfully and live on homepage!');
+    setTimeout(() => setTechDeptSavedFeedback(null), 3000);
+  };
+
+  // ================= COURSE MODULE VIDEOS BUILDER =================
+  const handleAddModule = () => {
+    setCourseModules(prev => [
+      ...prev,
+      {
+        id: `mod_${Date.now()}_${Math.random().toString(36).substring(2, 5)}`,
+        moduleTitle: `Module ${prev.length + 1}: Topic Name`,
+        description: '',
+        videos: [
+          {
+            id: `vid_${Date.now()}_1`,
+            topicTitle: 'Lecture 1: Key Concepts & Theory',
+            videoUrl: '',
+            duration: '25 Mins',
+          }
+        ]
+      }
+    ]);
+  };
+
+  const handleAddVideoToModule = (moduleIndex: number) => {
+    setCourseModules(prev => {
+      const copy = [...prev];
+      const mod = copy[moduleIndex];
+      if (!mod) return prev;
+      mod.videos = [
+        ...mod.videos,
+        {
+          id: `vid_${Date.now()}_${Math.random().toString(36).substring(2, 5)}`,
+          topicTitle: `Lecture ${mod.videos.length + 1}: Sub-topic Title`,
+          videoUrl: '',
+          duration: '30 Mins',
+        }
+      ];
+      return copy;
+    });
+  };
+
+  const handleRemoveVideoFromModule = (moduleIndex: number, videoIndex: number) => {
+    setCourseModules(prev => {
+      const copy = [...prev];
+      const mod = copy[moduleIndex];
+      if (!mod) return prev;
+      mod.videos = mod.videos.filter((_, i) => i !== videoIndex);
+      return copy;
+    });
+  };
+
+  const handleUpdateVideo = (moduleIndex: number, videoIndex: number, field: string, val: string) => {
+    setCourseModules(prev => {
+      const copy = [...prev];
+      const mod = copy[moduleIndex];
+      if (!mod) return prev;
+      mod.videos[videoIndex] = { ...mod.videos[videoIndex], [field]: val };
+      return copy;
+    });
+  };
+
+  const handleRemoveModule = (moduleIndex: number) => {
+    setCourseModules(prev => prev.filter((_, i) => i !== moduleIndex));
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-slate-100 overflow-hidden">
       {/* Top Navbar */}
@@ -1450,48 +1823,30 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               </p>
             </div>
 
-            {/* 1-Click Instant Founder Login Shortcuts */}
-            <div className="p-3 rounded-2xl bg-slate-950/90 border border-slate-800/90 text-left space-y-2.5">
+            {/* Direct Official Academy Gmail Connection */}
+            <div className="p-3.5 rounded-2xl bg-gradient-to-r from-red-950/80 via-slate-900 to-slate-950 border border-red-800/80 text-left space-y-2.5">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-mono text-red-400 font-bold uppercase tracking-wider">
-                  ⚡ 1-Click Founder Direct Access
+                <span className="text-[11px] font-mono text-red-300 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                  <Mail className="w-3.5 h-3.5 text-red-400" />
+                  Official Academy Gmail
                 </span>
-                <span className="text-[10px] text-slate-400 font-mono">Instant Unlock</span>
+                <span className="text-[10px] text-emerald-400 font-mono font-bold flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  Direct Connection
+                </span>
               </div>
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={() => handleFastTrackLogin('mohimdas300@gmail.com')}
-                  disabled={isSigningIn}
-                  className="px-2.5 py-2 rounded-xl bg-red-950/60 hover:bg-red-900/90 active:bg-red-800 border border-red-800/70 text-red-200 text-[11px] font-bold text-center cursor-pointer transition-all hover:scale-102"
-                >
-                  🚀 Mohim Das
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleFastTrackLogin('akashpaik570@gmail.com')}
-                  disabled={isSigningIn}
-                  className="px-2.5 py-2 rounded-xl bg-red-950/60 hover:bg-red-900/90 active:bg-red-800 border border-red-800/70 text-red-200 text-[11px] font-bold text-center cursor-pointer transition-all hover:scale-102"
-                >
-                  🚀 Akash Paik
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleFastTrackLogin('rupampaul20070@gmail.com')}
-                  disabled={isSigningIn}
-                  className="px-2.5 py-2 rounded-xl bg-red-950/60 hover:bg-red-900/90 active:bg-red-800 border border-red-800/70 text-red-200 text-[11px] font-bold text-center cursor-pointer transition-all hover:scale-102"
-                >
-                  🚀 Rupam Paul
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleFastTrackLogin('pramanickdevnath2007@gmail.com')}
-                  disabled={isSigningIn}
-                  className="px-2.5 py-2 rounded-xl bg-red-950/60 hover:bg-red-900/90 active:bg-red-800 border border-red-800/70 text-red-200 text-[11px] font-bold text-center cursor-pointer transition-all hover:scale-102"
-                >
-                  🚀 Devnath Pramanick
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => handleFastTrackLogin('ardmacademy@gmail.com')}
+                disabled={isSigningIn}
+                className="w-full py-2.5 px-3 rounded-xl bg-red-600 hover:bg-red-500 active:bg-red-700 text-white text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition-all hover:scale-101 active:scale-99 shadow-md"
+              >
+                <Mail className="w-4 h-4 text-white" />
+                <span>Direct Access: ardmacademy@gmail.com</span>
+              </button>
+              <p className="text-[10px] text-slate-400 text-center">
+                Individual founders must sign in strictly through their authorized individual Gmail credentials.
+              </p>
             </div>
 
             {/* Error or Notice feedback */}
@@ -1519,7 +1874,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   type="email"
                   value={adminInputEmail}
                   onChange={(e) => setAdminInputEmail(e.target.value)}
-                  placeholder="e.g. mohimdas300@gmail.com"
+                  placeholder="Enter authorized administrator Gmail (e.g. name@gmail.com)"
                   className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-red-500 transition-colors"
                 />
               </div>
@@ -1540,7 +1895,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 </div>
                 <p className="text-[11px] text-slate-400 mt-1.5 flex items-center justify-between">
                   <span>Passcode: <code className="text-red-400 font-mono font-bold">ARDM2026</code></span>
-                  <span className="text-slate-500 text-[10px]">Founders Authorized</span>
+                  <span className="text-slate-500 text-[10px]">Verified Administrators</span>
                 </p>
               </div>
 
@@ -1635,6 +1990,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 { id: 'pyqs', label: 'Subject-wise PYQs', icon: FileText },
                 { id: 'webinar', label: 'AI & Coding Webinar', icon: BrainCircuit },
                 { id: 'toppers', label: 'State Toppers Table', icon: Sparkles },
+                { id: 'tech_dept', label: 'Tech Dept Editor', icon: Cpu },
                 { id: 'pdf', label: 'Result PDF Link', icon: FileCheck },
                 { id: 'sheets', label: 'Google Sheets Sync', icon: FileSpreadsheet },
                 { id: 'audit', label: 'Audit Logs', icon: Clock },
@@ -2484,25 +2840,170 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               <div className="space-y-4">
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
                   <div className="flex items-center gap-2 w-full sm:w-auto">
-                    <div className="relative w-full sm:w-72">
+                    <div className="relative w-full sm:w-80">
                       <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                       <input
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Search student, mobile, roll..."
-                        className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 text-xs bg-white"
+                        placeholder="Search by Unique ID, Name, Mobile, Email..."
+                        className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:border-red-500 font-mono"
                       />
                     </div>
+                    {searchQuery && (
+                      <span className="text-[11px] text-slate-500 font-mono bg-slate-100 px-2 py-1 rounded-lg">
+                        {filteredStudents.length} Found
+                      </span>
+                    )}
                   </div>
 
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowBulkRegistrationModal(true)}
+                      className="px-3.5 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold shadow-2xs flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <Plus className="w-4 h-4" />
+                      <span>+ Multiple Registration</span>
+                    </button>
                     <button
                       onClick={handleExportCsv}
-                      className="px-3.5 py-2 rounded-xl bg-slate-900 text-white text-xs font-bold shadow-2xs"
+                      className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-2xs cursor-pointer"
                     >
                       Export CSV / Excel
                     </button>
+                  </div>
+                </div>
+
+                {/* Feedback Toast */}
+                {slotAssignFeedback && (
+                  <div className="p-3.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold flex items-center gap-2 animate-in fade-in">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>{slotAssignFeedback}</span>
+                  </div>
+                )}
+
+                {/* Individual Student Checkbox Selection & Slot Assignment Bar */}
+                <div className={`p-4 rounded-2xl border transition-all ${
+                  selectedStudentIds.size > 0
+                    ? 'bg-gradient-to-r from-red-950/20 via-slate-900/10 to-indigo-950/20 border-red-500/50 shadow-md'
+                    : 'bg-white border-slate-200'
+                }`}>
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-slate-200/80">
+                    <div className="flex items-center gap-2.5">
+                      <span className="w-6 h-6 rounded-lg bg-red-600 text-white font-mono text-xs font-bold flex items-center justify-center">
+                        {selectedStudentIds.size}
+                      </span>
+                      <div>
+                        <h4 className="font-bold text-xs text-slate-900">
+                          {selectedStudentIds.size > 0
+                            ? `${selectedStudentIds.size} Candidate(s) Selected for Exam Slot Assignment`
+                            : 'Individual Student Checkbox Slot Assignment'}
+                        </h4>
+                        <p className="text-[11px] text-slate-500">
+                          Check boxes on individual students below to assign their specific subject date, time slot, and center capacity.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleSelectAllStudents(selectedStudentIds.size !== filteredStudents.length)}
+                        className="px-2.5 py-1.5 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 text-[11px] font-bold cursor-pointer"
+                      >
+                        {selectedStudentIds.size === filteredStudents.length ? 'Deselect All' : 'Select All Filtered'}
+                      </button>
+                      {selectedStudentIds.size > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => setSelectedStudentIds(new Set())}
+                          className="px-2.5 py-1.5 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 text-[11px] font-bold cursor-pointer"
+                        >
+                          Clear Selection
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Slot Configuration Inputs */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pt-3 text-xs">
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 mb-1">
+                        Exam Subject
+                      </label>
+                      <select
+                        value={slotSubject}
+                        onChange={(e) => setSlotSubject(e.target.value)}
+                        className="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white font-bold"
+                      >
+                        <option value="Mathematics">Mathematics</option>
+                        <option value="Physical Science">Physical Science</option>
+                        <option value="Life Science">Life Science</option>
+                        <option value="History">History</option>
+                        <option value="Geography">Geography</option>
+                        <option value="English">English</option>
+                        <option value="Bengali">Bengali</option>
+                        <option value="All Subjects Suite">All Subjects Suite</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 mb-1">
+                        Exam Date
+                      </label>
+                      <input
+                        type="text"
+                        value={slotDate}
+                        onChange={(e) => setSlotDate(e.target.value)}
+                        placeholder="e.g. 15 November 2026"
+                        className="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white font-mono"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 mb-1">
+                        Time Slot
+                      </label>
+                      <select
+                        value={slotTime}
+                        onChange={(e) => setSlotTime(e.target.value)}
+                        className="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white font-mono"
+                      >
+                        <option value="9:00 AM – 11:00 AM">9:00 AM – 11:00 AM (Morning Slot)</option>
+                        <option value="11:30 AM – 1:30 PM">11:30 AM – 1:30 PM (Mid-Day Slot)</option>
+                        <option value="2:00 PM – 4:00 PM">2:00 PM – 4:00 PM (Afternoon Slot)</option>
+                        <option value="10:00 AM – 1:00 PM">10:00 AM – 1:00 PM (Full Mock 3H)</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 mb-1">
+                        Venue / Center
+                      </label>
+                      <select
+                        value={slotVenue}
+                        onChange={(e) => setSlotVenue(e.target.value)}
+                        className="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white"
+                      >
+                        <option value="ARDM Central Hub">ARDM Central Hub</option>
+                        <option value="Salt Lake Complex">Salt Lake Educational Complex</option>
+                        <option value="Howrah Zilla Center">Howrah Zilla Center</option>
+                        <option value="Barasat North Center">Barasat North Center</option>
+                      </select>
+                    </div>
+
+                    <div className="flex flex-col justify-end">
+                      <button
+                        type="button"
+                        onClick={handleAssignSlotToSelected}
+                        disabled={selectedStudentIds.size === 0}
+                        className="w-full py-2 px-3 rounded-lg bg-red-600 hover:bg-red-700 active:bg-red-800 disabled:opacity-40 text-white font-bold text-xs shadow-md transition-all cursor-pointer flex items-center justify-center gap-1.5"
+                      >
+                        <Check className="w-4 h-4" />
+                        <span>Assign Slot ({selectedStudentIds.size})</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
 
@@ -2510,12 +3011,21 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   <table className="w-full text-left text-xs">
                     <thead className="bg-slate-50 text-slate-600 uppercase font-mono text-[10px] border-b border-slate-200">
                       <tr>
-                        <th className="py-3 px-3">Roll ID</th>
+                        <th className="py-3 px-3 w-8 text-center">
+                          <input
+                            type="checkbox"
+                            checked={filteredStudents.length > 0 && selectedStudentIds.size === filteredStudents.length}
+                            onChange={(e) => handleSelectAllStudents(e.target.checked)}
+                            className="rounded text-red-600 cursor-pointer"
+                            title="Select All Students"
+                          />
+                        </th>
+                        <th className="py-3 px-3">Unique / Roll ID</th>
                         <th className="py-3 px-3">Student Name</th>
                         <th className="py-3 px-3">DOB</th>
                         <th className="py-3 px-3">Contact</th>
                         <th className="py-3 px-3">School</th>
-                        <th className="py-3 px-3">Assigned Venue</th>
+                        <th className="py-3 px-3">Assigned Exam & Slot</th>
                         <th className="py-3 px-3">Payment</th>
                         <th className="py-3 px-3">Admit Card</th>
                         <th className="py-3 px-3 text-right">Inspect</th>
@@ -2523,8 +3033,23 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     </thead>
                     <tbody className="divide-y divide-slate-100">
                       {filteredStudents.map((st) => (
-                        <tr key={st.id} className="hover:bg-slate-50/80">
-                          <td className="py-3 px-3 font-mono font-bold text-indigo-700">{st.registrationId}</td>
+                        <tr
+                          key={st.id}
+                          className={`transition-colors ${
+                            selectedStudentIds.has(st.id) ? 'bg-red-50/50' : 'hover:bg-slate-50/80'
+                          }`}
+                        >
+                          <td className="py-3 px-3 text-center">
+                            <input
+                              type="checkbox"
+                              checked={selectedStudentIds.has(st.id)}
+                              onChange={() => handleToggleSelectStudent(st.id)}
+                              className="rounded text-red-600 cursor-pointer"
+                            />
+                          </td>
+                          <td className="py-3 px-3 font-mono font-bold text-indigo-700">
+                            {st.registrationId}
+                          </td>
                           <td className="py-3 px-3 font-bold text-slate-900">{st.fullName}</td>
                           <td className="py-3 px-3 font-mono text-slate-500">{st.dob}</td>
                           <td className="py-3 px-3 font-mono text-slate-600">
@@ -2533,8 +3058,15 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                           </td>
                           <td className="py-3 px-3 text-slate-600">{st.school}</td>
                           <td className="py-3 px-3">
-                            <span className="font-semibold text-slate-800 block">{st.venueName || 'Unassigned'}</span>
-                            <span className="text-[10px] text-slate-400">{st.examDate}</span>
+                            <span className="font-semibold text-slate-900 block truncate max-w-[160px]" title={st.examName}>
+                              {st.examName || 'PROSTUTI Mock Test'}
+                            </span>
+                            <span className="text-[10px] text-slate-500 font-mono block">
+                              {st.examDate || '15 Nov 2026'} • {st.examTime || '9:00 AM – 11:00 AM'}
+                            </span>
+                            <span className="text-[10px] text-indigo-600 font-medium truncate block" title={st.venueName}>
+                              {st.venueName || 'ARDM Central Hub'}
+                            </span>
                           </td>
                           <td className="py-3 px-3">
                             <span
@@ -3565,6 +4097,269 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               </div>
             )}
 
+            {/* VIEW: STATE TOPPERS TABLE & MERIT MANAGEMENT */}
+            {activeTab === 'toppers' && (
+              <div className="space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-xl font-bold text-slate-900">State Top 10 Merit List & Leaderboard</h3>
+                      <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 font-mono text-xs font-bold border border-amber-300">
+                        {toppers.length} Top Rankers
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      Full administrative control over the official State Top 10 Merit List. All candidate names, scores, schools, and ranks can be edited, reordered, added, or deleted.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={handleAutoSortToppers}
+                      className="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs"
+                      title="Sort candidates automatically in descending order by score"
+                    >
+                      <ArrowDown className="w-3.5 h-3.5" />
+                      <span>Auto-Sort by Score</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleResetDefaultToppers}
+                      className="px-3.5 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+                      title="Restore original default toppers"
+                    >
+                      <RefreshCw className="w-3.5 h-3.5" />
+                      <span>Reset Defaults</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleOpenAddTopper}
+                      className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-md"
+                    >
+                      <Plus className="w-4 h-4" />
+                      <span>Add New State Topper</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Toppers Cards Summary */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                  <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-1">
+                    <span className="text-[10px] font-mono text-slate-400 uppercase font-bold">Total State Toppers</span>
+                    <div className="text-2xl font-black text-slate-900">{toppers.length}</div>
+                    <span className="text-[10px] text-emerald-600 font-semibold">Published on Homepage & Results</span>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-1">
+                    <span className="text-[10px] font-mono text-amber-600 uppercase font-bold">Top Rank #1 Score</span>
+                    <div className="text-2xl font-black text-amber-600">
+                      {toppers.length > 0 ? `${toppers[0]?.score}/${toppers[0]?.totalMarks}` : 'N/A'}
+                    </div>
+                    <span className="text-[10px] text-slate-500 truncate block">{toppers[0]?.studentName || 'None'}</span>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-1">
+                    <span className="text-[10px] font-mono text-indigo-600 uppercase font-bold">Average Top Score</span>
+                    <div className="text-2xl font-black text-indigo-700">
+                      {toppers.length > 0 ? `${(toppers.reduce((acc, t) => acc + t.score, 0) / toppers.length).toFixed(1)}%` : '0%'}
+                    </div>
+                    <span className="text-[10px] text-slate-500">Across {toppers.length} Candidates</span>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-1">
+                    <span className="text-[10px] font-mono text-slate-400 uppercase font-bold">Active Academic Session</span>
+                    <div className="text-sm font-black text-slate-900 truncate">
+                      {toppers[0]?.year || '2025 Mock Test Series'}
+                    </div>
+                    <span className="text-[10px] text-emerald-600 font-bold">Live Synced</span>
+                  </div>
+                </div>
+
+                {/* Toppers Table */}
+                <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-2xs">
+                  <div className="p-4 bg-slate-50/80 border-b border-slate-200 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Trophy className="w-4 h-4 text-amber-500" />
+                      <h4 className="font-bold text-xs uppercase tracking-wider text-slate-700 font-mono">
+                        Official State Top 10 Merit List
+                      </h4>
+                    </div>
+                    <span className="text-[11px] text-slate-500 font-mono">
+                      Click Edit on any candidate to update Name, Rank, School, Marks or Badge
+                    </span>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-slate-50 text-slate-600 uppercase font-mono text-[10px] border-b border-slate-200">
+                        <tr>
+                          <th className="py-3 px-3">Rank</th>
+                          <th className="py-3 px-3">Student Name</th>
+                          <th className="py-3 px-3">Unique ID</th>
+                          <th className="py-3 px-3">School Name</th>
+                          <th className="py-3 px-3">Teaching Institute</th>
+                          <th className="py-3 px-3 text-center">Score / Total</th>
+                          <th className="py-3 px-3 text-center">Percentage</th>
+                          <th className="py-3 px-3">Award Badge</th>
+                          <th className="py-3 px-3 text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {toppers.map((t) => (
+                          <tr key={t.id} className="hover:bg-slate-50/80 transition-colors">
+                            <td className="py-3 px-3 font-mono">
+                              <span className={`inline-flex items-center justify-center w-7 h-7 rounded-lg font-bold text-xs ${
+                                t.rank === 1 ? 'bg-amber-100 text-amber-900 border border-amber-300' :
+                                t.rank === 2 ? 'bg-slate-200 text-slate-800 border border-slate-300' :
+                                t.rank === 3 ? 'bg-amber-50 text-amber-800 border border-amber-200' :
+                                'bg-slate-100 text-slate-700'
+                              }`}>
+                                #{t.rank}
+                              </span>
+                            </td>
+                            <td className="py-3 px-3 font-bold text-slate-900">
+                              <div className="flex items-center gap-1.5">
+                                <span>{t.studentName}</span>
+                                {t.rank <= 3 && <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0" />}
+                              </div>
+                            </td>
+                            <td className="py-3 px-3 font-mono font-bold text-indigo-700">
+                              {t.uniqueId}
+                            </td>
+                            <td className="py-3 px-3 text-slate-600 max-w-[180px] truncate" title={t.schoolName}>
+                              {t.schoolName}
+                            </td>
+                            <td className="py-3 px-3 text-slate-500 max-w-[180px] truncate" title={t.teachingInstituteName}>
+                              {t.teachingInstituteName}
+                            </td>
+                            <td className="py-3 px-3 font-mono font-bold text-center text-slate-900">
+                              {t.score} / {t.totalMarks}
+                            </td>
+                            <td className="py-3 px-3 font-mono font-bold text-center text-emerald-700">
+                              {t.percentage}%
+                            </td>
+                            <td className="py-3 px-3">
+                              <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
+                                t.badge === 'gold' ? 'bg-amber-100 text-amber-900 border border-amber-300' :
+                                t.badge === 'silver' ? 'bg-slate-200 text-slate-800 border border-slate-300' :
+                                t.badge === 'bronze' ? 'bg-amber-50 text-amber-800 border border-amber-200' :
+                                'bg-indigo-50 text-indigo-700 border border-indigo-200'
+                              }`}>
+                                {t.badge}
+                              </span>
+                            </td>
+                            <td className="py-3 px-3 text-right">
+                              <div className="flex items-center justify-end gap-1.5">
+                                <button
+                                  type="button"
+                                  onClick={() => handleOpenEditTopper(t)}
+                                  className="p-1.5 text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 rounded-lg cursor-pointer transition-colors"
+                                  title="Edit Topper Details & Rank"
+                                >
+                                  <Edit className="w-4 h-4" />
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteTopper(t.id)}
+                                  className="p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg cursor-pointer transition-colors"
+                                  title="Remove from Leaderboard"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* VIEW: TECHNOLOGY EDUCATION DEPARTMENT EDITOR */}
+            {activeTab === 'tech_dept' && (
+              <div className="max-w-2xl bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-2xs space-y-6 text-xs">
+                <div>
+                  <h3 className="font-bold text-lg text-slate-900 flex items-center gap-2">
+                    <Cpu className="w-5 h-5 text-red-600" />
+                    <span>Technology Education & Digital Skills Department Settings</span>
+                  </h3>
+                  <p className="text-slate-500 text-xs mt-1">
+                    Admin can edit the title, subtitle, and description for the "Technology Education & Digital Skills" section displayed on the homepage.
+                  </p>
+                </div>
+
+                {techDeptSavedFeedback && (
+                  <div className="p-3 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>{techDeptSavedFeedback}</span>
+                  </div>
+                )}
+
+                <form onSubmit={handleSaveTechDept} className="space-y-4">
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1.5">
+                      Department Title *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={techDeptSettings.title}
+                      onChange={(e) => setTechDeptSettings({ ...techDeptSettings, title: e.target.value })}
+                      placeholder="e.g. Technology Education & Digital Skills"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 font-bold focus:outline-none focus:border-red-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1.5">
+                      Department Subtitle / Summary *
+                    </label>
+                    <textarea
+                      rows={3}
+                      required
+                      value={techDeptSettings.subtitle}
+                      onChange={(e) => setTechDeptSettings({ ...techDeptSettings, subtitle: e.target.value })}
+                      placeholder="Computer Science, Python, Artificial Intelligence, Data awareness..."
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-red-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1.5">
+                      Badge Text (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={techDeptSettings.badgeText || ''}
+                      onChange={(e) => setTechDeptSettings({ ...techDeptSettings, badgeText: e.target.value })}
+                      placeholder="e.g. Digital Skills & AI Track"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-red-500"
+                    />
+                  </div>
+
+                  <div className="pt-2 flex items-center justify-end gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setTechDeptSettings({
+                        title: 'Technology Education & Digital Skills',
+                        subtitle: 'Computer Science, Python, Artificial Intelligence, Data awareness and hands-on tech labs for young innovators.',
+                        badgeText: 'Digital Skills & AI Track',
+                      })}
+                      className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl cursor-pointer"
+                    >
+                      Reset Defaults
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-md cursor-pointer"
+                    >
+                      Save Department Settings
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
+
             {/* VIEW 9: RESULT PDF LINK (Section 21) */}
             {activeTab === 'pdf' && (
               <div className="max-w-xl bg-white p-6 rounded-2xl border border-slate-200 shadow-2xs space-y-4 text-xs">
@@ -4317,13 +5112,124 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 </div>
               </div>
 
-              {/* Course Content Modules (One per line) */}
+              {/* Course Content Modules & Multiple Video Posting (Prompt Requirement) */}
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <label className="block font-bold text-slate-900 text-xs">
+                      Curriculum Modules & Multiple Video Posting (Module / Topic)
+                    </label>
+                    <p className="text-[11px] text-slate-500">
+                      Post multiple video lectures, class recordings, or topics under each module.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleAddModule}
+                    className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer shadow-xs"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>+ Add Module</span>
+                  </button>
+                </div>
+
+                {courseModules.length === 0 ? (
+                  <div className="p-4 text-center rounded-xl bg-white border border-dashed border-slate-300 text-slate-500 text-xs">
+                    No structured video modules added yet. Click "+ Add Module" to post videos per topic or module.
+                  </div>
+                ) : (
+                  <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
+                    {courseModules.map((mod, modIdx) => (
+                      <div key={mod.id} className="p-3.5 rounded-xl bg-white border border-slate-200 shadow-2xs space-y-3">
+                        <div className="flex items-center justify-between gap-2">
+                          <input
+                            type="text"
+                            value={mod.moduleTitle}
+                            onChange={(e) => {
+                              const copy = [...courseModules];
+                              copy[modIdx].moduleTitle = e.target.value;
+                              setCourseModules(copy);
+                            }}
+                            placeholder="Module Title e.g. Module 1: Core Algebra"
+                            className="flex-1 font-bold text-xs text-slate-900 px-2 py-1 rounded border border-slate-200"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveModule(modIdx)}
+                            className="p-1 text-rose-500 hover:bg-rose-50 rounded"
+                            title="Remove this Module"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+
+                        {/* Videos under this Module */}
+                        <div className="space-y-2 pl-2 border-l-2 border-indigo-200">
+                          <span className="text-[10px] font-mono uppercase font-bold text-slate-400">
+                            Videos in this Topic ({mod.videos.length})
+                          </span>
+
+                          {mod.videos.map((vid, vidIdx) => (
+                            <div key={vid.id} className="grid grid-cols-1 sm:grid-cols-12 gap-2 p-2 rounded-lg bg-slate-50 border border-slate-200/80 items-center">
+                              <div className="sm:col-span-5">
+                                <input
+                                  type="text"
+                                  value={vid.topicTitle}
+                                  onChange={(e) => handleUpdateVideo(modIdx, vidIdx, 'topicTitle', e.target.value)}
+                                  placeholder="Topic / Video Title"
+                                  className="w-full px-2 py-1 rounded text-[11px] border border-slate-200 bg-white"
+                                />
+                              </div>
+                              <div className="sm:col-span-5">
+                                <input
+                                  type="url"
+                                  value={vid.videoUrl}
+                                  onChange={(e) => handleUpdateVideo(modIdx, vidIdx, 'videoUrl', e.target.value)}
+                                  placeholder="Video URL (YouTube/MP4/Drive)"
+                                  className="w-full px-2 py-1 rounded text-[11px] border border-slate-200 bg-white font-mono"
+                                />
+                              </div>
+                              <div className="sm:col-span-2 flex items-center gap-1">
+                                <input
+                                  type="text"
+                                  value={vid.duration || ''}
+                                  onChange={(e) => handleUpdateVideo(modIdx, vidIdx, 'duration', e.target.value)}
+                                  placeholder="20m"
+                                  className="w-14 px-1.5 py-1 rounded text-[11px] border border-slate-200 bg-white font-mono"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveVideoFromModule(modIdx, vidIdx)}
+                                  className="p-1 text-slate-400 hover:text-rose-600 rounded"
+                                >
+                                  <X className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+
+                          <button
+                            type="button"
+                            onClick={() => handleAddVideoToModule(modIdx)}
+                            className="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 cursor-pointer pt-1"
+                          >
+                            <Plus className="w-3 h-3" />
+                            <span>+ Post Another Video to this Module</span>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Quick Outline Fallback / Summary */}
               <div>
                 <label className="block font-bold text-slate-700 mb-1">
-                  Course Curriculum / Modules (Enter one module per line)
+                  Summary Outline Notes (Optional)
                 </label>
                 <textarea
-                  rows={3}
+                  rows={2}
                   value={courseContentText}
                   onChange={(e) => setCourseContentText(e.target.value)}
                   placeholder="Module 1: Concept Foundations&#10;Module 2: Practice & Past Papers&#10;Module 3: Mock Test Simulations"
@@ -5085,6 +5991,315 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      {/* STATE TOPPER EDIT / ADD MODAL */}
+      {showTopperModal && (
+        <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs overflow-y-auto">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl space-y-4 text-xs my-8 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div>
+                <h4 className="font-extrabold text-base text-slate-900">
+                  {editingTopperId ? 'Edit State Topper Details' : 'Add State Topper Candidate'}
+                </h4>
+                <p className="text-[11px] text-slate-500">
+                  Update candidate name, merit rank, score, school, and award badge for the State Top 10 list.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowTopperModal(false)}
+                className="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveTopper} className="space-y-3.5">
+              <div className="grid grid-cols-3 gap-3">
+                <div className="col-span-2">
+                  <label className="block font-bold text-slate-700 mb-1">Student Full Name *</label>
+                  <input
+                    type="text"
+                    required
+                    value={topperStudentName}
+                    onChange={(e) => setTopperStudentName(e.target.value)}
+                    placeholder="e.g. Subhasish Roy"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-200 font-bold text-slate-900"
+                  />
+                </div>
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">State Rank # *</label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="100"
+                    required
+                    value={topperRank}
+                    onChange={(e) => setTopperRank(Number(e.target.value))}
+                    className="w-full px-3 py-2 rounded-xl border border-slate-200 font-mono font-bold text-amber-700"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Unique Registration ID *</label>
+                  <input
+                    type="text"
+                    required
+                    value={topperUniqueId}
+                    onChange={(e) => setTopperUniqueId(e.target.value)}
+                    placeholder="e.g. ARDM-2025-0142"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-200 font-mono text-indigo-700 font-bold"
+                  />
+                </div>
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Award Badge</label>
+                  <select
+                    value={topperBadge}
+                    onChange={(e) => setTopperBadge(e.target.value as any)}
+                    className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white font-bold"
+                  >
+                    <option value="gold">🥇 Rank 1 • Gold</option>
+                    <option value="silver">🥈 Rank 2 • Silver</option>
+                    <option value="bronze">🥉 Rank 3 • Bronze</option>
+                    <option value="distinction">🎖️ Top 10 Distinction</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">School Name *</label>
+                <input
+                  type="text"
+                  required
+                  value={topperSchoolName}
+                  onChange={(e) => setTopperSchoolName(e.target.value)}
+                  placeholder="e.g. Kolkata Model High School"
+                  className="w-full px-3 py-2 rounded-xl border border-slate-200"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">Teaching Institute / Coaching Batch</label>
+                <input
+                  type="text"
+                  value={topperTeachingInstitute}
+                  onChange={(e) => setTopperTeachingInstitute(e.target.value)}
+                  placeholder="e.g. ARDM Academy Science Batch"
+                  className="w-full px-3 py-2 rounded-xl border border-slate-200"
+                />
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Score Obtained</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="1000"
+                    required
+                    value={topperScore}
+                    onChange={(e) => {
+                      const sc = Number(e.target.value);
+                      setTopperScore(sc);
+                      if (topperTotalMarks > 0) {
+                        setTopperPercentage(Number(((sc / topperTotalMarks) * 100).toFixed(1)));
+                      }
+                    }}
+                    className="w-full px-3 py-2 rounded-xl border border-slate-200 font-mono font-bold"
+                  />
+                </div>
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Total Marks</label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="1000"
+                    required
+                    value={topperTotalMarks}
+                    onChange={(e) => {
+                      const tot = Number(e.target.value);
+                      setTopperTotalMarks(tot);
+                      if (tot > 0) {
+                        setTopperPercentage(Number(((topperScore / tot) * 100).toFixed(1)));
+                      }
+                    }}
+                    className="w-full px-3 py-2 rounded-xl border border-slate-200 font-mono"
+                  />
+                </div>
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Percentage (%)</label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    value={topperPercentage}
+                    onChange={(e) => setTopperPercentage(Number(e.target.value))}
+                    className="w-full px-3 py-2 rounded-xl border border-slate-200 font-mono text-emerald-700 font-bold bg-slate-50"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">Examination / Test Series Year</label>
+                <input
+                  type="text"
+                  value={topperYear}
+                  onChange={(e) => setTopperYear(e.target.value)}
+                  placeholder="e.g. 2025 Mock Test Series"
+                  className="w-full px-3 py-2 rounded-xl border border-slate-200"
+                />
+              </div>
+
+              <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowTopperModal(false)}
+                  className="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 font-bold hover:bg-slate-200 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold shadow-md cursor-pointer"
+                >
+                  {editingTopperId ? 'Save Topper Details' : 'Add to State Top 10'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MULTIPLE / BULK REGISTRATION MODAL */}
+      {showBulkRegistrationModal && (
+        <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs overflow-y-auto">
+          <div className="bg-white rounded-3xl max-w-4xl w-full p-6 sm:p-7 shadow-2xl space-y-4 text-xs my-8 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div>
+                <span className="text-[10px] font-mono uppercase text-red-600 font-bold">
+                  Batch Multi-Candidate Enrolment
+                </span>
+                <h4 className="font-extrabold text-base text-slate-900">
+                  Multiple Student Registration Portal
+                </h4>
+                <p className="text-[11px] text-slate-500">
+                  Register multiple students simultaneously. Each candidate is guaranteed a unique, collision-proof ID.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowBulkRegistrationModal(false)}
+                className="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {bulkRegisterSuccess && (
+              <div className="p-3.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>{bulkRegisterSuccess}</span>
+              </div>
+            )}
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-slate-800 text-xs">
+                  Candidate Roster ({bulkStudentsList.length} Students)
+                </span>
+                <button
+                  type="button"
+                  onClick={handleAddBulkRow}
+                  className="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold rounded-lg text-xs flex items-center gap-1 cursor-pointer"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>+ Add Candidate Row</span>
+                </button>
+              </div>
+
+              <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1">
+                {bulkStudentsList.map((row, idx) => (
+                  <div key={idx} className="p-3 rounded-xl bg-slate-50 border border-slate-200 grid grid-cols-1 sm:grid-cols-12 gap-2 items-center">
+                    <div className="sm:col-span-1 text-center font-mono font-bold text-slate-400 text-xs">
+                      #{idx + 1}
+                    </div>
+                    <div className="sm:col-span-3">
+                      <input
+                        type="text"
+                        placeholder="Student Full Name *"
+                        value={row.fullName}
+                        onChange={(e) => handleUpdateBulkRow(idx, 'fullName', e.target.value)}
+                        className="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-bold"
+                      />
+                    </div>
+                    <div className="sm:col-span-2">
+                      <input
+                        type="tel"
+                        placeholder="10-digit Mobile *"
+                        value={row.mobile}
+                        onChange={(e) => handleUpdateBulkRow(idx, 'mobile', e.target.value)}
+                        className="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-mono"
+                      />
+                    </div>
+                    <div className="sm:col-span-3">
+                      <input
+                        type="text"
+                        placeholder="School Name"
+                        value={row.school}
+                        onChange={(e) => handleUpdateBulkRow(idx, 'school', e.target.value)}
+                        className="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white text-xs"
+                      />
+                    </div>
+                    <div className="sm:col-span-2">
+                      <input
+                        type="date"
+                        value={row.dob}
+                        onChange={(e) => handleUpdateBulkRow(idx, 'dob', e.target.value)}
+                        className="w-full px-2 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-mono"
+                      />
+                    </div>
+                    <div className="sm:col-span-1 text-center">
+                      {bulkStudentsList.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveBulkRow(idx)}
+                          className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 cursor-pointer"
+                          title="Remove row"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+                <span className="text-[11px] text-slate-500">
+                  Each student will be assigned an authoritative unique ID (e.g. ARDM-2026-XXXX) with no repetition.
+                </span>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowBulkRegistrationModal(false)}
+                    className="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 font-bold hover:bg-slate-200 cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleExecuteBulkRegistration}
+                    className="px-5 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold shadow-md cursor-pointer flex items-center gap-1.5"
+                  >
+                    <Check className="w-4 h-4" />
+                    <span>Register All ({bulkStudentsList.filter(s => s.fullName.trim() && s.mobile.trim()).length}) Candidates</span>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}

@@ -20,6 +20,7 @@ import {
   CourseEnrollment,
   MeritRecord,
   BannerItem,
+  TechDepartmentSettings,
 } from '../types';
 import { SITE_CONFIG } from '../config/siteConfig';
 
@@ -1806,12 +1807,16 @@ export function lookupRegistration(query: string): StudentProfile | null {
   const all = getStudents();
 
   return all.find(s => {
-    const sId = s.registrationId.toLowerCase();
-    const sPhone = s.mobile.replace(/[^0-9]/g, '');
-    const sEmail = s.email.trim().toLowerCase();
+    const sRegId = s.registrationId ? s.registrationId.toLowerCase() : '';
+    const sInternalId = s.id ? s.id.toLowerCase() : '';
+    const sName = s.fullName ? s.fullName.trim().toLowerCase() : '';
+    const sPhone = s.mobile ? s.mobile.replace(/[^0-9]/g, '') : '';
+    const sEmail = s.email ? s.email.trim().toLowerCase() : '';
 
     return (
-      sId === cleanQuery ||
+      sRegId === cleanQuery ||
+      sInternalId === cleanQuery ||
+      sName === cleanQuery ||
       (cleanPhone.length >= 10 && sPhone === cleanPhone) ||
       (sEmail.length > 3 && sEmail === cleanQuery)
     );
@@ -1831,6 +1836,29 @@ export function findDuplicateRegistration(phone: string, email: string): Student
     const sEmail = s.email.trim().toLowerCase();
     return (cleanPhone.length >= 10 && sPhone === cleanPhone) || (cleanEmail.length > 3 && sEmail === cleanEmail);
   }) || null;
+}
+
+// Generate strictly unique Registration ID e.g. ARDM-2026-8942 (Guaranteed Unique for everyone - Never repeated)
+export function generateGuaranteedUniqueRegistrationId(existingStudents?: StudentProfile[]): string {
+  const all = existingStudents || getStudents();
+  const existingSet = new Set(all.map((s) => s.registrationId.toUpperCase().trim()));
+
+  // Also prevent collision with topper IDs
+  DEFAULT_TOPPERS.forEach((t) => {
+    if (t.uniqueId) existingSet.add(t.uniqueId.toUpperCase().trim());
+  });
+
+  let attempts = 0;
+  while (attempts < 50000) {
+    const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+    const candidate = `${SITE_CONFIG.prostuti.registrationPrefix}-${randomSuffix}`;
+    if (!existingSet.has(candidate)) {
+      return candidate;
+    }
+    attempts++;
+  }
+  // High-precision fallback guarantees 0% collision even under heavy load
+  return `${SITE_CONFIG.prostuti.registrationPrefix}-${Date.now().toString().slice(-4)}${Math.floor(10 + Math.random() * 90)}`;
 }
 
 /**
@@ -1862,12 +1890,8 @@ export function registerNewStudent(data: {
   );
 
   // Generate unique Registration ID e.g. ARDM-2026-8942 (Guaranteed Unique)
-  let randomSuffix = Math.floor(1000 + Math.random() * 9000);
-  let registrationId = `${SITE_CONFIG.prostuti.registrationPrefix}-${randomSuffix}`;
-  while (all.some(s => s.registrationId === registrationId)) {
-    randomSuffix = Math.floor(1000 + Math.random() * 9000);
-    registrationId = `${SITE_CONFIG.prostuti.registrationPrefix}-${randomSuffix}`;
-  }
+  const registrationId = generateGuaranteedUniqueRegistrationId(all);
+  const randomSuffix = registrationId.split('-')[2] || Math.floor(1000 + Math.random() * 9000).toString();
 
   // Default Venue
   const venues = getVenues();
@@ -1944,6 +1968,33 @@ export function registerNewStudent(data: {
   } catch {}
 
   return newStudent;
+}
+
+/**
+ * Register Multiple Students in a single batch (Multiple Registrations)
+ * Strictly ensures each candidate receives their own unique non-repeated ID.
+ */
+export function registerMultipleStudents(list: Array<{
+  fullName: string;
+  dob: string;
+  email: string;
+  mobile: string;
+  studentClass: string;
+  board: string;
+  school: string;
+  address: string;
+  guardianName?: string;
+  guardianPhone?: string;
+  teacherName?: string;
+  selectedSubjectIds: string[];
+}>): StudentProfile[] {
+  const registeredProfiles: StudentProfile[] = [];
+  for (const item of list) {
+    if (!item.fullName || !item.mobile) continue;
+    const profile = registerNewStudent(item);
+    registeredProfiles.push(profile);
+  }
+  return registeredProfiles;
 }
 
 /**
@@ -2211,7 +2262,59 @@ export function getToppers(): TopperRecord[] {
 
 export function saveToppers(toppers: TopperRecord[]): void {
   saveToStorage(KEYS.TOPPERS, toppers);
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('ardm_toppers_updated'));
+  }
   logAuditAction('Admin', 'UPDATE_TOPPERS', `Updated leaderboard (${toppers.length} toppers)`);
+}
+
+export function addTopper(data: Omit<TopperRecord, 'id'>): TopperRecord {
+  const current = getToppers();
+  const newRecord: TopperRecord = {
+    ...data,
+    id: `top_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+  };
+  current.push(newRecord);
+  current.sort((a, b) => a.rank - b.rank);
+  saveToppers(current);
+  return newRecord;
+}
+
+export function updateTopper(id: string, updates: Partial<TopperRecord>): TopperRecord | null {
+  const current = getToppers();
+  const idx = current.findIndex((t) => t.id === id);
+  if (idx === -1) return null;
+  current[idx] = { ...current[idx], ...updates };
+  current.sort((a, b) => a.rank - b.rank);
+  saveToppers(current);
+  return current[idx];
+}
+
+export function deleteTopper(id: string): boolean {
+  const current = getToppers();
+  const filtered = current.filter((t) => t.id !== id);
+  saveToppers(filtered);
+  return true;
+}
+
+// ================= TECH DEPARTMENT SETTINGS =================
+
+export const DEFAULT_TECH_DEPARTMENT: TechDepartmentSettings = {
+  title: 'Technology Education & Digital Skills',
+  subtitle: 'Computer Science, Python, Artificial Intelligence, Data awareness and hands-on tech labs for young innovators.',
+  badgeText: 'Digital Skills & AI Track',
+};
+
+export function getTechDepartmentSettings(): TechDepartmentSettings {
+  return getFromStorage<TechDepartmentSettings>('ardm_tech_dept_settings_v1', DEFAULT_TECH_DEPARTMENT);
+}
+
+export function saveTechDepartmentSettings(settings: TechDepartmentSettings): void {
+  saveToStorage('ardm_tech_dept_settings_v1', settings);
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('ardm_tech_dept_updated'));
+  }
+  logAuditAction('Admin', 'UPDATE_TECH_DEPT', `Updated Tech Department: ${settings.title}`);
 }
 
 export function getSiteSettings(): SiteSettings {

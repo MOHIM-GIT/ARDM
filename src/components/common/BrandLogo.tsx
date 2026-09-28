@@ -123,9 +123,9 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
             className={`font-bold uppercase ${subTextSizes[size]} mt-1 flex items-center gap-1.5`}
           >
             <span className="text-[#FF671F]">LEARN</span>
-            <span className="text-slate-400 font-bold">•</span>
+            <span className={light ? 'text-white/80 font-bold' : 'text-slate-400 dark:text-white/80 font-bold'}>•</span>
             <span className={light ? 'text-white' : 'text-slate-900 dark:text-white'}>PRACTICE</span>
-            <span className="text-slate-400 font-bold">•</span>
+            <span className={light ? 'text-white/80 font-bold' : 'text-slate-400 dark:text-white/80 font-bold'}>•</span>
             <span className="text-[#16A34A] dark:text-[#22C55E]">IMPROVE</span>
           </span>
         </div>
