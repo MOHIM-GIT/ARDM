@@ -15,6 +15,7 @@ export const SITE_CONFIG = {
   // Official Verified Contact Information
   contact: {
     phoneNumber: "6289139984", // Clickable tel:6289139984
+    freeClassesFormUrl: "https://docs.google.com/forms/d/e/1FAIpQLSfaShqjqwxM7v7nlHixgApJzjJDBwipl4RC7M5B1LxlgRVP7Q/viewform?usp=publish-editor",
     whatsappNumber: "6289139984",
     emailAddress: "ardmacademy@gmail.com", // Clickable mailto:ardmacademy@gmail.com
     upiId: "akashpaik570@oksbi", // Official ARDM UPI VPA for course & test payments
@@ -28,7 +29,7 @@ export const SITE_CONFIG = {
     whatsappChannel: "https://whatsapp.com/channel/0029VbDUvfu6BIErmz6pxX1h",
     facebook: "https://www.facebook.com/share/1FA562wUSQ/",
     instagram: "https://www.instagram.com/ardmacademy2026?stkn=bTZnejdwbXJnNWY=",
-    youtube: "https://youtube.com/@ardmacademy?si=GWXca9H1pAZhdZU4",
+    youtube: "https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS",
   },
 
   // Server-Side Role-Based Admin Protection

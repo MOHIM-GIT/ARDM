@@ -22,6 +22,10 @@ import {
   GraduationCap,
   Clock,
   Award,
+  Upload,
+  Image as ImageIcon,
+  Trash2,
+  Eye,
 } from 'lucide-react';
 import {
   getCourses,
@@ -48,6 +52,9 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenRegi
   const [enrollStudentEmail, setEnrollStudentEmail] = useState('');
   const [enrollStudentSchool, setEnrollStudentSchool] = useState('');
   const [enrollTransactionId, setEnrollTransactionId] = useState('');
+  const [enrollPaymentScreenshot, setEnrollPaymentScreenshot] = useState<string | null>(null);
+  const [enrollScreenshotFileName, setEnrollScreenshotFileName] = useState('');
+  const [enrollScreenshotPreviewModal, setEnrollScreenshotPreviewModal] = useState(false);
   const [enrollPaymentDate, setEnrollPaymentDate] = useState(
     new Date().toISOString().split('T')[0]
   );
@@ -73,10 +80,52 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenRegi
     setTimeout(() => setCopiedUpi(false), 2500);
   };
 
+  const handleEnrollScreenshotUpload = (file: File) => {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      alert('Please upload an image file (PNG, JPG, JPEG, WEBP).');
+      return;
+    }
+    setEnrollScreenshotFileName(file.name);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const rawDataUrl = e.target?.result as string;
+      const img = new Image();
+      img.onload = () => {
+        const maxDim = 1200;
+        let width = img.width;
+        let height = img.height;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          setEnrollPaymentScreenshot(canvas.toDataURL('image/jpeg', 0.82));
+        } else {
+          setEnrollPaymentScreenshot(rawDataUrl);
+        }
+      };
+      img.src = rawDataUrl;
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleOpenEnrollModal = (course: Course) => {
     setSelectedCourseForEnroll(course);
     setEnrollSuccessMessage(null);
     setEnrollTransactionId('');
+    setEnrollPaymentScreenshot(null);
+    setEnrollScreenshotFileName('');
   };
 
   const handleSubmitEnrollment = async (e: React.FormEvent) => {
@@ -84,8 +133,8 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenRegi
     if (!selectedCourseForEnroll) return;
     if (!enrollStudentName.trim() || !enrollStudentMobile.trim()) return;
 
-    if (!selectedCourseForEnroll.isFree && selectedCourseForEnroll.price > 0 && !enrollTransactionId.trim()) {
-      alert('Please enter your 12-digit UPI Transaction ID / UTR number.');
+    if (!selectedCourseForEnroll.isFree && selectedCourseForEnroll.price > 0 && !enrollPaymentScreenshot) {
+      alert('Please upload your payment screenshot to verify payment.');
       return;
     }
 
@@ -100,8 +149,9 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenRegi
         studentMobile: enrollStudentMobile.trim(),
         school: enrollStudentSchool.trim(),
         paymentAmount: isFree ? 0 : selectedCourseForEnroll.price,
-        transactionId: isFree ? 'FREE_ENROLLMENT' : enrollTransactionId.trim(),
+        transactionId: isFree ? 'FREE_ENROLLMENT' : (enrollTransactionId.trim() || 'SCREENSHOT_UPLOADED'),
         paymentDate: enrollPaymentDate,
+        paymentScreenshotUrl: enrollPaymentScreenshot || undefined,
       });
 
       if (isFree) {
@@ -110,7 +160,7 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenRegi
         );
       } else {
         setEnrollSuccessMessage(
-          `Payment Received! Status: PAYMENT UNDER REVIEW. Our admin team will verify your UTR (${enrollTransactionId}) with State Bank of India. Once verified, your Course Enrollment will become ACTIVE.`
+          `Payment Screenshot Received! Status: PAYMENT UNDER REVIEW. Our admin team will verify your screenshot and activate your Course Enrollment within 2-4 hours.`
         );
       }
     } catch (err: any) {
@@ -538,8 +588,8 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenRegi
                     <div className="p-2.5 rounded-xl bg-slate-800/80 text-[11px] text-slate-300 space-y-1">
                       <p className="font-semibold text-white">Payment Instructions:</p>
                       <p>1. Scan the dynamic QR above or send to <strong>akashpaik570@oksbi</strong>.</p>
-                      <p>2. Copy the 12-digit UPI UTR / Transaction ID from your receipt.</p>
-                      <p>3. Enter your details & UTR below to submit proof for review.</p>
+                      <p>2. Take a screenshot of your successful transaction receipt.</p>
+                      <p>3. Enter candidate details & upload the screenshot below for verification.</p>
                     </div>
                   </div>
                 )}
@@ -600,33 +650,113 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenRegi
                       <span className="font-bold text-amber-950 block text-xs">
                         Transaction Verification Details
                       </span>
+
+                      {/* Screenshot Upload */}
+                      <div>
+                        <label className="block font-bold text-amber-950 mb-1 flex items-center justify-between">
+                          <span className="flex items-center gap-1.5">
+                            <Upload className="w-3.5 h-3.5 text-amber-800" />
+                            <span>Upload Payment Screenshot</span>
+                            <span className="text-rose-600 font-extrabold">*</span>
+                          </span>
+                          <span className="text-[10px] text-amber-800 font-normal">PNG, JPG, WEBP</span>
+                        </label>
+
+                        {!enrollPaymentScreenshot ? (
+                          <label
+                            onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                            onDrop={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                                handleEnrollScreenshotUpload(e.dataTransfer.files[0]);
+                              }
+                            }}
+                            className="relative flex flex-col items-center justify-center p-4 border-2 border-dashed border-amber-300 rounded-xl bg-white/80 hover:bg-white cursor-pointer transition-all"
+                          >
+                            <input
+                              type="file"
+                              accept="image/png, image/jpeg, image/jpg, image/webp"
+                              className="sr-only"
+                              onChange={(e) => {
+                                if (e.target.files && e.target.files[0]) {
+                                  handleEnrollScreenshotUpload(e.target.files[0]);
+                                }
+                              }}
+                            />
+                            <Upload className="w-5 h-5 text-amber-700 mb-1" />
+                            <p className="text-xs font-bold text-amber-950 text-center">
+                              Click to upload or drag & drop payment screenshot
+                            </p>
+                            <p className="text-[10px] text-amber-700 mt-0.5">
+                              Receipt from Google Pay, PhonePe, Paytm, or Mobile Banking
+                            </p>
+                          </label>
+                        ) : (
+                          <div className="p-2.5 bg-white rounded-xl border border-emerald-300 shadow-xs flex items-center gap-3">
+                            <img
+                              src={enrollPaymentScreenshot}
+                              alt="Payment Proof"
+                              onClick={() => setEnrollScreenshotPreviewModal(true)}
+                              className="w-12 h-12 object-cover rounded-lg border border-slate-200 cursor-pointer"
+                            />
+                            <div className="flex-1 min-w-0">
+                              <span className="text-xs font-bold text-emerald-800 flex items-center gap-1">
+                                <CheckCircle2 className="w-3.5 h-3.5" />
+                                Screenshot attached
+                              </span>
+                              <p className="text-[10px] text-slate-500 truncate">{enrollScreenshotFileName || 'receipt.jpg'}</p>
+                              <div className="flex items-center gap-2 mt-0.5">
+                                <button
+                                  type="button"
+                                  onClick={() => setEnrollScreenshotPreviewModal(true)}
+                                  className="text-[10px] text-indigo-600 font-bold hover:underline"
+                                >
+                                  Preview
+                                </button>
+                                <span className="text-slate-300">•</span>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setEnrollPaymentScreenshot(null);
+                                    setEnrollScreenshotFileName('');
+                                  }}
+                                  className="text-[10px] text-rose-600 font-bold hover:underline"
+                                >
+                                  Remove
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
-                          <label className="block font-bold text-amber-900 mb-1">
-                            UPI Transaction ID / UTR *
+                          <label className="block font-medium text-amber-900 mb-1 text-[11px]">
+                            UPI Transaction ID / UTR <span className="text-slate-400 font-normal">(Optional)</span>
                           </label>
                           <input
                             type="text"
-                            required
                             value={enrollTransactionId}
                             onChange={(e) => setEnrollTransactionId(e.target.value)}
                             placeholder="e.g. 439281726354"
-                            className="w-full px-3 py-2 rounded-xl border border-amber-300 bg-white font-mono font-bold"
+                            className="w-full px-3 py-2 rounded-xl border border-amber-300 bg-white font-mono text-xs"
                           />
                         </div>
                         <div>
-                          <label className="block font-bold text-amber-900 mb-1">Payment Date *</label>
+                          <label className="block font-bold text-amber-900 mb-1 text-[11px]">Payment Date *</label>
                           <input
                             type="date"
                             required
                             value={enrollPaymentDate}
                             onChange={(e) => setEnrollPaymentDate(e.target.value)}
-                            className="w-full px-3 py-2 rounded-xl border border-amber-300 bg-white font-mono"
+                            className="w-full px-3 py-2 rounded-xl border border-amber-300 bg-white font-mono text-xs"
                           />
                         </div>
                       </div>
                       <p className="text-[10px] text-amber-800">
-                        Status after submission: <strong>Payment Under Review</strong>. Admin will verify with bank statement before activating enrollment.
+                        Status after submission: <strong>Payment Under Review</strong>. Admin will verify your screenshot before activating enrollment.
                       </p>
                     </div>
                   )}
@@ -763,6 +893,43 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenRegi
                 )}
               </div>
             )}
+          </div>
+        </div>
+      )}
+      {/* Screenshot Preview Modal */}
+      {enrollScreenshotPreviewModal && enrollPaymentScreenshot && (
+        <div className="fixed inset-0 z-60 bg-black/80 flex items-center justify-center p-4 backdrop-blur-xs">
+          <div className="relative max-w-2xl w-full max-h-[90vh] bg-white rounded-2xl overflow-hidden shadow-2xl flex flex-col">
+            <div className="p-3 bg-slate-900 text-white flex items-center justify-between">
+              <span className="text-xs font-bold flex items-center gap-2">
+                <ImageIcon className="w-4 h-4 text-emerald-400" />
+                <span>Uploaded Payment Screenshot</span>
+              </span>
+              <button
+                type="button"
+                onClick={() => setEnrollScreenshotPreviewModal(false)}
+                className="p-1 text-slate-300 hover:text-white rounded-lg hover:bg-slate-800"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="p-3 overflow-auto max-h-[72vh] flex items-center justify-center bg-slate-950">
+              <img
+                src={enrollPaymentScreenshot}
+                alt="Payment Proof Full"
+                className="max-h-[68vh] w-auto max-w-full object-contain rounded"
+              />
+            </div>
+            <div className="p-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-[11px] text-slate-600">
+              <span className="truncate">{enrollScreenshotFileName || 'receipt.jpg'}</span>
+              <button
+                type="button"
+                onClick={() => setEnrollScreenshotPreviewModal(false)}
+                className="px-3 py-1 bg-slate-800 text-white font-bold rounded-lg hover:bg-slate-700"
+              >
+                Close Preview
+              </button>
+            </div>
           </div>
         </div>
       )}

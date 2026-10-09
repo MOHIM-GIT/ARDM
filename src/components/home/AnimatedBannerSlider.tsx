@@ -17,6 +17,7 @@ interface AnimatedBannerSliderProps {
   onNavigate?: (target: string) => void;
   onOpenRegistration?: () => void;
   onOpenTestEngine?: () => void;
+  onOpenWorkshopManager?: () => void;
   className?: string;
 }
 
@@ -24,6 +25,7 @@ export const AnimatedBannerSlider: React.FC<AnimatedBannerSliderProps> = ({
   onNavigate,
   onOpenRegistration,
   onOpenTestEngine,
+  onOpenWorkshopManager,
   className = '',
 }) => {
   const [banners, setBanners] = useState<BannerItem[]>([]);
@@ -115,7 +117,19 @@ export const AnimatedBannerSlider: React.FC<AnimatedBannerSliderProps> = ({
 
   const currentBanner = banners[currentIndex] || banners[0];
 
-  const handleCtaClick = (link?: string) => {
+  const handleCtaClick = (link?: string, banner?: BannerItem) => {
+    if (
+      link === '#workshop-manager' ||
+      link === 'workshop-manager' ||
+      banner?.id === 'banner_ai_coding_labs' ||
+      banner?.ctaLink === '#workshop-manager' ||
+      (banner?.title?.toLowerCase().includes('workshop') && banner?.ctaText?.toLowerCase().includes('explore'))
+    ) {
+      if (onOpenWorkshopManager) {
+        onOpenWorkshopManager();
+        return;
+      }
+    }
     if (!link) return;
     if (link === '#mock-tests' || link === 'registration') {
       if (onOpenRegistration) {
@@ -130,7 +144,13 @@ export const AnimatedBannerSlider: React.FC<AnimatedBannerSliderProps> = ({
       }
     }
     if (link.startsWith('http://') || link.startsWith('https://')) {
-      window.open(link, '_blank', 'noopener,noreferrer');
+      const a = document.createElement('a');
+      a.href = link;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
       return;
     }
     if (onNavigate) {
@@ -258,7 +278,7 @@ export const AnimatedBannerSlider: React.FC<AnimatedBannerSliderProps> = ({
                   {b.ctaText && (
                     <div className="mt-6 flex items-center gap-3 pointer-events-auto">
                       <button
-                        onClick={() => handleCtaClick(b.ctaLink)}
+                        onClick={() => handleCtaClick(b.ctaLink, b)}
                         className="inline-flex items-center gap-2 px-5 sm:px-6 py-3 rounded-xl bg-gradient-to-r from-red-700 via-rose-600 to-red-700 hover:from-red-800 hover:to-rose-800 text-white text-xs sm:text-sm font-bold shadow-lg hover:shadow-red-900/40 transition-all hover:scale-102 active:scale-98 cursor-pointer"
                       >
                         <span>{b.ctaText}</span>

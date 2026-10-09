@@ -103,6 +103,31 @@ export const WorkshopsPage: React.FC<WorkshopsPageProps> = ({ onNavigate, onOpen
             </div>
           ))}
         </div>
+
+        {/* Free AI & Coding Workshop Manager Spotlight */}
+        <section className="rounded-3xl bg-gradient-to-r from-slate-950 via-red-950/80 to-slate-950 border border-red-500/30 p-6 sm:p-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 mb-12">
+          <div className="space-y-2 text-center md:text-left">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-500/20 text-red-300 border border-red-500/30 text-[11px] font-mono font-bold uppercase tracking-wider">
+              <span>CodeLX &amp; ARDM Academy Initiative</span>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-black text-white">
+              AI Masterclass &amp; Free Coding Bootcamps
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
+              Led by Workshop Manager <strong>MOHIM DAS</strong> (Founder &amp; CEO of CodeLX, Joint Founder of ARDM Academy). Hands-on Python programming, AI fundamentals, and verifiable digital certificates.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-3 shrink-0">
+            <button
+              onClick={() => onNavigate('/workshop-manager')}
+              className="px-6 py-3 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold text-xs shadow-lg transition-all active:scale-98 cursor-pointer flex items-center gap-2"
+            >
+              <span>Explore Workshop Manager</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </section>
       </main>
     </div>
   );

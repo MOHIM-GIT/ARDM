@@ -21,6 +21,7 @@ import {
   MeritRecord,
   BannerItem,
   TechDepartmentSettings,
+  FreeClassesDisplayMode,
 } from '../types';
 import { SITE_CONFIG } from '../config/siteConfig';
 
@@ -633,8 +634,8 @@ export const DEFAULT_PYQS: PYQItem[] = [
 export const DEFAULT_FREE_CLASSES: FreeClassVideo[] = [
   {
     id: 'yt_1',
-    title: 'Class 10 Madhyamik Mathematics 2026: 96%+ Question Prediction & Theorem Secrets',
-    youtubeUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    title: 'Class 10 Madhyamik Mathematics 2026: 96%+ Question Prediction & Circle Theorems',
+    youtubeUrl: 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS',
     thumbnailUrl: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=600&q=80',
     description: 'In-depth analysis of circle theorems, quadratic formulas, and high-probability board questions.',
     category: 'Mathematics',
@@ -647,7 +648,7 @@ export const DEFAULT_FREE_CLASSES: FreeClassVideo[] = [
   {
     id: 'yt_2',
     title: 'Physical Science: Current Electricity & Joule’s Law Numerical Hacks',
-    youtubeUrl: 'https://www.youtube.com/watch?v=jNQXAC9IVRw',
+    youtubeUrl: 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS',
     thumbnailUrl: 'https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=600&q=80',
     description: 'Learn how to solve complex circuit resistance problems in under 60 seconds with clear diagrams.',
     category: 'Sciences',
@@ -660,7 +661,7 @@ export const DEFAULT_FREE_CLASSES: FreeClassVideo[] = [
   {
     id: 'yt_3',
     title: 'Life Science: Genetics, Punnett Squares & Cell Division in 30 Minutes',
-    youtubeUrl: 'https://www.youtube.com/watch?v=fJ9rUzIMcZQ',
+    youtubeUrl: 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS',
     thumbnailUrl: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=600&q=80',
     description: 'Mendelian genetics laws, monohybrid and dihybrid crosses made intuitive and visually clear.',
     category: 'Sciences',
@@ -673,7 +674,7 @@ export const DEFAULT_FREE_CLASSES: FreeClassVideo[] = [
   {
     id: 'yt_4',
     title: 'Free Coding Foundation: Python & Logic Building for School Students',
-    youtubeUrl: 'https://www.youtube.com/watch?v=kqtD5dpn9C8',
+    youtubeUrl: 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS',
     thumbnailUrl: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=600&q=80',
     description: 'Zero-prerequisite introduction to coding logic, computational thinking, and building fun text games.',
     category: 'Computer',
@@ -1137,6 +1138,8 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   googleSheetUrl: '',
   registrationIsOpen: true,
   upiVpa: SITE_CONFIG.contact.upiId,
+  freeClassesDisplayMode: 'coming_soon',
+  freeClassesBannerVisible: false,
 };
 
 // Seed CBT Exam & Questions
@@ -2004,7 +2007,9 @@ export function registerMultipleStudents(list: Array<{
 export function submitPaymentProof(
   registrationId: string,
   paymentDetails: {
-    transactionId: string;
+    transactionId?: string;
+    paymentScreenshotUrl?: string;
+    screenshotUrl?: string;
     paymentDate: string;
     amount: number;
     screenshotNote?: string;
@@ -2014,7 +2019,11 @@ export function submitPaymentProof(
   const student = all.find(s => s.registrationId === registrationId || s.id === registrationId);
   if (!student) return null;
 
-  student.paymentTransactionId = paymentDetails.transactionId.trim();
+  const resolvedScreenshot = paymentDetails.paymentScreenshotUrl || paymentDetails.screenshotUrl;
+  if (resolvedScreenshot) {
+    student.paymentScreenshotUrl = resolvedScreenshot;
+  }
+  student.paymentTransactionId = paymentDetails.transactionId?.trim() || (resolvedScreenshot ? 'SCREENSHOT_UPLOADED' : '');
   student.paymentDate = paymentDetails.paymentDate;
   student.paymentAmount = paymentDetails.amount;
   student.paymentScreenshotNote = paymentDetails.screenshotNote;
@@ -2024,7 +2033,7 @@ export function submitPaymentProof(
   student.updatedAt = new Date().toISOString();
 
   saveStudents(all);
-  logAuditAction('Student', 'SUBMIT_PAYMENT', `Student submitted payment UTR ${paymentDetails.transactionId} for ${student.registrationId}`);
+  logAuditAction('Student', 'SUBMIT_PAYMENT', `Student uploaded payment screenshot for ${student.registrationId}`);
 
   // Post to server
   fetch('/api/students/payment', {
@@ -2032,7 +2041,8 @@ export function submitPaymentProof(
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       registrationId: student.registrationId,
-      transactionId: paymentDetails.transactionId,
+      transactionId: student.paymentTransactionId,
+      paymentScreenshotUrl: resolvedScreenshot,
       paymentDate: paymentDetails.paymentDate,
       amount: paymentDetails.amount,
       screenshotNote: paymentDetails.screenshotNote,
@@ -2138,7 +2148,14 @@ export function updatePYQ(id: string, updates: Partial<PYQItem>): PYQItem | null
 // ================= FREE YOUTUBE CLASSES =================
 
 export function getFreeClasses(): FreeClassVideo[] {
-  return getFromStorage<FreeClassVideo[]>(KEYS.FREE_CLASSES, DEFAULT_FREE_CLASSES);
+  const classes = getFromStorage<FreeClassVideo[]>(KEYS.FREE_CLASSES, DEFAULT_FREE_CLASSES);
+  const yt1 = classes.find((c) => c.id === 'yt_1');
+  if (yt1 && (yt1.title !== 'Class 10 Madhyamik Mathematics 2026: 96%+ Question Prediction & Circle Theorems' || yt1.youtubeUrl !== 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS')) {
+    yt1.title = 'Class 10 Madhyamik Mathematics 2026: 96%+ Question Prediction & Circle Theorems';
+    yt1.youtubeUrl = 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS';
+    saveToStorage(KEYS.FREE_CLASSES, classes);
+  }
+  return classes;
 }
 
 export function saveFreeClasses(classes: FreeClassVideo[]): void {
@@ -3003,6 +3020,19 @@ export async function deleteFreeClass(id: string): Promise<boolean> {
 // ==========================================
 export const DEFAULT_BANNERS: BannerItem[] = [
   {
+    id: 'banner_wbbse_free_classes_2026',
+    title: 'WBBSE Online Free Classes (Class 8, 9 & 10 Madhyamik)',
+    subtitle: 'Free Guidance by Dada-Didi • 24/7 Doubt Solving with Instant Reply • Free Notes & Proper Predicted Questions • 100% Free for West Bengal Board! Call: 6289139984',
+    badgeText: '100% FREE WBBSE ONLINE CLASSES',
+    mediaType: 'image',
+    mediaUrl: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=1200&auto=format&fit=crop&q=80',
+    ctaText: 'Seat Book Now (Google Form)',
+    ctaLink: 'https://docs.google.com/forms/d/e/1FAIpQLSfaShqjqwxM7v7nlHixgApJzjJDBwipl4RC7M5B1LxlgRVP7Q/viewform?usp=publish-editor',
+    isVisible: true,
+    orderIndex: 0,
+    createdAt: '2026-02-01T00:00:00.000Z',
+  },
+  {
     id: 'banner_prostuti_2026',
     title: 'PROSTUTI 2026: State-Level Class 10 Mock Exam Suite',
     subtitle: 'Comprehensive WBBSE & CBSE mock examination with 96%+ historical similarity, granular speed analytics, and real exam atmosphere.',
@@ -3017,26 +3047,26 @@ export const DEFAULT_BANNERS: BannerItem[] = [
   },
   {
     id: 'banner_dada_didi_mentorship',
-    title: 'Dada-Didi Mentorship & Free Curriculum Lectures',
+    title: 'Free Education & YouTube Classes (Classes 5 to 10)',
     subtitle: '100% free video classes for Classes 5 to 10 covering Mathematics, Physical Science, and Life Science with senior toppers.',
-    badgeText: '100% FREE EDUCATION',
-    mediaType: 'image',
-    mediaUrl: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&auto=format&fit=crop&q=80',
-    ctaText: 'Watch Free Lectures',
-    ctaLink: '#free-classes',
-    isVisible: true,
+    badgeText: '100% FREE EDUCATION & YOUTUBE CLASSES',
+    mediaType: 'video',
+    mediaUrl: 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS',
+    ctaText: 'Watch Free YouTube Classes',
+    ctaLink: 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS',
+    isVisible: false,
     orderIndex: 2,
     createdAt: '2026-01-02T00:00:00.000Z',
   },
   {
     id: 'banner_ai_coding_labs',
-    title: 'Monthly AI Masterclass & Next-Gen Coding Workshops',
-    subtitle: 'Learn Python, modern Artificial Intelligence fundamentals, prompt craft, and receive digital verifiable certificates.',
-    badgeText: 'AI & CODING LAB',
-    mediaType: 'video',
-    mediaUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-    ctaText: 'Explore AI Workshops',
-    ctaLink: '#ai-webinars',
+    title: 'Free AI Workshop & Coding Classes 2026',
+    subtitle: 'Learn Python, Artificial Intelligence fundamentals, prompt engineering, and hands-on coding from CodeLX & ARDM Academy.',
+    badgeText: '100% FREE AI & CODING WORKSHOP',
+    mediaType: 'image',
+    mediaUrl: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1600&auto=format&fit=crop&q=80',
+    ctaText: 'Explore Workshop',
+    ctaLink: '#workshop-manager',
     isVisible: true,
     orderIndex: 3,
     createdAt: '2026-01-03T00:00:00.000Z',
@@ -3055,6 +3085,48 @@ export function getBanners(): BannerItem[] {
     if (!Array.isArray(parsed) || parsed.length === 0) {
       saveBanners(DEFAULT_BANNERS);
       return DEFAULT_BANNERS;
+    }
+    // Ensure WBBSE Free Online Classes banner is always injected
+    if (!parsed.some((b: BannerItem) => b.id === 'banner_wbbse_free_classes_2026')) {
+      parsed.unshift(DEFAULT_BANNERS[0]);
+      saveBanners(parsed);
+    }
+    // Upgrade Free Education banner to video and YouTube link if it was previously image
+    const freeEduIdx = parsed.findIndex((b: BannerItem) => b.id === 'banner_dada_didi_mentorship');
+    if (freeEduIdx >= 0) {
+      const siteSettings = getSiteSettings();
+      const shouldBeVisible = !!siteSettings.freeClassesBannerVisible;
+      if (
+        parsed[freeEduIdx].mediaType !== 'video' ||
+        parsed[freeEduIdx].title !== 'Free Education & YouTube Classes (Classes 5 to 10)' ||
+        parsed[freeEduIdx].isVisible !== shouldBeVisible
+      ) {
+        parsed[freeEduIdx] = {
+          ...parsed[freeEduIdx],
+          title: 'Free Education & YouTube Classes (Classes 5 to 10)',
+          badgeText: '100% FREE EDUCATION & YOUTUBE CLASSES',
+          mediaType: 'video',
+          mediaUrl: 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS',
+          ctaText: 'Watch Free YouTube Classes',
+          ctaLink: 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS',
+          isVisible: shouldBeVisible,
+        };
+        saveBanners(parsed);
+      }
+    }
+    // Upgrade AI Coding Lab banner to image and workshop manager if it was previously video
+    const aiIdx = parsed.findIndex((b: BannerItem) => b.id === 'banner_ai_coding_labs');
+    if (aiIdx >= 0 && (parsed[aiIdx].mediaType === 'video' || parsed[aiIdx].ctaLink !== '#workshop-manager')) {
+      parsed[aiIdx] = {
+        ...parsed[aiIdx],
+        title: 'Free AI Workshop & Coding Classes 2026',
+        badgeText: '100% FREE AI & CODING WORKSHOP',
+        mediaType: 'image',
+        mediaUrl: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1600&auto=format&fit=crop&q=80',
+        ctaText: 'Explore Workshop',
+        ctaLink: '#workshop-manager',
+      };
+      saveBanners(parsed);
     }
     return parsed.sort((a, b) => a.orderIndex - b.orderIndex);
   } catch (e) {
@@ -3117,4 +3189,47 @@ export function deleteBanner(id: string): boolean {
   saveBanners(filtered);
   return true;
 }
+
+// ==========================================
+// FREE CLASSES ADMIN VISIBILITY & DISPLAY MODE
+// ==========================================
+
+export function getFreeClassesDisplayMode(): FreeClassesDisplayMode {
+  const settings = getSiteSettings();
+  return settings.freeClassesDisplayMode || 'coming_soon';
+}
+
+export function setFreeClassesDisplayMode(mode: FreeClassesDisplayMode): void {
+  const settings = getSiteSettings();
+  settings.freeClassesDisplayMode = mode;
+  saveSiteSettings(settings);
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('ardm_free_classes_mode_updated'));
+  }
+  logAuditAction('Admin', 'UPDATE_FREE_CLASSES_MODE', `Set Free Classes section mode to ${mode}`);
+}
+
+export function isFreeClassesBannerVisible(): boolean {
+  const settings = getSiteSettings();
+  return !!settings.freeClassesBannerVisible;
+}
+
+export function setFreeClassesBannerVisible(visible: boolean): void {
+  const settings = getSiteSettings();
+  settings.freeClassesBannerVisible = visible;
+  saveSiteSettings(settings);
+
+  const banners = getBanners();
+  const banner = banners.find((b) => b.id === 'banner_dada_didi_mentorship');
+  if (banner) {
+    banner.isVisible = visible;
+    saveBanners(banners);
+  }
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('ardm_banners_updated'));
+    window.dispatchEvent(new Event('ardm_free_classes_mode_updated'));
+  }
+  logAuditAction('Admin', 'UPDATE_FREE_CLASSES_BANNER', `Free classes homepage banner set to ${visible ? 'VISIBLE' : 'HIDDEN'}`);
+}
+
 

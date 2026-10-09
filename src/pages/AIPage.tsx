@@ -65,7 +65,7 @@ export const AIPage: React.FC<AIPageProps> = ({ onNavigate }) => {
             Understand how AI models see, learn, and reason. We break down machine learning, neural networks, and prompt engineering into interactive, intuitive experiments for young scholars.
           </p>
 
-          <div className="flex justify-center gap-3 pt-2">
+          <div className="flex flex-wrap justify-center gap-3 pt-2">
             <a
               href={getWhatsAppLink('Hello ARDM Academy, I would like to register for the AI & Machine Learning Workshop.')}
               target="_blank"
@@ -75,6 +75,13 @@ export const AIPage: React.FC<AIPageProps> = ({ onNavigate }) => {
               <span>Join AI Masterclass</span>
               <ArrowRight className="w-4 h-4" />
             </a>
+
+            <button
+              onClick={() => onNavigate('/workshop-manager')}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl border border-slate-700 shadow-md transition-all cursor-pointer"
+            >
+              <span>Explore Workshop Manager (Mohim Das)</span>
+            </button>
           </div>
         </header>
 

@@ -24,6 +24,10 @@ import {
   Copy,
   Calendar,
   Lock,
+  Upload,
+  Image as ImageIcon,
+  Trash2,
+  Eye,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import {
@@ -84,6 +88,10 @@ export const MockTestRegistrationModal: React.FC<MockTestRegistrationModalProps>
 
   // Payment Submission State (Section 10)
   const [transactionId, setTransactionId] = useState('');
+  const [paymentScreenshot, setPaymentScreenshot] = useState<string | null>(null);
+  const [screenshotFileName, setScreenshotFileName] = useState('');
+  const [screenshotFileSize, setScreenshotFileSize] = useState('');
+  const [previewModalOpen, setPreviewModalOpen] = useState(false);
   const [paymentDate, setPaymentDate] = useState(new Date().toISOString().split('T')[0]);
   const [paymentNote, setPaymentNote] = useState('');
   const [isSubmittingPayment, setIsSubmittingPayment] = useState(false);
@@ -207,11 +215,63 @@ export const MockTestRegistrationModal: React.FC<MockTestRegistrationModalProps>
     );
   };
 
+  const handleScreenshotUpload = (file: File) => {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      setErrors((prev) => ({ ...prev, screenshot: 'Please upload an image file (PNG, JPG, JPEG, WEBP).' }));
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      setErrors((prev) => ({ ...prev, screenshot: 'Image size exceeds 10MB limit.' }));
+      return;
+    }
+
+    setScreenshotFileName(file.name);
+    setScreenshotFileSize((file.size / 1024).toFixed(0) + ' KB');
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const rawDataUrl = e.target?.result as string;
+      const img = new Image();
+      img.onload = () => {
+        const maxDim = 1200;
+        let width = img.width;
+        let height = img.height;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          setPaymentScreenshot(canvas.toDataURL('image/jpeg', 0.82));
+        } else {
+          setPaymentScreenshot(rawDataUrl);
+        }
+        setErrors((prev) => {
+          const next = { ...prev };
+          delete next.screenshot;
+          return next;
+        });
+      };
+      img.src = rawDataUrl;
+    };
+    reader.readAsDataURL(file);
+  };
+
   // Submit Payment Proof (Section 10)
   const handleSubmitPaymentProof = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!transactionId.trim()) {
-      setErrors({ transactionId: 'Transaction ID / UTR is required' });
+    if (!paymentScreenshot) {
+      setErrors({ screenshot: 'Payment Screenshot is required. Please upload your payment receipt/screenshot.' });
       return;
     }
 
@@ -221,7 +281,8 @@ export const MockTestRegistrationModal: React.FC<MockTestRegistrationModalProps>
 
     setTimeout(() => {
       const updated = submitPaymentProof(createdStudent.registrationId, {
-        transactionId: transactionId.trim(),
+        paymentScreenshotUrl: paymentScreenshot,
+        transactionId: transactionId.trim() || undefined,
         paymentDate,
         amount: pricing.finalAmount,
         screenshotNote: paymentNote.trim() || undefined,
@@ -546,7 +607,7 @@ export const MockTestRegistrationModal: React.FC<MockTestRegistrationModalProps>
                 <div>
                   <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
                     <QrCode className="w-4 h-4 text-indigo-600" />
-                    <span>Step 4: Scan UPI QR & Submit Transaction ID</span>
+                    <span>Step 4: Scan UPI QR & Upload Payment Screenshot</span>
                   </h4>
                   <p className="text-slate-500">
                     Registration ID generated:{' '}
@@ -578,23 +639,133 @@ export const MockTestRegistrationModal: React.FC<MockTestRegistrationModalProps>
                   </span>
                 </div>
 
-                {/* UTR Input Form */}
+                  {/* Screenshot Upload Form */}
                 <form onSubmit={handleSubmitPaymentProof} className="space-y-3">
                   <div>
-                    <label className="block font-bold text-slate-700 mb-1">
-                      Transaction ID / UTR <span className="text-rose-500">*</span>
+                    <label className="block font-bold text-slate-700 mb-1 flex items-center justify-between">
+                      <span className="flex items-center gap-1.5">
+                        <Upload className="w-3.5 h-3.5 text-indigo-600" />
+                        <span>Upload Payment Screenshot</span>
+                        <span className="text-rose-500 font-extrabold">*</span>
+                      </span>
+                      <span className="text-[10px] text-indigo-600 font-normal">PNG, JPG, WEBP (Max 10MB)</span>
+                    </label>
+
+                    {!paymentScreenshot ? (
+                      <label
+                        onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                        onDrop={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                            handleScreenshotUpload(e.dataTransfer.files[0]);
+                          }
+                        }}
+                        className={`relative flex flex-col items-center justify-center p-4 border-2 border-dashed rounded-2xl cursor-pointer transition-all ${
+                          errors.screenshot
+                            ? 'border-rose-400 bg-rose-50/50 hover:bg-rose-50'
+                            : 'border-indigo-300 bg-indigo-50/40 hover:bg-indigo-50/80 hover:border-indigo-500'
+                        }`}
+                      >
+                        <input
+                          type="file"
+                          accept="image/png, image/jpeg, image/jpg, image/webp"
+                          className="sr-only"
+                          onChange={(e) => {
+                            if (e.target.files && e.target.files[0]) {
+                              handleScreenshotUpload(e.target.files[0]);
+                            }
+                          }}
+                        />
+                        <div className="w-9 h-9 rounded-full bg-white shadow-xs border border-indigo-200 flex items-center justify-center text-indigo-600 mb-1.5">
+                          <Upload className="w-4 h-4" />
+                        </div>
+                        <p className="text-xs font-bold text-slate-800 text-center">
+                          Click to upload or drag & drop payment screenshot
+                        </p>
+                        <p className="text-[10px] text-slate-500 mt-0.5 text-center">
+                          PhonePe / Google Pay / Paytm / Bank successful transaction receipt
+                        </p>
+                      </label>
+                    ) : (
+                      <div className="p-3 bg-white rounded-xl border border-emerald-300 shadow-xs space-y-2">
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={paymentScreenshot}
+                            alt="Payment proof preview"
+                            onClick={() => setPreviewModalOpen(true)}
+                            className="w-14 h-14 object-cover rounded-lg border border-slate-200 cursor-pointer hover:opacity-90 transition-opacity"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-1 text-emerald-700 font-bold text-xs">
+                              <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                              <span className="truncate">Screenshot uploaded successfully</span>
+                            </div>
+                            <p className="text-[10px] text-slate-500 truncate mt-0.5">
+                              {screenshotFileName || 'screenshot.jpg'} {screenshotFileSize && `(${screenshotFileSize})`}
+                            </p>
+                            <div className="flex items-center gap-2 mt-1">
+                              <button
+                                type="button"
+                                onClick={() => setPreviewModalOpen(true)}
+                                className="text-[10px] text-indigo-600 hover:text-indigo-800 font-semibold flex items-center gap-1"
+                              >
+                                <Eye className="w-3 h-3" />
+                                <span>Preview</span>
+                              </button>
+                              <span className="text-slate-300">•</span>
+                              <label className="text-[10px] text-slate-600 hover:text-slate-800 font-semibold cursor-pointer">
+                                <span>Change</span>
+                                <input
+                                  type="file"
+                                  accept="image/png, image/jpeg, image/jpg, image/webp"
+                                  className="sr-only"
+                                  onChange={(e) => {
+                                    if (e.target.files && e.target.files[0]) {
+                                      handleScreenshotUpload(e.target.files[0]);
+                                    }
+                                  }}
+                                />
+                              </label>
+                              <span className="text-slate-300">•</span>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setPaymentScreenshot(null);
+                                  setScreenshotFileName('');
+                                  setScreenshotFileSize('');
+                                }}
+                                className="text-[10px] text-rose-600 hover:text-rose-800 font-semibold flex items-center gap-1"
+                              >
+                                <Trash2 className="w-3 h-3" />
+                                <span>Remove</span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {errors.screenshot && (
+                      <p className="text-rose-500 text-[10px] mt-1 flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3 shrink-0" />
+                        <span>{errors.screenshot}</span>
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Optional Transaction ID / UTR */}
+                  <div>
+                    <label className="block font-medium text-slate-700 mb-1 text-[11px]">
+                      Transaction ID / UTR <span className="text-slate-400 font-normal">(Optional)</span>
                     </label>
                     <input
                       type="text"
-                      required
                       value={transactionId}
                       onChange={(e) => setTransactionId(e.target.value)}
-                      placeholder="e.g. 425689123456"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 font-mono focus:outline-none focus:border-indigo-600"
+                      placeholder="e.g. 425689123456 (if available)"
+                      className="w-full px-3 py-2 rounded-xl border border-slate-200 font-mono text-xs focus:outline-none focus:border-indigo-600"
                     />
-                    {errors.transactionId && (
-                      <p className="text-rose-500 text-[10px] mt-1">{errors.transactionId}</p>
-                    )}
                   </div>
 
                   <div>
@@ -673,6 +844,19 @@ export const MockTestRegistrationModal: React.FC<MockTestRegistrationModalProps>
                     Under Review
                   </span>
                 </div>
+                {paymentScreenshot && (
+                  <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                    <span className="text-slate-400">Payment Screenshot:</span>
+                    <button
+                      type="button"
+                      onClick={() => setPreviewModalOpen(true)}
+                      className="text-indigo-600 hover:text-indigo-800 font-bold inline-flex items-center gap-1 hover:underline"
+                    >
+                      <Eye className="w-3.5 h-3.5" />
+                      <span>View Uploaded Proof</span>
+                    </button>
+                  </div>
+                )}
                 <div className="flex items-center justify-between">
                   <span className="text-slate-400">Admit Card:</span>
                   <span className="font-semibold text-slate-600">
@@ -744,6 +928,43 @@ export const MockTestRegistrationModal: React.FC<MockTestRegistrationModalProps>
               <span>{currentStep === 3 ? 'Generate Application & Pay' : 'Continue'}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
+          </div>
+        )}
+        {/* Full Image Preview Modal */}
+        {previewModalOpen && paymentScreenshot && (
+          <div className="fixed inset-0 z-60 bg-black/80 flex items-center justify-center p-4 backdrop-blur-xs">
+            <div className="relative max-w-2xl w-full max-h-[90vh] bg-white rounded-2xl overflow-hidden shadow-2xl flex flex-col">
+              <div className="p-3 bg-slate-900 text-white flex items-center justify-between">
+                <span className="text-xs font-bold flex items-center gap-2">
+                  <ImageIcon className="w-4 h-4 text-emerald-400" />
+                  <span>Payment Screenshot Proof</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setPreviewModalOpen(false)}
+                  className="p-1 text-slate-300 hover:text-white rounded-lg hover:bg-slate-800"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              <div className="p-3 overflow-auto max-h-[72vh] flex items-center justify-center bg-slate-950">
+                <img
+                  src={paymentScreenshot}
+                  alt="Payment Proof Full"
+                  className="max-h-[68vh] w-auto max-w-full object-contain rounded"
+                />
+              </div>
+              <div className="p-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-[11px] text-slate-600">
+                <span className="truncate">{screenshotFileName || 'screenshot.jpg'} {screenshotFileSize && `• ${screenshotFileSize}`}</span>
+                <button
+                  type="button"
+                  onClick={() => setPreviewModalOpen(false)}
+                  className="px-3 py-1 bg-slate-800 text-white font-bold rounded-lg hover:bg-slate-700"
+                >
+                  Close Preview
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>

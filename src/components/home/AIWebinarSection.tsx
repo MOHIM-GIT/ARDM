@@ -12,7 +12,11 @@ import {
 import { getWebinar } from '../../services/storage';
 import { WebinarItem } from '../../types';
 
-export const AIWebinarSection: React.FC = () => {
+interface AIWebinarSectionProps {
+  onOpenWorkshopManager?: () => void;
+}
+
+export const AIWebinarSection: React.FC<AIWebinarSectionProps> = ({ onOpenWorkshopManager }) => {
   const [webinar, setWebinar] = useState<WebinarItem | null>(null);
 
   useEffect(() => {
@@ -96,6 +100,16 @@ export const AIWebinarSection: React.FC = () => {
                 <Clock className="w-4 h-4" />
                 <span>Webinar Registration Coming Soon</span>
               </div>
+            )}
+
+            {onOpenWorkshopManager && (
+              <button
+                onClick={onOpenWorkshopManager}
+                className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-white font-bold text-xs border border-red-500/40 hover:border-red-400 transition-all cursor-pointer shadow-md"
+              >
+                <User className="w-4 h-4 text-red-400" />
+                <span>Explore Workshop Manager (Mohim Das)</span>
+              </button>
             )}
 
             <div className="flex items-center gap-2 text-xs text-white/95 font-medium">

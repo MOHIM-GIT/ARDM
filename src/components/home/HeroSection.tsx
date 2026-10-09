@@ -44,11 +44,20 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           {/* Left Column: Core Messaging & CTAs */}
           <div className="lg:col-span-7 text-center lg:text-left space-y-5">
-            {/* Announcement Pill */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-50 dark:bg-red-950/70 border border-red-200 dark:border-red-900/60 text-red-900 dark:text-red-300 text-xs font-semibold shadow-2xs">
-              <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>PROSTUTI 2026 • The Ultimate Class 10 Mock Test Series Open</span>
-              <Sparkles className="w-3.5 h-3.5 text-red-600 dark:text-red-400" />
+            {/* Announcement Pills */}
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-50 dark:bg-red-950/70 border border-red-200 dark:border-red-900/60 text-red-900 dark:text-red-300 text-xs font-semibold shadow-2xs">
+                <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span>PROSTUTI 2026 • The Ultimate Class 10 Mock Test</span>
+                <Sparkles className="w-3.5 h-3.5 text-red-600 dark:text-red-400" />
+              </div>
+              <a
+                href="#free-online-classes"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-950/70 border border-emerald-700/60 text-emerald-300 text-xs font-bold hover:bg-emerald-900/80 transition-all shadow-2xs"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>Online Free Classes (Class 8, 9, 10) • Seat Book Now</span>
+              </a>
             </div>
 
             {/* Main Headline with Indian Tricolor for Learn. Practice. Improve. */}
@@ -149,7 +158,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
             {/* Secondary Contact Quick Links */}
             <div className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-3 text-xs text-white">
-              <span className="font-semibold text-white">Quick Connect:</span>
+              <span className="font-semibold text-white">Direct Helpline:</span>
+              <a
+                href="tel:6289139984"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-red-950/60 border border-red-500/40 text-red-300 hover:text-white hover:bg-red-900/80 font-bold font-mono transition-colors"
+                title="Call 6289139984 Directly"
+              >
+                <PhoneCall className="w-3.5 h-3.5 text-red-400" />
+                <span>6289139984</span>
+              </a>
+              <span className="text-white/40">•</span>
               <a
                 href={getWhatsAppChannelLink()}
                 target="_blank"
@@ -159,21 +177,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <MessageCircle className="w-3.5 h-3.5" />
                 <span>WhatsApp Channel</span>
               </a>
-              <span className="text-white/40">•</span>
-              <a
-                href={getTelLink()}
-                className="inline-flex items-center gap-1 text-red-400 hover:text-red-300 font-bold font-mono hover:underline"
-              >
-                <PhoneCall className="w-3.5 h-3.5" />
-                <span>{SITE_CONFIG.contact.phoneNumber}</span>
-              </a>
-              <span className="text-white/40">•</span>
-              <button
-                onClick={onContactUs}
-                className="text-white hover:text-red-400 font-semibold hover:underline cursor-pointer"
-              >
-                <span>Contact Helpdesk</span>
-              </button>
             </div>
           </div>
 

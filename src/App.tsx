@@ -34,11 +34,13 @@ import { FreeClassesPage } from './pages/FreeClassesPage';
 import { PYQsPage } from './pages/PYQsPage';
 import { SubjectDiagramPage } from './pages/SubjectDiagramPage';
 import { SubjectUltraDiagramSection } from './components/home/SubjectUltraDiagramSection';
+import { OnlineFreeClassesBookingSection } from './components/home/OnlineFreeClassesBookingSection';
 
 // Modals & Panels (Code-split for 1 Lakh+ concurrent users performance)
 import { MockTestRegistrationModal } from './components/mockTest/MockTestRegistrationModal';
 import { StudentPortalModal } from './components/student/StudentPortalModal';
 import { SideMenuBar } from './components/layout/SideMenuBar';
+import { WorkshopManagerModal } from './components/modals/WorkshopManagerModal';
 
 const MockTestEngine = lazy(() => import('./components/mockTest/MockTestEngine').then(m => ({ default: m.MockTestEngine })));
 const AdminPanel = lazy(() => import('./components/admin/AdminPanel').then(m => ({ default: m.AdminPanel })));
@@ -107,12 +109,21 @@ export default function App() {
   const [candidateRollId, setCandidateRollId] = useState('ARDM-2026-DEMO');
 
   const [adminPanelOpen, setAdminPanelOpen] = useState(false);
+  const [adminInitialTab, setAdminInitialTab] = useState<any>('students');
+
+  const handleOpenAdmin = (tab: any = 'students') => {
+    setAdminInitialTab(tab);
+    setAdminPanelOpen(true);
+  };
 
   // Student Portal & Admit Card Modals
   const [studentPortalOpen, setStudentPortalOpen] = useState(false);
   const [admitCardModalOpen, setAdmitCardModalOpen] = useState(false);
   const [admitCardStudent, setAdmitCardStudent] = useState<StudentProfile | null>(null);
   const [isAdminAdmitCardView, setIsAdminAdmitCardView] = useState(false);
+
+  // Workshop Manager Modal (Mohim Das - Founder & CEO CodeLX)
+  const [workshopManagerOpen, setWorkshopManagerOpen] = useState(false);
 
   // Listen to browser Back / Forward buttons
   useEffect(() => {
@@ -125,6 +136,29 @@ export default function App() {
 
   // Universal Navigation (Supports both URL Paths and Section Anchors)
   const handleNavigate = (pathOrId: string) => {
+    if (
+      pathOrId === '/workshop-manager' ||
+      pathOrId === '#workshop-manager' ||
+      pathOrId === 'workshop-manager' ||
+      pathOrId === '/mohim-das' ||
+      pathOrId === '#mohim-das'
+    ) {
+      setWorkshopManagerOpen(true);
+      return;
+    }
+
+    if (
+      pathOrId === '/admin' ||
+      pathOrId === '/student-data' ||
+      pathOrId === '/student-data-admin' ||
+      pathOrId === '/student-data-admin-panel' ||
+      pathOrId === '#admin' ||
+      pathOrId === '#student-data'
+    ) {
+      handleOpenAdmin('students');
+      return;
+    }
+
     // 1. Direct URL Path (e.g. '/courses', '/courses.html', '/mock-tests', etc.)
     if (pathOrId.startsWith('/')) {
       if (pathOrId.includes('#')) {
@@ -160,6 +194,7 @@ export default function App() {
       'diagram': '/subject-diagram',
       'pyqs': '/pyqs',
       'free-classes': '/free-classes',
+      'free-online-classes': '/#free-online-classes',
       'results': '/results',
       'computer-science': '/computer-science',
       'tech-courses': '/computer-science',
@@ -241,7 +276,7 @@ export default function App() {
         activeSection={currentPath !== '/' ? currentPath : activeSection}
         onNavigate={handleNavigate}
         onOpenRegistration={() => handleRegisterWithSubject(undefined)}
-        onOpenAdmin={() => setAdminPanelOpen(true)}
+        onOpenAdmin={() => handleOpenAdmin('students')}
         onOpenTestEngine={() => setTestEngineOpen(true)}
         onOpenStudentPortal={() => setStudentPortalOpen(true)}
         onOpenCheckRegistration={() => {
@@ -274,7 +309,7 @@ export default function App() {
         }}
         onOpenDownloadAdmitCard={handleQuickDownloadAdmitCard}
         onOpenStudentPortal={() => setStudentPortalOpen(true)}
-        onOpenAdmin={() => setAdminPanelOpen(true)}
+        onOpenAdmin={() => handleOpenAdmin('students')}
       />
 
       {/* 4. Main Content Area with Dynamic Animated Left Offset */}
@@ -417,6 +452,7 @@ export default function App() {
               onNavigate={(target) => handleNavigate(target.startsWith('/') ? target : `/#${target}`)}
               onOpenRegistration={() => handleRegisterWithSubject(undefined)}
               onOpenTestEngine={() => setTestEngineOpen(true)}
+              onOpenWorkshopManager={() => setWorkshopManagerOpen(true)}
             />
           </div>
 
@@ -428,6 +464,9 @@ export default function App() {
             onLaunchPractice={() => setTestEngineOpen(true)}
             onOpenDownloadAdmitCard={handleQuickDownloadAdmitCard}
           />
+
+          {/* WBBSE Online Free Classes Live Booking & Helpline (Class 8, 9, 10 Madhyamik) */}
+          <OnlineFreeClassesBookingSection onNavigate={handleNavigate} />
 
           {/* About Section */}
           <AboutSection />
@@ -461,7 +500,7 @@ export default function App() {
           <FreeClassesSection />
 
           {/* AI & Coding Webinar Masterclass */}
-          <AIWebinarSection />
+          <AIWebinarSection onOpenWorkshopManager={() => setWorkshopManagerOpen(true)} />
 
           {/* Free Education ("Learn Without Barriers") */}
           <FreeEducationSection
@@ -491,7 +530,7 @@ export default function App() {
         {/* 5. Footer */}
         <Footer
           onNavigate={handleNavigate}
-          onOpenAdmin={() => setAdminPanelOpen(true)}
+          onOpenAdmin={() => handleOpenAdmin('students')}
           onOpenRegistration={() => handleRegisterWithSubject(undefined)}
           onOpenCheckRegistration={() => {
             if (currentPath !== '/') {
@@ -555,9 +594,16 @@ export default function App() {
             isOpen={adminPanelOpen}
             onClose={() => setAdminPanelOpen(false)}
             onViewCandidateAdmitCard={(st) => handleOpenAdmitCardForStudent(st, true)}
+            initialTab={adminInitialTab}
           />
         )}
       </Suspense>
+
+      {/* 6. Workshop Manager Profile Modal (Mohim Das - Founder & CEO CodeLX) */}
+      <WorkshopManagerModal
+        isOpen={workshopManagerOpen}
+        onClose={() => setWorkshopManagerOpen(false)}
+      />
     </div>
   );
 }

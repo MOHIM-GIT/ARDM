@@ -55,6 +55,7 @@ export interface StudentProfile {
   paymentTransactionId?: string; // UTR / Txn reference submitted by student
   paymentDate?: string;
   paymentAmount: number;
+  paymentScreenshotUrl?: string; // Uploaded payment receipt screenshot (Data URL or hosted URL)
   paymentScreenshotNote?: string;
   paymentReviewedAt?: string;
   paymentReviewedBy?: string;
@@ -339,6 +340,8 @@ export interface AuditLog {
   details: string;
 }
 
+export type FreeClassesDisplayMode = 'coming_soon' | 'active' | 'hidden';
+
 export interface SiteSettings {
   resultPdfUrl: string;
   resultPdfTitle: string;
@@ -347,6 +350,8 @@ export interface SiteSettings {
   googleSheetUrl?: string;
   registrationIsOpen: boolean;
   upiVpa: string;
+  freeClassesDisplayMode?: FreeClassesDisplayMode;
+  freeClassesBannerVisible?: boolean;
 }
 
 export interface Examination {

@@ -20,6 +20,7 @@ import {
   X,
   ExternalLink,
   Activity,
+  MessageCircle,
 } from 'lucide-react';
 import { BrandLogo } from '../common/BrandLogo';
 import { SITE_CONFIG, getTelLink } from '../../config/siteConfig';
@@ -342,16 +343,47 @@ export const SideMenuBar: React.FC<SideMenuBarProps> = ({
             </button>
           )}
 
-          {/* Helpline Quick Link */}
+          {/* Free Class Contact & Helpline Card */}
           {isExpanded && (
-            <div className="pt-1 px-1 flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-500">
-              <span className="font-mono">Helpline:</span>
-              <a
-                href={getTelLink()}
-                className="font-bold text-red-600 dark:text-red-400 hover:underline font-mono"
-              >
-                {SITE_CONFIG.contact.phoneNumber}
-              </a>
+            <div className="pt-2 px-1 space-y-2 text-[11px]">
+              <div className="p-2.5 rounded-xl bg-slate-900 border border-emerald-500/40 space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="font-mono font-bold text-emerald-400 text-[10px] uppercase tracking-wider">
+                    Free Class Contact
+                  </span>
+                  <span className="text-[9px] bg-emerald-500/20 text-emerald-300 px-1 rounded font-bold">
+                    100% Free
+                  </span>
+                </div>
+                <a
+                  href="tel:6289139984"
+                  className="w-full flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg bg-red-600 hover:bg-red-500 text-white font-mono font-bold text-xs transition-colors shadow-2xs"
+                  title="Direct Call Free Class Helpline"
+                >
+                  <PhoneCall className="w-3 h-3 text-white animate-pulse" />
+                  <span>Call: 6289139984</span>
+                </a>
+                <div className="flex items-center gap-1 pt-0.5">
+                  <a
+                    href="https://wa.me/916289139984?text=Hello%20ARDM%20Academy%2C%20I%20want%20to%20book%20a%20free%20online%20class%20seat%20for%20West%20Bengal%20Board."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 inline-flex items-center justify-center gap-1 py-1 rounded bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-800 text-emerald-300 text-[10px] font-medium transition-colors"
+                  >
+                    <MessageCircle className="w-3 h-3" />
+                    <span>WhatsApp</span>
+                  </a>
+                  <a
+                    href={SITE_CONFIG.contact.freeClassesFormUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 inline-flex items-center justify-center gap-1 py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-[10px] font-medium transition-colors"
+                  >
+                    <span>Book Seat</span>
+                    <ExternalLink className="w-2.5 h-2.5" />
+                  </a>
+                </div>
+              </div>
             </div>
           )}
         </div>

@@ -2,6 +2,7 @@ import React from 'react';
 import { SEOHead } from '../components/seo/SEOHead';
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { FreeClassesSection } from '../components/home/FreeClassesSection';
+import { OnlineFreeClassesBookingSection } from '../components/home/OnlineFreeClassesBookingSection';
 import { Video, BookOpen, GraduationCap, ArrowRight } from 'lucide-react';
 import { getFreeClasses } from '../services/storage';
 
@@ -67,6 +68,11 @@ export const FreeClassesPage: React.FC<FreeClassesPageProps> = ({ onNavigate }) 
           </div>
         </div>
       </section>
+
+      {/* Dedicated WBBSE Online Free Classes Live Booking & Helpline Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-6">
+        <OnlineFreeClassesBookingSection onNavigate={onNavigate} />
+      </div>
 
       {/* Embedded Video Studio Player & Playlist */}
       <FreeClassesSection />

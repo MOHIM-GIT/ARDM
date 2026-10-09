@@ -108,6 +108,7 @@ export interface ServerStudent {
   paymentTransactionId?: string;
   paymentDate?: string;
   paymentAmount: number;
+  paymentScreenshotUrl?: string;
   paymentScreenshotNote?: string;
   paymentReviewedAt?: string;
   paymentReviewedBy?: string;
@@ -837,7 +838,7 @@ const DEFAULT_LECTURES: ServerLecture[] = [
   {
     id: 'lec_1',
     title: 'Class 10 Madhyamik Mathematics 2026: 96%+ Question Prediction & Circle Theorems',
-    youtubeUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    youtubeUrl: 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS',
     thumbnailUrl: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=800&q=80',
     description: 'In-depth analysis of circle theorems, quadratic equations, and high-probability board questions.',
     category: 'Mathematics',
@@ -854,7 +855,7 @@ const DEFAULT_LECTURES: ServerLecture[] = [
   {
     id: 'lec_2',
     title: 'Physical Science: Current Electricity & Joule’s Law Numerical Hacks',
-    youtubeUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    youtubeUrl: 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS',
     thumbnailUrl: 'https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=800&q=80',
     description: 'Step-by-step circuit problems, resistance combinations, and power dissipation formulas.',
     category: 'Sciences',
@@ -871,7 +872,7 @@ const DEFAULT_LECTURES: ServerLecture[] = [
   {
     id: 'lec_3',
     title: 'Life Science: Chromosomes, Cell Division & Mendel’s Laws of Inheritance',
-    youtubeUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    youtubeUrl: 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS',
     thumbnailUrl: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80',
     description: 'Detailed microscopic phase analysis of Mitosis & Meiosis with monohybrid cross diagrams.',
     category: 'Sciences',
@@ -888,7 +889,7 @@ const DEFAULT_LECTURES: ServerLecture[] = [
   {
     id: 'lec_4',
     title: 'Computer Science: Binary Arithmetic, Logic Gates & Flowcharts for Beginners',
-    youtubeUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    youtubeUrl: 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS',
     thumbnailUrl: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80',
     description: 'Understand truth tables, AND/OR/NOT logic gates, and building program flowchart diagrams.',
     category: 'Computer',
@@ -905,7 +906,7 @@ const DEFAULT_LECTURES: ServerLecture[] = [
   {
     id: 'lec_5',
     title: 'Middle School Science: Solar System, Heat & Force Experiments (Classes 6–8)',
-    youtubeUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    youtubeUrl: 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS',
     thumbnailUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80',
     description: 'Fun, visual experiments demonstrating friction, atmospheric pressure, and states of matter.',
     category: 'Foundation',
@@ -1575,9 +1576,9 @@ app.post('/api/students/register', rateLimiter(60, 60000), (req: Request, res: R
  */
 app.post('/api/students/payment', rateLimiter(60, 60000), (req: Request, res: Response) => {
   try {
-    const { registrationId, transactionId, paymentDate, amount, screenshotNote } = req.body;
-    if (!registrationId || !transactionId) {
-      return res.status(400).json({ error: 'Registration ID and Transaction ID / UTR are required.' });
+    const { registrationId, transactionId, paymentDate, amount, screenshotNote, paymentScreenshotUrl } = req.body;
+    if (!registrationId || (!transactionId && !paymentScreenshotUrl)) {
+      return res.status(400).json({ error: 'Registration ID and Payment Screenshot are required.' });
     }
 
     const cleanReg = String(registrationId).trim().toLowerCase();
@@ -1588,8 +1589,9 @@ app.post('/api/students/payment', rateLimiter(60, 60000), (req: Request, res: Re
     }
 
     const now = new Date().toISOString();
-    student.paymentTransactionId = String(transactionId).trim();
+    student.paymentTransactionId = transactionId ? String(transactionId).trim() : 'SCREENSHOT_UPLOADED';
     student.paymentDate = paymentDate || now.split('T')[0];
+    if (paymentScreenshotUrl) student.paymentScreenshotUrl = String(paymentScreenshotUrl);
     if (amount) student.paymentAmount = Number(amount);
     if (screenshotNote) student.paymentScreenshotNote = String(screenshotNote);
 
@@ -2434,7 +2436,7 @@ app.post('/api/admin/lectures', requireAdmin, (req: Request, res: Response) => {
 
     // Auto extract YouTube ID for default thumbnail
     const ytMatch = data.youtubeUrl.match(/(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*)/);
-    const videoId = ytMatch && ytMatch[1]?.length === 11 ? ytMatch[1] : 'dQw4w9WgXcQ';
+    const videoId = ytMatch && ytMatch[1]?.length === 11 ? ytMatch[1] : 'zYGjsevcofw';
     const fallbackThumb = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
 
     const newLec: ServerLecture = {

@@ -44,7 +44,7 @@ export const Class10MockTestSection: React.FC<Class10MockTestSectionProps> = ({
     { num: '01', title: 'Student Info', desc: 'Full Name, Date of Birth, 10-digit Mobile, & Email.' },
     { num: '02', title: 'School & Board', desc: 'Class 10, Board (WBBSE/CBSE/ICSE), & District.' },
     { num: '03', title: 'Subject Selection', desc: 'Choose 1 to 8 subjects. Dynamic transparent fee of ₹100 each.' },
-    { num: '04', title: 'Payment via UPI', desc: 'Scan official ARDM QR and enter Transaction ID / UTR.' },
+    { num: '04', title: 'Payment via UPI', desc: 'Scan official ARDM QR and upload payment screenshot.' },
     { num: '05', title: 'Admin Verification', desc: 'Faculty verifies payment proof within 2-4 hours.' },
     { num: '06', title: 'Admit Card Issued', desc: 'Automatic unlock with assigned exam center & reporting time.' },
   ];

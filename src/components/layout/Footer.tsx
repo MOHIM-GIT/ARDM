@@ -250,9 +250,13 @@ export const Footer: React.FC<FooterProps> = ({
                 </button>
               </li>
               <li>
-                <button onClick={onOpenAdmin} className="inline-flex items-center gap-1 text-slate-500 hover:text-slate-300 transition-colors">
-                  <ShieldCheck className="w-3.5 h-3.5 text-indigo-400" />
-                  <span>Admin Gateway</span>
+                <button
+                  onClick={onOpenAdmin}
+                  className="inline-flex items-center gap-1.5 text-slate-400 hover:text-white transition-colors group cursor-pointer"
+                  title="Student Data - Admin Panel"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5 text-red-500 group-hover:scale-110 transition-transform" />
+                  <span>Student Data - Admin Panel</span>
                 </button>
               </li>
             </ul>
