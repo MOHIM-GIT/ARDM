@@ -1349,6 +1349,8 @@ export async function syncFromDatabase(): Promise<void> {
       headers: token ? { 'x-admin-token': token } : {},
     });
     if (!res.ok) return;
+    const contentType = res.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) return;
     const data = await res.json();
     if (data.students && Array.isArray(data.students)) {
       saveToStorage(KEYS.STUDENTS, data.students);

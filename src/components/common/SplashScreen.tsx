@@ -16,7 +16,10 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
 
   useEffect(() => {
     // Respect user preference for reduced motion
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const prefersReducedMotion =
+      typeof window !== 'undefined' && typeof window.matchMedia === 'function'
+        ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        : false;
     if (prefersReducedMotion) {
       onComplete();
       return;

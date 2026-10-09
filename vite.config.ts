@@ -4,8 +4,28 @@ import path from 'path';
 import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
+  // Base path strategy:
+  // - If VITE_BASE_URL is specified (e.g. from netlify.toml or environment), use it.
+  // - If Netlify, Vercel, or custom domain: always use '/' so asset paths are absolute and deep routes/refreshes work cleanly.
+  // - If building specifically inside GitHub Actions workflow for github.io subdirectory: use './'.
+  // - Default to '/' for standard root deployments and dev server.
+  const isNetlify = process.env.NETLIFY === 'true' || process.env.NETLIFY === '1';
+  const isVercel = process.env.VERCEL === '1';
+  const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
+
+  let base = '/';
+  if (process.env.VITE_BASE_URL) {
+    base = process.env.VITE_BASE_URL;
+  } else if (isNetlify || isVercel) {
+    base = '/';
+  } else if (isGitHubActions) {
+    base = './';
+  } else {
+    base = '/';
+  }
+
   return {
-    base: process.env.VITE_BASE_URL || './',
+    base,
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
