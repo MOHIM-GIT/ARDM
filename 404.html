@@ -184,37 +184,39 @@
     <script type="module" crossorigin src="./assets/rolldown-runtime-CbXtAM7H.js"></script>
     <script type="module" crossorigin src="./assets/icons-CK1JNYli.js"></script>
     <script type="module" crossorigin src="./assets/vendor-react-BGQcPDRL.js"></script>
-    <script type="module" crossorigin src="./assets/storage-DVfXueVQ.js"></script>
-    <script type="module" crossorigin src="./assets/main-BHYFLtRJ.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/main-WCKX1AR9.css">
+    <script type="module" crossorigin src="./assets/storage-CWBUQJS9.js"></script>
+    <script type="module" crossorigin src="./assets/main-D7CJrJRb.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/main-CNkkgmnL.css">
   </head>
   <body class="dark theme-black bg-[#09090b] text-[#f8fafc] antialiased selection:bg-red-600 selection:text-white font-sans">
     <script>
       (function() {
-        document.documentElement.classList.add('dark', 'theme-black');
-        document.documentElement.setAttribute('data-theme', 'dark');
-        document.documentElement.style.colorScheme = 'dark';
-        if (typeof localStorage !== 'undefined') {
-          localStorage.setItem('ardm_color_theme', 'black');
-        }
+        try {
+          document.documentElement.classList.add('dark', 'theme-black');
+          document.documentElement.setAttribute('data-theme', 'dark');
+          document.documentElement.style.colorScheme = 'dark';
+          if (typeof localStorage !== 'undefined') {
+            localStorage.setItem('ardm_color_theme', 'black');
+          }
+        } catch (e) {}
       })();
     </script>
     <div id="root"></div>
     <script>
       // Restore SPA path if redirected by 404.html on GitHub Pages
       (function() {
-        var redirect = sessionStorage.getItem('ardm_spa_redirect');
-        if (redirect) {
-          sessionStorage.removeItem('ardm_spa_redirect');
-          try {
+        try {
+          var redirect = typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('ardm_spa_redirect') : null;
+          if (redirect) {
+            sessionStorage.removeItem('ardm_spa_redirect');
             var parts = window.location.pathname.split('/').filter(Boolean);
             var repoPrefix = (window.location.hostname.endsWith('github.io') && parts.length > 0) ? '/' + parts[0] : '';
             var target = repoPrefix + (redirect.startsWith('/') ? redirect : '/' + redirect);
             if (window.location.pathname + window.location.search + window.location.hash !== target) {
               window.history.replaceState(null, '', target);
             }
-          } catch (e) {}
-        }
+          }
+        } catch (e) {}
       })();
     </script>
   </body>
