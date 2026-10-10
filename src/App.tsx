@@ -41,6 +41,11 @@ import { MockTestRegistrationModal } from './components/mockTest/MockTestRegistr
 import { StudentPortalModal } from './components/student/StudentPortalModal';
 import { SideMenuBar } from './components/layout/SideMenuBar';
 import { WorkshopManagerModal } from './components/modals/WorkshopManagerModal';
+import { FoundersModal } from './components/modals/FoundersModal';
+import { MobileBottomNav } from './components/layout/MobileBottomNav';
+import { MobileFrameWrapper } from './components/common/MobileFrameWrapper';
+import { GoogleStyleSearchModal } from './components/search/GoogleStyleSearchModal';
+import { GoogleStyleSearchSection } from './components/search/GoogleStyleSearchSection';
 
 const MockTestEngine = lazy(() => import('./components/mockTest/MockTestEngine').then(m => ({ default: m.MockTestEngine })));
 const AdminPanel = lazy(() => import('./components/admin/AdminPanel').then(m => ({ default: m.AdminPanel })));
@@ -125,6 +130,30 @@ export default function App() {
   // Workshop Manager Modal (Mohim Das - Founder & CEO CodeLX)
   const [workshopManagerOpen, setWorkshopManagerOpen] = useState(false);
 
+  // Founders Modal (All 4 Founders: Akash Paik, Rupam Paul, Devnath Pramanick, Mohim Das)
+  const [foundersModalOpen, setFoundersModalOpen] = useState(false);
+  const [selectedFounderId, setSelectedFounderId] = useState<'all' | 'akash' | 'rupam' | 'devnath' | 'mohim'>('all');
+
+  // Google-Style Search Modal State
+  const [searchModalOpen, setSearchModalOpen] = useState(false);
+
+  // Global Ctrl + K / Cmd + K to open search modal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setSearchModalOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const handleOpenFoundersModal = (founderId: 'all' | 'akash' | 'rupam' | 'devnath' | 'mohim' = 'all') => {
+    setSelectedFounderId(founderId);
+    setFoundersModalOpen(true);
+  };
+
   // Listen to browser Back / Forward buttons
   useEffect(() => {
     const handlePopState = () => {
@@ -136,6 +165,18 @@ export default function App() {
 
   // Universal Navigation (Supports both URL Paths and Section Anchors)
   const handleNavigate = (pathOrId: string) => {
+    if (
+      pathOrId === '/founders' ||
+      pathOrId === '#founders' ||
+      pathOrId === 'founders' ||
+      pathOrId === '#founders-modal' ||
+      pathOrId === '/founders-modal' ||
+      pathOrId === '#about-founders'
+    ) {
+      handleOpenFoundersModal('all');
+      return;
+    }
+
     if (
       pathOrId === '/workshop-manager' ||
       pathOrId === '#workshop-manager' ||
@@ -262,14 +303,15 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] relative selection:bg-indigo-600 selection:text-white">
-      {/* 1. Elegant Logo Splash Screen */}
-      {showSplash && (
-        <SplashScreen
-          onComplete={() => setShowSplash(false)}
-          minDurationMs={2200}
-        />
-      )}
+    <MobileFrameWrapper>
+      <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] relative selection:bg-indigo-600 selection:text-white">
+        {/* 1. Elegant Logo Splash Screen */}
+        {showSplash && (
+          <SplashScreen
+            onComplete={() => setShowSplash(false)}
+            minDurationMs={2200}
+          />
+        )}
 
       {/* 2. Top Header Navigation Bar with Action Buttons & Sidebar Toggle */}
       <Navbar
@@ -287,6 +329,7 @@ export default function App() {
           }
         }}
         onOpenDownloadAdmitCard={handleQuickDownloadAdmitCard}
+        onOpenSearch={() => setSearchModalOpen(true)}
         isSidebarExpanded={sidebarExpanded}
         onToggleSidebar={() => setSidebarExpanded((prev) => !prev)}
         onOpenMobileSidebar={() => setMobileSidebarOpen(true)}
@@ -318,7 +361,7 @@ export default function App() {
           sidebarExpanded ? 'lg:pl-64' : 'lg:pl-20'
         }`}
       >
-        <main className="flex-1">
+        <main className="flex-1 pb-16 lg:pb-0">
           {/* ROUTE VIEWS: Dedicated Pages for Search Engine Sitelinks & Clean URLs */}
           {currentPath === '/courses' && (
             <CoursesPage
@@ -412,7 +455,10 @@ export default function App() {
       )}
 
       {currentPath === '/about' && (
-        <AboutPage onNavigate={handleNavigate} />
+        <AboutPage
+          onNavigate={handleNavigate}
+          onOpenFounderModal={(founderId) => handleOpenFoundersModal(founderId || 'all')}
+        />
       )}
 
       {currentPath === '/contact' && (
@@ -441,8 +487,8 @@ export default function App() {
           !currentPath.startsWith('/classes/'))) && (
         <>
           <SEOHead
-            title="ARDM Academy | Classes, Mock Tests, AI & Computer Science"
-            description="ARDM Academy provides academic classes, mock tests, Computer Science, Data Science, AI workshops and learning resources for students."
+            title="ARDM Academy | Founders: Akash Paik, Rupam Paul, Devnath Pramanick, Mohim Das"
+            description="ARDM Academy was founded by 4 founders: Akash Paik, Rupam Paul, Devnath Pramanick, and Mohim Das. Academic coaching, Class 10 mock tests, and AI workshops."
             canonical="https://ardmacademy.in/"
           />
 
@@ -453,8 +499,20 @@ export default function App() {
               onOpenRegistration={() => handleRegisterWithSubject(undefined)}
               onOpenTestEngine={() => setTestEngineOpen(true)}
               onOpenWorkshopManager={() => setWorkshopManagerOpen(true)}
+              onOpenFounders={() => handleOpenFoundersModal('all')}
             />
           </div>
+
+          {/* Google-Style Deep Search & Sitelinks Section (Exact Match to User Sitelinks Reference) */}
+          <GoogleStyleSearchSection
+            onOpenSearchModal={() => setSearchModalOpen(true)}
+            onNavigate={handleNavigate}
+            onOpenFounders={(founderId) => handleOpenFoundersModal(founderId || 'all')}
+            onOpenWorkshopManager={() => setWorkshopManagerOpen(true)}
+            onOpenRegistration={() => handleRegisterWithSubject(undefined)}
+            onOpenTestEngine={() => setTestEngineOpen(true)}
+            onOpenDownloadAdmitCard={handleQuickDownloadAdmitCard}
+          />
 
           {/* Hero Section */}
           <HeroSection
@@ -463,13 +521,17 @@ export default function App() {
             onContactUs={() => handleNavigate('/contact')}
             onLaunchPractice={() => setTestEngineOpen(true)}
             onOpenDownloadAdmitCard={handleQuickDownloadAdmitCard}
+            onOpenFounders={(founderId) => handleOpenFoundersModal(founderId || 'all')}
           />
 
           {/* WBBSE Online Free Classes Live Booking & Helpline (Class 8, 9, 10 Madhyamik) */}
           <OnlineFreeClassesBookingSection onNavigate={handleNavigate} />
 
           {/* About Section */}
-          <AboutSection />
+          <AboutSection
+            onOpenWorkshopManager={() => setWorkshopManagerOpen(true)}
+            onOpenFounderModal={(founderId) => handleOpenFoundersModal(founderId || 'all')}
+          />
 
           {/* What We Provide (Dual Track: Academic + Tech) */}
           <WhatWeProvide onRegisterSubject={handleRegisterWithSubject} />
@@ -604,6 +666,34 @@ export default function App() {
         isOpen={workshopManagerOpen}
         onClose={() => setWorkshopManagerOpen(false)}
       />
+
+      {/* 7. Founders Comprehensive Profile Modal (Akash, Rupam, Devnath, Mohim) */}
+      <FoundersModal
+        isOpen={foundersModalOpen}
+        onClose={() => setFoundersModalOpen(false)}
+        initialFounderId={selectedFounderId}
+      />
+
+      {/* 8. Mobile Native Bottom Navigation Bar */}
+      <MobileBottomNav
+        currentPath={currentPath}
+        onNavigate={handleNavigate}
+        onOpenFounders={() => handleOpenFoundersModal('all')}
+        onOpenMockTest={() => handleRegisterWithSubject(undefined)}
+      />
+
+      {/* 9. Google-Style Universal Search & Sitelinks Modal */}
+      <GoogleStyleSearchModal
+        isOpen={searchModalOpen}
+        onClose={() => setSearchModalOpen(false)}
+        onNavigate={handleNavigate}
+        onOpenFounders={(founderId) => handleOpenFoundersModal(founderId || 'all')}
+        onOpenWorkshopManager={() => setWorkshopManagerOpen(true)}
+        onOpenRegistration={() => handleRegisterWithSubject(undefined)}
+        onOpenTestEngine={() => setTestEngineOpen(true)}
+        onOpenDownloadAdmitCard={handleQuickDownloadAdmitCard}
+      />
     </div>
+  </MobileFrameWrapper>
   );
 }

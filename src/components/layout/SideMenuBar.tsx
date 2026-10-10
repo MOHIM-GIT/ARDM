@@ -21,6 +21,7 @@ import {
   ExternalLink,
   Activity,
   MessageCircle,
+  Users,
 } from 'lucide-react';
 import { BrandLogo } from '../common/BrandLogo';
 import { SITE_CONFIG, getTelLink } from '../../config/siteConfig';
@@ -72,6 +73,14 @@ export const SideMenuBar: React.FC<SideMenuBarProps> = ({
       path: '/about',
       label: 'About',
       icon: Compass,
+    },
+    {
+      id: 'founders',
+      path: '/founders',
+      label: '4 Founders',
+      icon: Users,
+      badge: 'A·R·D·M',
+      badgeColor: 'bg-amber-100 text-amber-800 border-amber-200',
     },
     {
       id: 'what-we-provide',
@@ -305,25 +314,6 @@ export const SideMenuBar: React.FC<SideMenuBarProps> = ({
 
         {/* Footer Section of Left Bar (Quick Action Shortcuts) */}
         <div className="p-3 border-t border-slate-800/80 bg-[#0c0c0e] shrink-0 space-y-2">
-          {/* Check Registration Shortcut */}
-          {onOpenCheckRegistration && (
-            <button
-              onClick={() => {
-                onCloseMobile();
-                onOpenCheckRegistration();
-              }}
-              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-white hover:text-red-400 hover:bg-[#18181d] border border-transparent hover:border-slate-700 transition-all cursor-pointer ${
-                !isExpanded ? 'lg:justify-center lg:px-2' : ''
-              }`}
-              title="Check Registration Status"
-            >
-              <Search className="w-4 h-4 text-white shrink-0" />
-              <span className={`truncate ${!isExpanded ? 'lg:hidden' : 'block'}`}>
-                Check Status
-              </span>
-            </button>
-          )}
-
           {/* Download Admit Card Shortcut */}
           {onOpenDownloadAdmitCard && (
             <button
@@ -344,7 +334,7 @@ export const SideMenuBar: React.FC<SideMenuBarProps> = ({
           )}
 
           {/* Free Class Contact & Helpline Card */}
-          {isExpanded && (
+          {(isExpanded || isOpenMobile) && (
             <div className="pt-2 px-1 space-y-2 text-[11px]">
               <div className="p-2.5 rounded-xl bg-slate-900 border border-emerald-500/40 space-y-1.5">
                 <div className="flex items-center justify-between">
@@ -384,6 +374,22 @@ export const SideMenuBar: React.FC<SideMenuBarProps> = ({
                   </a>
                 </div>
               </div>
+
+              {/* Admin Panel for Mobile Drawer */}
+              {isOpenMobile && onOpenAdmin && (
+                <div className="pt-1 border-t border-slate-800/80">
+                  <button
+                    onClick={() => {
+                      onCloseMobile();
+                      onOpenAdmin();
+                    }}
+                    className="w-full flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 hover:text-white text-xs font-semibold cursor-pointer transition-colors"
+                  >
+                    <ShieldCheck className="w-3.5 h-3.5 text-red-500" />
+                    <span>Admin Panel</span>
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>

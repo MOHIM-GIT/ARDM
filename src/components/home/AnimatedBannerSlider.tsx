@@ -18,6 +18,7 @@ interface AnimatedBannerSliderProps {
   onOpenRegistration?: () => void;
   onOpenTestEngine?: () => void;
   onOpenWorkshopManager?: () => void;
+  onOpenFounders?: () => void;
   className?: string;
 }
 
@@ -26,6 +27,7 @@ export const AnimatedBannerSlider: React.FC<AnimatedBannerSliderProps> = ({
   onOpenRegistration,
   onOpenTestEngine,
   onOpenWorkshopManager,
+  onOpenFounders,
   className = '',
 }) => {
   const [banners, setBanners] = useState<BannerItem[]>([]);
@@ -119,6 +121,18 @@ export const AnimatedBannerSlider: React.FC<AnimatedBannerSliderProps> = ({
 
   const handleCtaClick = (link?: string, banner?: BannerItem) => {
     if (
+      link === '#founders-modal' ||
+      link === '#founders' ||
+      link === 'founders' ||
+      banner?.id === 'banner_four_founders_ardm' ||
+      banner?.title?.toLowerCase().includes('founder')
+    ) {
+      if (onOpenFounders) {
+        onOpenFounders();
+        return;
+      }
+    }
+    if (
       link === '#workshop-manager' ||
       link === 'workshop-manager' ||
       banner?.id === 'banner_ai_coding_labs' ||
@@ -184,7 +198,7 @@ export const AnimatedBannerSlider: React.FC<AnimatedBannerSliderProps> = ({
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      <div className="relative rounded-3xl overflow-hidden border border-slate-800 bg-[#0c0c0f] shadow-2xl min-h-[300px] sm:min-h-[360px] md:min-h-[420px] lg:min-h-[460px] flex items-center">
+      <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-800 bg-[#0c0c0f] shadow-2xl min-h-[340px] sm:min-h-[380px] md:min-h-[420px] lg:min-h-[460px] flex items-center">
         {/* Slides Track */}
         <div className="absolute inset-0 w-full h-full overflow-hidden">
           {banners.map((b, idx) => {
@@ -251,41 +265,41 @@ export const AnimatedBannerSlider: React.FC<AnimatedBannerSliderProps> = ({
                 )}
 
                 {/* Content Overlay Layer */}
-                <div className="absolute inset-0 z-20 flex flex-col justify-center px-6 sm:px-12 md:px-16 lg:px-20 max-w-3xl pointer-events-none">
+                <div className="absolute inset-0 z-20 flex flex-col justify-center px-4 sm:px-12 md:px-16 lg:px-20 max-w-3xl pt-8 pb-14 sm:pt-0 sm:pb-0 pointer-events-none">
                   {/* Badge */}
                   {b.badgeText && (
-                    <div className="mb-3 pointer-events-auto">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-950/80 border border-red-700/60 text-white font-mono text-[11px] font-bold uppercase tracking-wider shadow-sm">
-                        <Sparkles className="w-3 h-3 text-red-400" />
-                        <span>{b.badgeText}</span>
+                    <div className="mb-2 sm:mb-3 pointer-events-auto">
+                      <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-red-950/80 border border-red-700/60 text-white font-mono text-[10px] sm:text-[11px] font-bold uppercase tracking-wider shadow-sm">
+                        <Sparkles className="w-3 h-3 text-red-400 shrink-0" />
+                        <span className="truncate">{b.badgeText}</span>
                       </span>
                     </div>
                   )}
 
                   {/* Title */}
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.15] drop-shadow-md">
+                  <h2 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.18] drop-shadow-md">
                     {b.title}
                   </h2>
 
                   {/* Subtitle / Description */}
                   {b.subtitle && (
-                    <p className="mt-3 text-xs sm:text-sm md:text-base text-white/95 leading-relaxed max-w-2xl font-normal drop-shadow-sm">
+                    <p className="mt-2 sm:mt-3 text-xs sm:text-sm md:text-base text-white/95 leading-relaxed max-w-2xl font-normal drop-shadow-sm line-clamp-3 sm:line-clamp-none">
                       {b.subtitle}
                     </p>
                   )}
 
                   {/* CTA Action Button */}
                   {b.ctaText && (
-                    <div className="mt-6 flex items-center gap-3 pointer-events-auto">
+                    <div className="mt-4 sm:mt-6 flex items-center gap-3 pointer-events-auto">
                       <button
                         onClick={() => handleCtaClick(b.ctaLink, b)}
-                        className="inline-flex items-center gap-2 px-5 sm:px-6 py-3 rounded-xl bg-gradient-to-r from-red-700 via-rose-600 to-red-700 hover:from-red-800 hover:to-rose-800 text-white text-xs sm:text-sm font-bold shadow-lg hover:shadow-red-900/40 transition-all hover:scale-102 active:scale-98 cursor-pointer"
+                        className="inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-red-700 via-rose-600 to-red-700 hover:from-red-800 hover:to-rose-800 text-white text-xs sm:text-sm font-bold shadow-lg hover:shadow-red-900/40 transition-all hover:scale-102 active:scale-98 cursor-pointer"
                       >
                         <span>{b.ctaText}</span>
                         {b.ctaLink?.startsWith('http') ? (
-                          <ExternalLink className="w-4 h-4" />
+                          <ExternalLink className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                         ) : (
-                          <ArrowRight className="w-4 h-4" />
+                          <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                         )}
                       </button>
 
@@ -310,58 +324,106 @@ export const AnimatedBannerSlider: React.FC<AnimatedBannerSliderProps> = ({
           })}
         </div>
 
+        {/* Top Linear Segmented Slide Bar (Mobile & Desktop Linear Story Progress) */}
+        {banners.length > 1 && (
+          <div
+            className="absolute top-2.5 sm:top-3 inset-x-3 sm:inset-x-8 z-30 flex items-center gap-1.5 pointer-events-auto"
+            aria-label="Linear slide indicators"
+          >
+            {banners.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => goToSlide(idx)}
+                aria-label={`Jump to slide ${idx + 1}`}
+                title={`Slide ${idx + 1} of ${banners.length}`}
+                className="flex-1 h-1 sm:h-1.5 rounded-full bg-white/20 hover:bg-white/40 overflow-hidden cursor-pointer backdrop-blur-xs transition-all relative"
+              >
+                <div
+                  className={`h-full rounded-full transition-all duration-300 ${
+                    idx === currentIndex
+                      ? 'w-full bg-gradient-to-r from-red-500 via-rose-500 to-red-400 shadow-xs'
+                      : idx < currentIndex
+                      ? 'w-full bg-white/60'
+                      : 'w-0'
+                  }`}
+                />
+              </button>
+            ))}
+          </div>
+        )}
+
         {/* Slide Navigation Controls */}
         {banners.length > 1 && (
           <>
-            {/* Previous Arrow Button */}
+            {/* Desktop Side Arrows (Previous / Next) */}
             <button
               onClick={prevSlide}
               aria-label="Previous slide"
-              className="absolute left-3 sm:left-4 z-30 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-black/60 hover:bg-red-700 text-white border border-slate-700/80 hover:border-red-500 backdrop-blur-md flex items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-lg cursor-pointer"
+              className="hidden sm:flex absolute left-3 sm:left-4 z-30 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-black/70 hover:bg-red-700 text-white border border-slate-700/80 hover:border-red-500 backdrop-blur-md items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-lg cursor-pointer"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
 
-            {/* Next Arrow Button */}
             <button
               onClick={nextSlide}
               aria-label="Next slide"
-              className="absolute right-3 sm:right-4 z-30 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-black/60 hover:bg-red-700 text-white border border-slate-700/80 hover:border-red-500 backdrop-blur-md flex items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-lg cursor-pointer"
+              className="hidden sm:flex absolute right-3 sm:right-4 z-30 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-black/70 hover:bg-red-700 text-white border border-slate-700/80 hover:border-red-500 backdrop-blur-md items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-lg cursor-pointer"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
 
-            {/* Bottom Floating Bar: Pagination Dots, Counter & Pause Toggle */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-3 px-3.5 py-1.5 rounded-full bg-black/70 border border-slate-800 backdrop-blur-md shadow-xl">
-              {/* Slide Counter */}
-              <span className="text-[11px] font-mono font-bold text-white tracking-widest pl-1">
-                {String(currentIndex + 1).padStart(2, '0')} / {String(banners.length).padStart(2, '0')}
-              </span>
+            {/* Bottom Floating Bar: Strictly Linear Slide Bar for Mobile & Desktop */}
+            <div className="absolute bottom-2.5 sm:bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 sm:gap-2.5 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-black/90 border border-slate-800 backdrop-blur-md shadow-2xl whitespace-nowrap shrink-0 select-none max-w-[95%]">
+              {/* Mobile Compact Linear Previous Arrow */}
+              <button
+                onClick={prevSlide}
+                aria-label="Previous slide"
+                className="p-1 sm:hidden text-white/70 hover:text-white transition-colors cursor-pointer shrink-0"
+              >
+                <ChevronLeft className="w-3.5 h-3.5" />
+              </button>
 
-              {/* Dots */}
-              <div className="flex items-center gap-1.5 px-1.5">
+              {/* Linear Slide Counter Badge */}
+              <div className="flex items-center gap-1 text-[11px] sm:text-xs font-mono font-bold text-white tracking-wider whitespace-nowrap shrink-0 tabular-nums bg-white/10 px-2 py-0.5 rounded-full border border-white/10">
+                <span className="text-red-400">{String(currentIndex + 1).padStart(2, '0')}</span>
+                <span className="text-white/40 font-light">/</span>
+                <span className="text-white/80">{String(banners.length).padStart(2, '0')}</span>
+              </div>
+
+              {/* Linear Segmented Dash Bars */}
+              <div className="flex items-center gap-1 sm:gap-1.5 px-0.5 shrink-0">
                 {banners.map((_, idx) => (
                   <button
                     key={idx}
                     onClick={() => goToSlide(idx)}
-                    aria-label={`Go to slide ${idx + 1}`}
-                    className={`transition-all duration-300 rounded-full cursor-pointer ${
+                    aria-label={`Slide ${idx + 1} of ${banners.length}`}
+                    title={`Slide ${idx + 1} of ${banners.length}`}
+                    className={`transition-all duration-300 rounded-full cursor-pointer shrink-0 ${
                       idx === currentIndex
-                        ? 'w-6 h-2 bg-gradient-to-r from-red-600 to-rose-500 shadow-xs'
-                        : 'w-2 h-2 bg-slate-700 hover:bg-slate-500'
+                        ? 'w-6 sm:w-8 h-1.5 sm:h-2 bg-gradient-to-r from-red-600 to-rose-500 shadow-sm ring-1 ring-red-400/50'
+                        : 'w-2 sm:w-2.5 h-1.5 sm:h-2 bg-slate-700/90 hover:bg-slate-500'
                     }`}
                   />
                 ))}
               </div>
 
-              {/* Play/Pause Button */}
+              {/* Linear Auto-slide Play/Pause Toggle */}
               <button
                 onClick={() => setIsPaused(!isPaused)}
                 title={isPaused ? 'Resume Auto-slide' : 'Pause Auto-slide'}
                 aria-label={isPaused ? 'Resume Auto-slide' : 'Pause Auto-slide'}
-                className="p-1 text-white hover:text-red-400 transition-colors cursor-pointer"
+                className="p-1 text-white hover:text-red-400 transition-colors cursor-pointer shrink-0"
               >
                 {isPaused ? <Play className="w-3 h-3 fill-current" /> : <Pause className="w-3 h-3 fill-current" />}
+              </button>
+
+              {/* Mobile Compact Linear Next Arrow */}
+              <button
+                onClick={nextSlide}
+                aria-label="Next slide"
+                className="p-1 sm:hidden text-white/70 hover:text-white transition-colors cursor-pointer shrink-0"
+              >
+                <ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>
           </>

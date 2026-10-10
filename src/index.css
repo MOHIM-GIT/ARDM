@@ -129,7 +129,19 @@
     color: var(--text);
     background-color: var(--background);
     overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
     transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  .pb-safe {
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
+  }
+
+  .pt-safe {
+    padding-top: max(0.5rem, env(safe-area-inset-top, 0px));
   }
 
   h1, h2, h3, h4, h5, h6 {

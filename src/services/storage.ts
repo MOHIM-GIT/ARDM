@@ -3073,6 +3073,19 @@ export const DEFAULT_BANNERS: BannerItem[] = [
     orderIndex: 3,
     createdAt: '2026-01-03T00:00:00.000Z',
   },
+  {
+    id: 'banner_four_founders_ardm',
+    title: 'Meet All 4 Founders of ARDM Academy (A · R · D · M)',
+    subtitle: 'Akash Paik (Academic Lead) • Rupam Paul (Operations Lead) • Devnath Pramanick (Mentorship Lead) • Mohim Das (Technology Lead). Four leaders united in student excellence.',
+    badgeText: 'MEET ALL 4 FOUNDERS',
+    mediaType: 'image',
+    mediaUrl: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1600&auto=format&fit=crop&q=80',
+    ctaText: 'Meet The 4 Founders',
+    ctaLink: '#founders-modal',
+    isVisible: true,
+    orderIndex: 4,
+    createdAt: '2026-01-04T00:00:00.000Z',
+  },
 ];
 
 export function getBanners(): BannerItem[] {
@@ -3087,6 +3100,14 @@ export function getBanners(): BannerItem[] {
     if (!Array.isArray(parsed) || parsed.length === 0) {
       saveBanners(DEFAULT_BANNERS);
       return DEFAULT_BANNERS;
+    }
+    // Ensure All 4 Founders banner is always present
+    if (!parsed.some((b: BannerItem) => b.id === 'banner_four_founders_ardm')) {
+      const founderBanner = DEFAULT_BANNERS.find((b) => b.id === 'banner_four_founders_ardm');
+      if (founderBanner) {
+        parsed.splice(2, 0, founderBanner);
+        saveBanners(parsed);
+      }
     }
     // Ensure WBBSE Free Online Classes banner is always injected
     if (!parsed.some((b: BannerItem) => b.id === 'banner_wbbse_free_classes_2026')) {

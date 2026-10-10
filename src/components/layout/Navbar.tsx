@@ -16,6 +16,8 @@ import {
   MessageCircle,
   ExternalLink,
   ChevronDown,
+  Users,
+  Smartphone,
 } from 'lucide-react';
 import { SITE_CONFIG, getTelLink } from '../../config/siteConfig';
 
@@ -27,6 +29,7 @@ interface NavbarProps {
   onOpenStudentPortal: () => void;
   onOpenCheckRegistration: () => void;
   onOpenDownloadAdmitCard: () => void;
+  onOpenSearch?: () => void;
   activeSection: string;
   isSidebarExpanded?: boolean;
   onToggleSidebar?: () => void;
@@ -41,6 +44,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenStudentPortal,
   onOpenCheckRegistration,
   onOpenDownloadAdmitCard,
+  onOpenSearch,
   activeSection,
   isSidebarExpanded = true,
   onToggleSidebar,
@@ -82,9 +86,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           : 'bg-white/80 dark:bg-[#09090b]/80 backdrop-blur-xs py-3 border-b border-slate-100 dark:border-slate-800/60'
       }`}
     >
-      <div className="max-w-[1440px] mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between gap-3">
+      <div className="max-w-[1440px] mx-auto px-2.5 sm:px-6 lg:px-8 flex items-center justify-between gap-2 sm:gap-3 w-full">
         {/* Left Side: Sidebar Toggle & Mobile Brand Indicator */}
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
           {/* Mobile Menu Button (Opens Left-Side Animated Drawer) */}
           <button
             onClick={onOpenMobileSidebar}
@@ -94,6 +98,22 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <Menu className="w-5 h-5" />
           </button>
+
+          {/* Mobile Brand Title (Displays ARDM on phone screens) */}
+          <a
+            href="/"
+            onClick={(e) => {
+              e.preventDefault();
+              onNavigate('home');
+            }}
+            className="flex items-center gap-1.5 lg:hidden focus:outline-hidden"
+            title="ARDM Academy"
+          >
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-red-600 via-rose-600 to-red-800 flex items-center justify-center text-white font-black text-xs shadow-xs border border-red-500/40">
+              A
+            </div>
+            <span className="font-extrabold text-sm text-white tracking-tight">ARDM</span>
+          </a>
 
           {/* Desktop Sidebar Collapse / Expand Toggle */}
           <button
@@ -111,7 +131,47 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Right Side: Primary Actions in exact order */}
-        <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+          {/* Quick Search Button (Opens Google-style Sitelinks Search) */}
+          {onOpenSearch && (
+            <>
+              {/* Desktop / Laptop Search Button with Keyboard Hint */}
+              <button
+                onClick={onOpenSearch}
+                className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-300 bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 hover:border-blue-500/60 transition-all hover:scale-102 active:scale-98 shadow-2xs cursor-pointer group"
+                title="Search ARDM Academy Sitelinks (Ctrl + K)"
+                aria-label="Search ARDM Academy"
+              >
+                <Search className="w-3.5 h-3.5 text-blue-400 group-hover:scale-110 transition-transform" />
+                <span className="hidden xl:inline">Search ARDM...</span>
+                <span className="xl:hidden">Search</span>
+                <kbd className="hidden md:inline-block px-1.5 py-0.5 rounded bg-slate-800 text-[9px] font-mono text-slate-400 border border-slate-700">
+                  ⌘K
+                </kbd>
+              </button>
+
+              {/* Mobile Quick Search Button */}
+              <button
+                onClick={onOpenSearch}
+                className="inline-flex sm:hidden p-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-blue-400 transition-all shadow-xs shrink-0 cursor-pointer"
+                title="Search ARDM Academy"
+                aria-label="Search"
+              >
+                <Search className="w-4 h-4 text-blue-400" />
+              </button>
+            </>
+          )}
+
+          {/* 4 Founders Button */}
+          <button
+            onClick={() => onNavigate('/founders')}
+            className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold text-amber-300 bg-amber-950/40 hover:bg-amber-900/60 border border-amber-900/50 transition-all cursor-pointer"
+            title="Meet All 4 Founders: Akash Paik, Rupam Paul, Devnath Pramanick, Mohim Das"
+          >
+            <Users className="w-3.5 h-3.5 text-amber-400" />
+            <span className="whitespace-nowrap">4 Founders</span>
+          </button>
+
           {/* Practice CBT */}
           <button
             onClick={onOpenTestEngine}
@@ -122,14 +182,14 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="whitespace-nowrap">Practice CBT</span>
           </button>
 
-          {/* Mobile Free Class Quick Contact (Visible on phone devices) */}
+          {/* Mobile Free Class Call Helpline Icon */}
           <a
             href="tel:6289139984"
-            className="inline-flex sm:hidden items-center gap-1 px-2.5 py-1.5 rounded-xl bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-300 text-xs font-bold transition-all shadow-xs shrink-0"
+            className="inline-flex sm:hidden p-2 rounded-xl bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-300 transition-all shadow-xs shrink-0"
             title="Direct Call Free Class Helpline: 6289139984"
+            aria-label="Call Helpline"
           >
             <PhoneCall className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
-            <span className="text-[11px] font-bold">Free Class</span>
           </a>
 
           {/* Desktop & Laptop Free Class Contact Option with Quick Actions */}
@@ -257,18 +317,18 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="px-1.5 py-0.2 bg-white/20 rounded text-[11px] font-mono">₹100</span>
           </button>
 
-          {/* Student Portal & Status Link */}
+          {/* Student Portal & Status Link (Tablet and Desktop; available in mobile drawer on phones) */}
           <button
             onClick={onOpenStudentPortal}
-            className="p-2 text-white hover:text-red-400 rounded-xl hover:bg-slate-800 transition-colors border border-slate-800 shadow-2xs cursor-pointer"
+            className="hidden sm:inline-flex p-2 text-white hover:text-red-400 rounded-xl hover:bg-slate-800 transition-colors border border-slate-800 shadow-2xs cursor-pointer"
             title="Student Portal & Status Check"
             aria-label="Student Portal"
           >
             <UserCheck className="w-4 h-4" />
           </button>
 
-          {/* Visually Separated Student Data - Admin Panel Gateway */}
-          <div className="pl-1 sm:pl-2 border-l border-slate-800 ml-0.5">
+          {/* Visually Separated Student Data - Admin Panel Gateway (Tablet & Desktop; in mobile drawer on phones) */}
+          <div className="hidden sm:block pl-1 sm:pl-2 border-l border-slate-800 ml-0.5">
             <button
               onClick={onOpenAdmin}
               className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-white hover:text-red-400 bg-slate-900/90 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 rounded-xl transition-all hover:scale-102 active:scale-98 text-xs font-semibold cursor-pointer shadow-2xs"
@@ -279,7 +339,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="hidden xl:inline text-[11px] font-semibold text-slate-200 hover:text-white whitespace-nowrap">
                 Student Data - Admin Panel
               </span>
-              <span className="xl:hidden hidden sm:inline text-[11px] font-semibold text-slate-200 whitespace-nowrap">
+              <span className="xl:hidden inline text-[11px] font-semibold text-slate-200 whitespace-nowrap">
                 Student Data Admin
               </span>
             </button>

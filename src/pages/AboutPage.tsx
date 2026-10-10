@@ -24,9 +24,10 @@ import { SITE_CONFIG, getTelLink, getWhatsAppLink } from '../config/siteConfig';
 
 interface AboutPageProps {
   onNavigate: (path: string) => void;
+  onOpenFounderModal?: (founderId?: 'all' | 'akash' | 'rupam' | 'devnath' | 'mohim') => void;
 }
 
-export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
+export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onOpenFounderModal }) => {
   const testimonials = [
     {
       name: 'Arpan Ghosh',
@@ -75,49 +76,88 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
 
   const aboutSchema = {
     '@context': 'https://schema.org',
-    '@type': 'AboutPage',
-    name: 'About ARDM Academy & Founders',
-    description:
-      'Meet the Founders of ARDM Academy: Akash Paik, Rupam Paul, Devnath Pramanick, and Mohim Das. Educational leadership, Dada-Didi mentorship, and academic excellence.',
-    mainEntity: {
-      '@type': 'EducationalOrganization',
-      name: 'ARDM Academy',
-      url: 'https://ardmacademy.in/',
-      founder: [
-        {
-          '@type': 'Person',
-          name: 'Akash Paik',
-          jobTitle: 'Founder',
-          worksFor: { '@type': 'EducationalOrganization', name: 'ARDM Academy' },
-          knowsAbout: ['Mathematics', 'Physical Science', 'Board Exam Strategy', 'Curriculum Design'],
-          email: 'akashpaik570@gmail.com',
+    '@graph': [
+      {
+        '@type': 'AboutPage',
+        name: 'About ARDM Academy & Founders',
+        description:
+          'Meet the 4 Founders of ARDM Academy: Akash Paik, Rupam Paul, Devnath Pramanick, and Mohim Das. Educational leadership, Dada-Didi mentorship, and academic excellence.',
+        mainEntity: {
+          '@type': 'EducationalOrganization',
+          name: 'ARDM Academy',
+          url: 'https://ardmacademy.in/',
+          founder: [
+            {
+              '@type': 'Person',
+              name: 'Akash Paik',
+              jobTitle: 'Founder',
+              worksFor: { '@type': 'EducationalOrganization', name: 'ARDM Academy' },
+              description: 'Founder & Academic Lead in Mathematics and Physical Science pedagogy.',
+              knowsAbout: ['Mathematics', 'Physical Science', 'Board Exam Strategy', 'Curriculum Design'],
+              email: 'akashpaik570@gmail.com',
+            },
+            {
+              '@type': 'Person',
+              name: 'Rupam Paul',
+              jobTitle: 'Founder',
+              worksFor: { '@type': 'EducationalOrganization', name: 'ARDM Academy' },
+              description: 'Founder & Operations Lead managing examination logistics and CBT test delivery.',
+              knowsAbout: ['Operations Management', 'Systems Architecture', 'Educational Logistics', 'CBT Test Platforms'],
+              email: 'rupampaul20070@gmail.com',
+            },
+            {
+              '@type': 'Person',
+              name: 'Devnath Pramanick',
+              jobTitle: 'Founder',
+              worksFor: { '@type': 'EducationalOrganization', name: 'ARDM Academy' },
+              description: 'Founder & Mentorship Lead who architected the Dada-Didi Mentorship model.',
+              knowsAbout: ['Student Mentorship', 'Dada-Didi Mentorship Model', 'Examination Psychology', 'Academic Guidance'],
+              email: 'pramanickdevnath2007@gmail.com',
+            },
+            {
+              '@type': 'Person',
+              name: 'Mohim Das',
+              jobTitle: 'Founder',
+              worksFor: { '@type': 'EducationalOrganization', name: 'ARDM Academy' },
+              description: 'Founder & Technology Lead (Founder & CEO of CodeLX), leading AI workshops and web engineering.',
+              knowsAbout: ['Software Engineering', 'Artificial Intelligence', 'Web Architecture', 'Digital Education'],
+              email: 'mohimdas300@gmail.com',
+              telephone: '+919123870823',
+            },
+          ],
         },
-        {
-          '@type': 'Person',
-          name: 'Rupam Paul',
-          jobTitle: 'Founder',
-          worksFor: { '@type': 'EducationalOrganization', name: 'ARDM Academy' },
-          knowsAbout: ['Operations Management', 'Systems Architecture', 'Educational Logistics', 'CBT Test Platforms'],
-          email: 'rupampaul20070@gmail.com',
-        },
-        {
-          '@type': 'Person',
-          name: 'Devnath Pramanick',
-          jobTitle: 'Founder',
-          worksFor: { '@type': 'EducationalOrganization', name: 'ARDM Academy' },
-          knowsAbout: ['Student Mentorship', 'Dada-Didi Mentorship Model', 'Examination Psychology', 'Academic Guidance'],
-          email: 'pramanickdevnath2007@gmail.com',
-        },
-        {
-          '@type': 'Person',
-          name: 'Mohim Das',
-          jobTitle: 'Founder',
-          worksFor: { '@type': 'EducationalOrganization', name: 'ARDM Academy' },
-          knowsAbout: ['Software Engineering', 'Artificial Intelligence', 'Web Architecture', 'Digital Education'],
-          email: 'mohimdas300@gmail.com',
-        },
-      ],
-    },
+      },
+      {
+        '@type': 'FAQPage',
+        name: 'ARDM Academy Founders FAQ',
+        mainEntity: [
+          {
+            '@type': 'Question',
+            name: 'Who are the founders of ARDM Academy?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'ARDM Academy was founded by four founders: Akash Paik, Rupam Paul, Devnath Pramanick, and Mohim Das. The academy is named ARDM after the four founders: A (Akash), R (Rupam), D (Devnath), and M (Mohim).',
+            },
+          },
+          {
+            '@type': 'Question',
+            name: 'Who is the founder of ARDM Academy?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'ARDM Academy has four founders who established the academy jointly: Akash Paik (Academic Lead), Rupam Paul (Operations Lead), Devnath Pramanick (Mentorship Lead), and Mohim Das (Technology Lead & Founder/CEO of CodeLX).',
+            },
+          },
+          {
+            '@type': 'Question',
+            name: 'What does ARDM stand for in ARDM Academy?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'ARDM stands for the four founders of ARDM Academy: A - Akash Paik, R - Rupam Paul, D - Devnath Pramanick, and M - Mohim Das.',
+            },
+          },
+        ],
+      },
+    ],
   };
 
   return (
@@ -268,8 +308,16 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
                   Specializing in Mathematics, Physical Science pedagogy, and examination strategy. Champions student-first curriculum design and personalized doubt clearing.
                 </p>
               </div>
-              <div className="pt-2 border-t border-slate-200/80 text-[10px] font-mono text-slate-400">
-                Mathematics & Physical Science
+              <div className="pt-2 border-t border-slate-200/80 flex items-center justify-between text-[10px] font-mono text-slate-400">
+                <span>Mathematics & Physical Science</span>
+                {onOpenFounderModal && (
+                  <button
+                    onClick={() => onOpenFounderModal('akash')}
+                    className="text-indigo-600 font-bold hover:underline cursor-pointer"
+                  >
+                    View Details →
+                  </button>
+                )}
               </div>
             </article>
 
@@ -295,8 +343,16 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
                   Steering administrative operations, exam center logistics, and digital platform reliability. Ensures seamless nationwide examination delivery.
                 </p>
               </div>
-              <div className="pt-2 border-t border-slate-200/80 text-[10px] font-mono text-slate-400">
-                Operations & Systems Infrastructure
+              <div className="pt-2 border-t border-slate-200/80 flex items-center justify-between text-[10px] font-mono text-slate-400">
+                <span>Operations & Systems</span>
+                {onOpenFounderModal && (
+                  <button
+                    onClick={() => onOpenFounderModal('rupam')}
+                    className="text-blue-600 font-bold hover:underline cursor-pointer"
+                  >
+                    View Details →
+                  </button>
+                )}
               </div>
             </article>
 
@@ -322,8 +378,16 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
                   Architect of the Dada-Didi Mentorship philosophy. Focuses on student psychology, stress-free board preparation, and career roadmap counseling.
                 </p>
               </div>
-              <div className="pt-2 border-t border-slate-200/80 text-[10px] font-mono text-slate-400">
-                Student Welfare & Mentorship
+              <div className="pt-2 border-t border-slate-200/80 flex items-center justify-between text-[10px] font-mono text-slate-400">
+                <span>Student Welfare</span>
+                {onOpenFounderModal && (
+                  <button
+                    onClick={() => onOpenFounderModal('devnath')}
+                    className="text-emerald-600 font-bold hover:underline cursor-pointer"
+                  >
+                    View Details →
+                  </button>
+                )}
               </div>
             </article>
 
@@ -349,8 +413,16 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
                   Driving digital learning technology, AI education integration, and web engineering. Dedicated to modernizing educational access for aspiring learners.
                 </p>
               </div>
-              <div className="pt-2 border-t border-slate-200/80 text-[10px] font-mono text-slate-400">
-                Software Engineering & AI Labs
+              <div className="pt-2 border-t border-slate-200/80 flex items-center justify-between text-[10px] font-mono text-slate-400">
+                <span>Software & AI Labs</span>
+                {onOpenFounderModal && (
+                  <button
+                    onClick={() => onOpenFounderModal('mohim')}
+                    className="text-purple-600 font-bold hover:underline cursor-pointer"
+                  >
+                    View Details →
+                  </button>
+                )}
               </div>
             </article>
           </div>

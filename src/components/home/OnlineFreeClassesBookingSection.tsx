@@ -152,33 +152,33 @@ export const OnlineFreeClassesBookingSection: React.FC<OnlineFreeClassesBookingS
             </div>
 
             {/* Direct Call Buttons */}
-            <div className="flex flex-wrap items-center justify-center gap-3 shrink-0">
+            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 w-full sm:w-auto">
               {/* Phone 1: 6289139984 */}
-              <div className="flex items-center gap-1.5 bg-slate-900 p-1.5 rounded-2xl border border-red-500/50 shadow-lg">
+              <div className="flex items-center gap-1 sm:gap-1.5 bg-slate-900 p-1 sm:p-1.5 rounded-2xl border border-red-500/50 shadow-lg max-w-full">
                 <a
                   href={`tel:${HELPLINE_1}`}
-                  className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-mono text-sm sm:text-base font-bold shadow-md hover:scale-102 active:scale-98 transition-all cursor-pointer"
+                  className="inline-flex items-center gap-1.5 sm:gap-2.5 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-mono text-xs sm:text-base font-bold shadow-md hover:scale-102 active:scale-98 transition-all cursor-pointer"
                   title="Direct Call 6289139984"
                 >
-                  <PhoneCall className="w-4 h-4 animate-bounce" />
+                  <PhoneCall className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-bounce" />
                   <span>{HELPLINE_1}</span>
                 </a>
                 <button
                   type="button"
                   onClick={() => handleCopy(HELPLINE_1)}
-                  className="px-2.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium transition-colors cursor-pointer"
+                  className="px-2 sm:px-2.5 py-2 sm:py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium transition-colors cursor-pointer"
                   title="Copy Number"
                 >
-                  {copiedNumber === HELPLINE_1 ? <Check className="w-4 h-4 text-emerald-400" /> : 'Copy'}
+                  {copiedNumber === HELPLINE_1 ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : 'Copy'}
                 </button>
                 <a
                   href={`https://wa.me/91${HELPLINE_1}?text=Hello%20ARDM%20Academy%2C%20I%20want%20to%20book%20a%20free%20online%20class%20seat%20for%20West%20Bengal%20Board.`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition-colors cursor-pointer"
+                  className="p-2 sm:p-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition-colors cursor-pointer"
                   title="WhatsApp 6289139984"
                 >
-                  <MessageCircle className="w-4 h-4" />
+                  <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </a>
               </div>
             </div>
@@ -186,22 +186,22 @@ export const OnlineFreeClassesBookingSection: React.FC<OnlineFreeClassesBookingS
         </div>
 
         {/* 2. Interactive Class Selector (Class 8, 9, 10 Madhyamik) */}
-        <div className="flex items-center justify-center gap-2 sm:gap-4 mb-8">
+        <div className="grid grid-cols-3 gap-1.5 sm:flex sm:items-center sm:justify-center sm:gap-4 mb-8">
           {(['10', '9', '8'] as const).map((cls) => {
             const isSelected = selectedClass === cls;
             return (
               <button
                 key={cls}
                 onClick={() => setSelectedClass(cls)}
-                className={`flex-1 sm:flex-initial sm:min-w-[200px] py-3.5 px-4 rounded-2xl font-bold text-xs sm:text-sm transition-all cursor-pointer border ${
+                className={`w-full sm:w-auto sm:min-w-[180px] py-2.5 sm:py-3.5 px-1.5 sm:px-4 rounded-xl sm:rounded-2xl font-bold text-[11px] sm:text-sm transition-all cursor-pointer border text-center ${
                   isSelected
                     ? 'bg-gradient-to-r from-red-600 to-rose-600 text-white border-red-400 shadow-xl shadow-red-900/30 scale-102'
                     : 'bg-slate-900/80 hover:bg-slate-800 text-slate-300 border-slate-800'
                 }`}
               >
-                <div className="flex items-center justify-center gap-2">
-                  <GraduationCap className={`w-4 h-4 ${isSelected ? 'text-white' : 'text-slate-400'}`} />
-                  <span>{cls === '10' ? 'Class 10 (মাধ্যমিক)' : `Class ${cls}`}</span>
+                <div className="flex items-center justify-center gap-1 sm:gap-2">
+                  <GraduationCap className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${isSelected ? 'text-white' : 'text-slate-400'}`} />
+                  <span className="truncate">{cls === '10' ? 'Class 10' : `Class ${cls}`}</span>
                 </div>
               </button>
             );

@@ -25,6 +25,7 @@ interface HeroSectionProps {
   onContactUs: () => void;
   onLaunchPractice: () => void;
   onOpenDownloadAdmitCard: () => void;
+  onOpenFounders?: (founderId?: 'all' | 'akash' | 'rupam' | 'devnath' | 'mohim') => void;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
@@ -33,43 +34,87 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onContactUs,
   onLaunchPractice,
   onOpenDownloadAdmitCard,
+  onOpenFounders,
 }) => {
   return (
-    <section id="home" className="relative pt-10 pb-14 md:pt-16 md:pb-20 overflow-hidden">
+    <section id="home" className="relative pt-6 pb-12 sm:pt-10 sm:pb-16 md:pt-14 md:pb-20 overflow-hidden">
       {/* Background Subtle Gradient Blobs - Soft Red Ambient in Light & Dark Mode */}
       <div className="absolute top-10 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-br from-red-100/20 via-rose-50/10 to-transparent dark:from-red-950/20 dark:via-rose-950/10 dark:to-transparent rounded-full blur-3xl -z-10 pointer-events-none" />
       <div className="absolute top-40 right-10 w-72 h-72 bg-red-100/20 dark:bg-red-950/15 rounded-full blur-2xl -z-10 pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
           {/* Left Column: Core Messaging & CTAs */}
-          <div className="lg:col-span-7 text-center lg:text-left space-y-5">
+          <div className="lg:col-span-7 text-center lg:text-left space-y-4 sm:space-y-5">
             {/* Announcement Pills */}
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-50 dark:bg-red-950/70 border border-red-200 dark:border-red-900/60 text-red-900 dark:text-red-300 text-xs font-semibold shadow-2xs">
-                <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span>PROSTUTI 2026 • The Ultimate Class 10 Mock Test</span>
-                <Sparkles className="w-3.5 h-3.5 text-red-600 dark:text-red-400" />
+            <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center lg:justify-start gap-2">
+              <div className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-3 py-1.5 rounded-full bg-red-50 dark:bg-red-950/70 border border-red-200 dark:border-red-900/60 text-red-900 dark:text-red-300 text-xs font-semibold shadow-2xs">
+                <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                <span className="truncate">PROSTUTI 2026 • Class 10 Mock Test</span>
+                <Sparkles className="w-3.5 h-3.5 text-red-600 dark:text-red-400 shrink-0" />
               </div>
               <a
                 href="#free-online-classes"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-950/70 border border-emerald-700/60 text-emerald-300 text-xs font-bold hover:bg-emerald-900/80 transition-all shadow-2xs"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-950/70 border border-emerald-700/60 text-emerald-300 text-xs font-bold hover:bg-emerald-900/80 transition-all shadow-2xs"
               >
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                <span>Online Free Classes (Class 8, 9, 10) • Seat Book Now</span>
+                <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                <span className="truncate">Online Free Classes • Book Seat</span>
               </a>
             </div>
 
+            {/* ALL 4 FOUNDERS PROMINENT TRUST STRIP (SEO & Recognition) */}
+            <div className="pt-0.5 pb-0.5">
+              <div className="inline-flex flex-wrap items-center justify-center lg:justify-start gap-1.5 p-1.5 rounded-2xl bg-[#121215] border border-slate-800 shadow-md">
+                <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-amber-400 font-bold px-2 py-0.5">
+                  Founded by 4 Founders:
+                </span>
+                <div className="flex flex-wrap items-center justify-center gap-1">
+                  <button
+                    onClick={() => onOpenFounders?.('akash')}
+                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-[11px] font-semibold text-slate-200 hover:text-white border border-slate-800 transition-colors cursor-pointer"
+                    title="Akash Paik - Academic Lead"
+                  >
+                    <span className="w-3.5 h-3.5 rounded bg-amber-500/20 text-amber-400 text-[9px] font-bold flex items-center justify-center font-mono">A</span>
+                    <span>Akash Paik</span>
+                  </button>
+                  <button
+                    onClick={() => onOpenFounders?.('rupam')}
+                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-[11px] font-semibold text-slate-200 hover:text-white border border-slate-800 transition-colors cursor-pointer"
+                    title="Rupam Paul - Operations Lead"
+                  >
+                    <span className="w-3.5 h-3.5 rounded bg-red-500/20 text-red-400 text-[9px] font-bold flex items-center justify-center font-mono">R</span>
+                    <span>Rupam Paul</span>
+                  </button>
+                  <button
+                    onClick={() => onOpenFounders?.('devnath')}
+                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-[11px] font-semibold text-slate-200 hover:text-white border border-slate-800 transition-colors cursor-pointer"
+                    title="Devnath Pramanick - Mentorship Lead"
+                  >
+                    <span className="w-3.5 h-3.5 rounded bg-emerald-500/20 text-emerald-400 text-[9px] font-bold flex items-center justify-center font-mono">D</span>
+                    <span>Devnath Pramanick</span>
+                  </button>
+                  <button
+                    onClick={() => onOpenFounders?.('mohim')}
+                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-[11px] font-semibold text-slate-200 hover:text-white border border-slate-800 transition-colors cursor-pointer"
+                    title="Mohim Das - Technology Lead"
+                  >
+                    <span className="w-3.5 h-3.5 rounded bg-purple-500/20 text-purple-400 text-[9px] font-bold flex items-center justify-center font-mono">M</span>
+                    <span>Mohim Das</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
             {/* Main Headline with Indian Tricolor for Learn. Practice. Improve. */}
-            <div className="space-y-3">
+            <div className="space-y-2 sm:space-y-3">
               <p className="text-xs sm:text-sm font-bold tracking-widest text-red-500 uppercase flex items-center justify-center lg:justify-start gap-2">
                 <span className="w-5 h-0.5 bg-red-600 rounded-full inline-block" />
                 Welcome to ARDM Academy
                 <span className="w-5 h-0.5 bg-red-600 rounded-full inline-block lg:hidden" />
               </p>
 
-              {/* Stacked Monumental Headline: One by one like Learn. \n Practice. \n Improve. */}
-              <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.08] select-none my-1">
+              {/* Stacked Monumental Headline */}
+              <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.08] select-none my-1">
                 <div className="flex flex-col items-center lg:items-start gap-1 sm:gap-2">
                   {/* Saffron / Orange (Indian Flag) */}
                   <span className="text-[#FF9933] drop-shadow-[0_4px_20px_rgba(255,153,51,0.5)] hover:translate-x-1 transition-transform duration-200 inline-block">
@@ -88,9 +133,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 </div>
               </h1>
 
-              {/* Linear Tricolor Motto Pill (Providing both linear and one by one) */}
+              {/* Linear Tricolor Motto Pill */}
               <div className="flex items-center justify-center lg:justify-start pt-1 pb-1">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/90 border border-slate-800 shadow-lg backdrop-blur-md">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/90 border border-slate-800 shadow-lg backdrop-blur-md">
                   <span className="text-xs font-black text-[#FF9933]">Learn.</span>
                   <span className="text-white/60 text-xs font-bold">•</span>
                   <span className="text-xs font-black text-white">Practice.</span>
