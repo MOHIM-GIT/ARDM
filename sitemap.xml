@@ -6,15 +6,23 @@
 
   <!-- 1. Homepage -->
   <url>
-    <loc>https://ardmacademy.in/</loc>
-    <lastmod>2026-09-26</lastmod>
+    <loc>https://ardmacademy.netlify.app/</loc>
+    <lastmod>2026-10-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
+  <!-- 1.1 Founders of ARDM Academy (Akash Paik, Rupam Paul, Devnath Pramanick, Mohim Das) -->
+  <url>
+    <loc>https://ardmacademy.netlify.app/founders</loc>
+    <lastmod>2026-10-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
   <!-- 2. About ARDM Academy -->
   <url>
-    <loc>https://ardmacademy.in/about</loc>
+    <loc>https://ardmacademy.netlify.app/about</loc>
     <lastmod>2026-09-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -22,7 +30,7 @@
 
   <!-- 3. Mock Tests (PROSTUTI Series) -->
   <url>
-    <loc>https://ardmacademy.in/mock-tests</loc>
+    <loc>https://ardmacademy.netlify.app/mock-tests</loc>
     <lastmod>2026-09-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
@@ -30,7 +38,7 @@
 
   <!-- 4. PYQs (Previous Year Questions) -->
   <url>
-    <loc>https://ardmacademy.in/pyqs</loc>
+    <loc>https://ardmacademy.netlify.app/pyqs</loc>
     <lastmod>2026-09-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
@@ -38,7 +46,7 @@
 
   <!-- 5. Free Education Classes (5 to 10) -->
   <url>
-    <loc>https://ardmacademy.in/free-classes</loc>
+    <loc>https://ardmacademy.netlify.app/free-classes</loc>
     <lastmod>2026-09-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
@@ -46,37 +54,37 @@
 
   <!-- 6. Class-Wise Learning Hubs -->
   <url>
-    <loc>https://ardmacademy.in/classes/class-10</loc>
+    <loc>https://ardmacademy.netlify.app/classes/class-10</loc>
     <lastmod>2026-09-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://ardmacademy.in/classes/class-9</loc>
+    <loc>https://ardmacademy.netlify.app/classes/class-9</loc>
     <lastmod>2026-09-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://ardmacademy.in/classes/class-8</loc>
+    <loc>https://ardmacademy.netlify.app/classes/class-8</loc>
     <lastmod>2026-09-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://ardmacademy.in/classes/class-7</loc>
+    <loc>https://ardmacademy.netlify.app/classes/class-7</loc>
     <lastmod>2026-09-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://ardmacademy.in/classes/class-6</loc>
+    <loc>https://ardmacademy.netlify.app/classes/class-6</loc>
     <lastmod>2026-09-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://ardmacademy.in/classes/class-5</loc>
+    <loc>https://ardmacademy.netlify.app/classes/class-5</loc>
     <lastmod>2026-09-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
@@ -84,7 +92,7 @@
 
   <!-- 7. Dynamic Courses -->
   <url>
-    <loc>https://ardmacademy.in/courses</loc>
+    <loc>https://ardmacademy.netlify.app/courses</loc>
     <lastmod>2026-09-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
@@ -92,25 +100,25 @@
 
   <!-- 8. Artificial Intelligence & Webinars -->
   <url>
-    <loc>https://ardmacademy.in/webinars</loc>
+    <loc>https://ardmacademy.netlify.app/webinars</loc>
     <lastmod>2026-09-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://ardmacademy.in/ai</loc>
+    <loc>https://ardmacademy.netlify.app/ai</loc>
     <lastmod>2026-09-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://ardmacademy.in/computer-science</loc>
+    <loc>https://ardmacademy.netlify.app/computer-science</loc>
     <lastmod>2026-09-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://ardmacademy.in/workshops</loc>
+    <loc>https://ardmacademy.netlify.app/workshops</loc>
     <lastmod>2026-09-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -118,13 +126,13 @@
 
   <!-- 9. Results & Merit List -->
   <url>
-    <loc>https://ardmacademy.in/results</loc>
+    <loc>https://ardmacademy.netlify.app/results</loc>
     <lastmod>2026-09-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://ardmacademy.in/results/merit-list-2025-26</loc>
+    <loc>https://ardmacademy.netlify.app/results/merit-list-2025-26</loc>
     <lastmod>2026-09-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.85</priority>
@@ -132,7 +140,7 @@
 
   <!-- 10. Contact Us -->
   <url>
-    <loc>https://ardmacademy.in/contact</loc>
+    <loc>https://ardmacademy.netlify.app/contact</loc>
     <lastmod>2026-09-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
