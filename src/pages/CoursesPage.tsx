@@ -215,7 +215,7 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenRegi
       provider: {
         '@type': 'EducationalOrganization',
         name: 'ARDM Academy',
-        sameAs: 'https://ardmacademy.in',
+        sameAs: 'https://ardmacademy.netlify.app',
       },
     })),
   };
@@ -225,7 +225,7 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenRegi
       <SEOHead
         title="Courses & Programs | ARDM Academy"
         description="Explore dynamic academic courses, Class 10 board boosters, Coding, and Artificial Intelligence masterclasses at ARDM Academy."
-        canonical="https://ardmacademy.in/courses"
+        canonical="https://ardmacademy.netlify.app/courses"
         breadcrumbs={[{ name: 'Courses', path: '/courses' }]}
         schema={courseSchema}
       />

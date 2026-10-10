@@ -22,7 +22,13 @@ export function getStudentResultSlug(record: { studentName: string; registration
 }
 
 export function getCanonicalUrl(path: string): string {
-  const base = 'https://ardmacademy.in';
+  // Prefer live Netlify production URL or current window origin if on Netlify
+  let base = 'https://ardmacademy.netlify.app';
+  if (typeof window !== 'undefined' && window.location.origin) {
+    if (window.location.origin.includes('netlify.app')) {
+      base = window.location.origin;
+    }
+  }
   if (!path || path === '/') return `${base}/`;
   const clean = path.startsWith('/') ? path : `/${path}`;
   return `${base}${clean}`;

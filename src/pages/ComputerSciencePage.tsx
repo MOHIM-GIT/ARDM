@@ -54,7 +54,7 @@ export const ComputerSciencePage: React.FC<ComputerSciencePageProps> = ({
     'provider': {
       '@type': 'EducationalOrganization',
       'name': 'ARDM Academy',
-      'url': 'https://ardmacademy.in',
+      'url': 'https://ardmacademy.netlify.app',
     },
   };
 
@@ -63,7 +63,7 @@ export const ComputerSciencePage: React.FC<ComputerSciencePageProps> = ({
       <SEOHead
         title="Computer Science & Coding | ARDM Academy"
         description="Learn Computer Science, Python programming, binary logic, algorithms, and practical computing at ARDM Academy."
-        canonical="https://ardmacademy.in/computer-science"
+        canonical="https://ardmacademy.netlify.app/computer-science"
         breadcrumbs={[
           { name: 'Courses', path: '/courses' },
           { name: 'Computer Science', path: '/computer-science' },

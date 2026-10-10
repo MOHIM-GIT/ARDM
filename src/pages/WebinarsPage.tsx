@@ -20,12 +20,12 @@ export const WebinarsPage: React.FC<WebinarsPageProps> = ({ onNavigate }) => {
     eventStatus: 'https://schema.org/EventScheduled',
     location: {
       '@type': 'VirtualLocation',
-      url: 'https://ardmacademy.in/webinars',
+      url: 'https://ardmacademy.netlify.app/webinars',
     },
     organizer: {
       '@type': 'EducationalOrganization',
       name: 'ARDM Academy',
-      url: 'https://ardmacademy.in',
+      url: 'https://ardmacademy.netlify.app',
     },
     offers: {
       '@type': 'Offer',
@@ -40,7 +40,7 @@ export const WebinarsPage: React.FC<WebinarsPageProps> = ({ onNavigate }) => {
       <SEOHead
         title="Free AI Webinars & Coding Masterclasses | ARDM Academy"
         description="Join free live Artificial Intelligence, Data Science, and Python programming workshops for school and college students at ARDM Academy."
-        canonical="https://ardmacademy.in/webinars"
+        canonical="https://ardmacademy.netlify.app/webinars"
         breadcrumbs={[{ name: 'Webinars', path: '/webinars' }]}
         schema={webinarSchema}
       />

@@ -38,7 +38,7 @@ export const MockTestsPage: React.FC<MockTestsPageProps> = ({
     'provider': {
       '@type': 'EducationalOrganization',
       'name': 'ARDM Academy',
-      'url': 'https://ardmacademy.in',
+      'url': 'https://ardmacademy.netlify.app',
     },
     'offers': {
       '@type': 'Offer',
@@ -53,7 +53,7 @@ export const MockTestsPage: React.FC<MockTestsPageProps> = ({
       <SEOHead
         title="Mock Tests | ARDM Academy"
         description="Take ARDM Academy mock tests, practice questions and assessments for students. PROSTUTI Class 10 mock series with previous prediction accuracy over 96%."
-        canonical="https://ardmacademy.in/mock-tests"
+        canonical="https://ardmacademy.netlify.app/mock-tests"
         breadcrumbs={[{ name: 'Mock Tests', path: '/mock-tests' }]}
         schema={mockTestSchema}
       />

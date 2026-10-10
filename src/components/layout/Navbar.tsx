@@ -6,7 +6,6 @@ import {
   ShieldCheck,
   PhoneCall,
   Download,
-  Search,
   UserCheck,
   PanelLeftClose,
   PanelLeft,
@@ -29,7 +28,6 @@ interface NavbarProps {
   onOpenStudentPortal: () => void;
   onOpenCheckRegistration: () => void;
   onOpenDownloadAdmitCard: () => void;
-  onOpenSearch?: () => void;
   activeSection: string;
   isSidebarExpanded?: boolean;
   onToggleSidebar?: () => void;
@@ -44,7 +42,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenStudentPortal,
   onOpenCheckRegistration,
   onOpenDownloadAdmitCard,
-  onOpenSearch,
   activeSection,
   isSidebarExpanded = true,
   onToggleSidebar,
@@ -132,36 +129,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Right Side: Primary Actions in exact order */}
         <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
-          {/* Quick Search Button (Opens Google-style Sitelinks Search) */}
-          {onOpenSearch && (
-            <>
-              {/* Desktop / Laptop Search Button with Keyboard Hint */}
-              <button
-                onClick={onOpenSearch}
-                className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-300 bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 hover:border-blue-500/60 transition-all hover:scale-102 active:scale-98 shadow-2xs cursor-pointer group"
-                title="Search ARDM Academy Sitelinks (Ctrl + K)"
-                aria-label="Search ARDM Academy"
-              >
-                <Search className="w-3.5 h-3.5 text-blue-400 group-hover:scale-110 transition-transform" />
-                <span className="hidden xl:inline">Search ARDM...</span>
-                <span className="xl:hidden">Search</span>
-                <kbd className="hidden md:inline-block px-1.5 py-0.5 rounded bg-slate-800 text-[9px] font-mono text-slate-400 border border-slate-700">
-                  ⌘K
-                </kbd>
-              </button>
-
-              {/* Mobile Quick Search Button */}
-              <button
-                onClick={onOpenSearch}
-                className="inline-flex sm:hidden p-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-blue-400 transition-all shadow-xs shrink-0 cursor-pointer"
-                title="Search ARDM Academy"
-                aria-label="Search"
-              >
-                <Search className="w-4 h-4 text-blue-400" />
-              </button>
-            </>
-          )}
-
           {/* 4 Founders Button */}
           <button
             onClick={() => onNavigate('/founders')}

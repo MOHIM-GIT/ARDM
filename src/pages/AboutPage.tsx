@@ -85,7 +85,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onOpenFounderM
         mainEntity: {
           '@type': 'EducationalOrganization',
           name: 'ARDM Academy',
-          url: 'https://ardmacademy.in/',
+          url: 'https://ardmacademy.netlify.app/',
           founder: [
             {
               '@type': 'Person',
@@ -165,7 +165,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onOpenFounderM
       <SEOHead
         title="About Us & Founders: Akash Paik, Rupam Paul, Devnath Pramanick, Mohim Das | ARDM Academy"
         description="Meet the Founders of ARDM Academy: Akash Paik, Rupam Paul, Devnath Pramanick, and Mohim Das. Learn about our educational philosophy, Dada-Didi mentorship model, and comprehensive Class 10 board preparation."
-        canonical="https://ardmacademy.in/about"
+        canonical="https://ardmacademy.netlify.app/about"
         breadcrumbs={[{ name: 'About Us', path: '/about' }]}
         schema={aboutSchema}
       />

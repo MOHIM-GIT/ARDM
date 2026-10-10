@@ -64,7 +64,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
       <SEOHead
         title="Contact | ARDM Academy"
         description="Contact ARDM Academy via helpline 6289139984, official WhatsApp channel, or email for admissions, mock test queries, and coaching support."
-        canonical="https://ardmacademy.in/contact"
+        canonical="https://ardmacademy.netlify.app/contact"
         breadcrumbs={[{ name: 'Contact Us', path: '/contact' }]}
         schema={contactSchema}
       />

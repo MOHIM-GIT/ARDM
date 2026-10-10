@@ -1,6 +1,7 @@
 # ARDM Academy Robots.txt
 User-agent: *
 Allow: /
+Allow: /founders
 Allow: /about
 Allow: /mock-tests
 Allow: /pyqs
@@ -24,5 +25,6 @@ Disallow: /cbt
 Disallow: /api/admin/
 Disallow: /api/students/payment
 
-# Official Sitemap Location
+# Official Sitemap Locations
+Sitemap: https://ardmacademy.netlify.app/sitemap.xml
 Sitemap: https://ardmacademy.in/sitemap.xml

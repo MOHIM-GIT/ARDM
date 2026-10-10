@@ -170,7 +170,7 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({
       <SEOHead
         title="Results & State Merit List | ARDM Academy"
         description="Official ARDM Academy state-level merit list, rank cards, Class 10 mock test results, and verified topper leaderboard."
-        canonical="https://ardmacademy.in/results"
+        canonical="https://ardmacademy.netlify.app/results"
         breadcrumbs={[{ name: 'Results', path: '/results' }]}
         schema={resultsSchema}
       />
@@ -651,7 +651,7 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({
                   <div className="w-14 h-14 bg-white p-1 border border-slate-300 rounded-lg">
                     <img
                       src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(
-                        `https://ardmacademy.in/results?verified=${selectedRankCard.registrationId}&rank=${selectedRankCard.rank}`
+                        `https://ardmacademy.netlify.app/results?verified=${selectedRankCard.registrationId}&rank=${selectedRankCard.rank}`
                       )}`}
                       alt="Verification QR"
                       className="w-full h-full object-contain"

@@ -27,7 +27,7 @@ export const AIPage: React.FC<AIPageProps> = ({ onNavigate }) => {
     'provider': {
       '@type': 'EducationalOrganization',
       'name': 'ARDM Academy',
-      'url': 'https://ardmacademy.in',
+      'url': 'https://ardmacademy.netlify.app',
     },
   };
 
@@ -36,7 +36,7 @@ export const AIPage: React.FC<AIPageProps> = ({ onNavigate }) => {
       <SEOHead
         title="AI & Data Science Learning | ARDM Academy"
         description="Explore Artificial Intelligence, Machine Learning fundamentals, and Data Science workshops tailored for young tech innovators at ARDM Academy."
-        canonical="https://ardmacademy.in/ai"
+        canonical="https://ardmacademy.netlify.app/ai"
         breadcrumbs={[
           { name: 'Courses', path: '/courses' },
           { name: 'AI & Data Science', path: '/ai' },

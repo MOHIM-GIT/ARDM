@@ -370,7 +370,7 @@ export const ClassDetailsPage: React.FC<ClassDetailsPageProps> = ({
 
   const pageTitle = `${displayClassName} Online Classes, Mock Tests & Syllabus | ARDM Academy`;
   const metaDescription = `${data.description.slice(0, 150)}... Access free video lectures, mock test series, and board preparation tips at ARDM Academy.`;
-  const canonicalUrl = `https://ardmacademy.in/classes/${normalizedKey}`;
+  const canonicalUrl = `https://ardmacademy.netlify.app/classes/${normalizedKey}`;
 
   const classSchema = {
     '@context': 'https://schema.org',
@@ -380,7 +380,7 @@ export const ClassDetailsPage: React.FC<ClassDetailsPageProps> = ({
     provider: {
       '@type': 'EducationalOrganization',
       name: 'ARDM Academy',
-      sameAs: 'https://ardmacademy.in',
+      sameAs: 'https://ardmacademy.netlify.app',
     },
     educationalLevel: displayClassName,
     inLanguage: 'en-IN',

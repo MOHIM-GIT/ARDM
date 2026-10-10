@@ -18,7 +18,7 @@ export const PYQsPage: React.FC<PYQsPageProps> = ({ onNavigate, onOpenAdmin }) =
     provider: {
       '@type': 'EducationalOrganization',
       name: 'ARDM Academy',
-      sameAs: 'https://ardmacademy.in',
+      sameAs: 'https://ardmacademy.netlify.app',
     },
   };
 
@@ -27,7 +27,7 @@ export const PYQsPage: React.FC<PYQsPageProps> = ({ onNavigate, onOpenAdmin }) =
       <SEOHead
         title="Class 10 PYQs & Question Papers | ARDM Academy"
         description="Download Class 10 Madhyamik previous year question papers (2018-2025), subject-wise solved answer keys, and model solutions at ARDM Academy."
-        canonical="https://ardmacademy.in/pyqs"
+        canonical="https://ardmacademy.netlify.app/pyqs"
         breadcrumbs={[{ name: 'PYQs', path: '/pyqs' }]}
         schema={pyqSchema}
       />

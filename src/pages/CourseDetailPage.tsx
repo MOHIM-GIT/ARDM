@@ -93,7 +93,7 @@ export const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
 
   const pageTitle = `${course.title} | ARDM Academy`;
   const metaDescription = `${course.shortBio || course.fullDescription.slice(0, 150)} Instructor: ${course.instructor}. Duration: ${course.duration}.`;
-  const canonicalUrl = `https://ardmacademy.in/courses/${slugify(course.title)}`;
+  const canonicalUrl = `https://ardmacademy.netlify.app/courses/${slugify(course.title)}`;
 
   const courseSchema = {
     '@context': 'https://schema.org',
@@ -103,7 +103,7 @@ export const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
     provider: {
       '@type': 'EducationalOrganization',
       name: 'ARDM Academy',
-      sameAs: 'https://ardmacademy.in',
+      sameAs: 'https://ardmacademy.netlify.app',
     },
     educationalCredentialAwarded: course.certificateAvailable
       ? 'Verified Certificate of Completion'

@@ -34,7 +34,7 @@ export const FreeClassesPage: React.FC<FreeClassesPageProps> = ({ onNavigate }) 
       <SEOHead
         title="Free Education Classes 5 to 10 | ARDM Academy"
         description="Stream free video lectures, board exam concept breakdowns, chapter-wise notes, and faculty mentoring for Classes 5, 6, 7, 8, 9, and 10 at ARDM Academy."
-        canonical="https://ardmacademy.in/free-classes"
+        canonical="https://ardmacademy.netlify.app/free-classes"
         breadcrumbs={[{ name: 'Free Classes', path: '/free-classes' }]}
         schema={videoSchema}
       />

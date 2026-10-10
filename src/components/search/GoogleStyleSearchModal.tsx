@@ -306,8 +306,8 @@ export const GoogleStyleSearchModal: React.FC<GoogleStyleSearchModalProps> = ({
                 A
               </div>
               <div className="leading-tight">
-                <span className="text-[11px] text-slate-400 font-mono block">ardmacademy.in</span>
-                <span className="text-[10px] text-slate-500 font-mono block">https://ardmacademy.in</span>
+                <span className="text-[11px] text-slate-400 font-mono block">ardmacademy.netlify.app</span>
+                <span className="text-[10px] text-slate-500 font-mono block">https://ardmacademy.netlify.app</span>
               </div>
             </div>
 

@@ -48,7 +48,7 @@ export const WorkshopsPage: React.FC<WorkshopsPageProps> = ({ onNavigate, onOpen
       <SEOHead
         title="Workshops & Free Guidance | ARDM Academy"
         description="Access free academic webinars, board exam strategy sessions, and downloadable formula revision sheets from ARDM Academy mentors."
-        canonical="https://ardmacademy.in/workshops"
+        canonical="https://ardmacademy.netlify.app/workshops"
         breadcrumbs={[{ name: 'Workshops & Guidance', path: '/workshops' }]}
       />
 

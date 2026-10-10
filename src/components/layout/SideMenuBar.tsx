@@ -13,7 +13,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Sparkles,
-  Search,
   Download,
   UserCheck,
   ShieldCheck,

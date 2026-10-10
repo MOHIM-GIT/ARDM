@@ -17,7 +17,7 @@ export const SubjectDiagramPage: React.FC<SubjectDiagramPageProps> = ({
       <SEOHead
         title="Subject-Wise Ultra Diagram & Blueprint | ARDM Academy"
         description="Comprehensive interactive subject-wise ultra diagram, question weightage flow, 6-axis mastery radar, and high-yield concept trees for Class 10 Board exams."
-        canonical="https://ardmacademy.in/subject-diagram"
+        canonical="https://ardmacademy.netlify.app/subject-diagram"
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">

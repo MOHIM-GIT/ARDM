@@ -11,6 +11,10 @@ export const SITE_CONFIG = {
   tagline: "BUILD • PROGRESS • TOGETHER",
   motto: "Learn. Practice. Improve.",
   subtext: "Education, guidance and structured mock tests designed to help students learn with confidence.",
+  url: "https://ardmacademy.netlify.app",
+  siteUrl: "https://ardmacademy.netlify.app",
+  domain: "ardmacademy.netlify.app",
+  alternateDomain: "ardmacademy.in",
   
   // Official Verified Contact Information
   contact: {

@@ -18,9 +18,9 @@ export interface SEOHeadProps {
 export const SEOHead: React.FC<SEOHeadProps> = ({
   title,
   description,
-  canonical = typeof window !== 'undefined' ? window.location.href : 'https://ardmacademy.in/',
+  canonical = typeof window !== 'undefined' ? window.location.href : 'https://ardmacademy.netlify.app/',
   ogType = 'website',
-  ogImage = 'https://ardmacademy.in/logo.png',
+  ogImage = 'https://ardmacademy.netlify.app/logo.png',
   breadcrumbs,
   schema,
 }) => {
@@ -82,7 +82,7 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
           '@type': 'ListItem',
           'position': index + 1,
           'name': crumb.name,
-          'item': crumb.path.startsWith('http') ? crumb.path : `https://ardmacademy.in${crumb.path}`,
+          'item': crumb.path.startsWith('http') ? crumb.path : `https://ardmacademy.netlify.app${crumb.path}`,
         })),
       };
 

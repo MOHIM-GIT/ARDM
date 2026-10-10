@@ -114,7 +114,7 @@ export const PublicResultPage: React.FC<PublicResultPageProps> = ({
     const pageTitle = 'Class 10 Merit List 2025-26 | ARDM Academy';
     const metaDescription =
       'Official West Bengal state-level Class 10 Madhyamik mock test merit list, top 10 rankers, scores, and verified academic honor roll.';
-    const canonicalUrl = 'https://ardmacademy.in/results/merit-list-2025-26';
+    const canonicalUrl = 'https://ardmacademy.netlify.app/results/merit-list-2025-26';
 
     const meritSchema = {
       '@context': 'https://schema.org',
@@ -292,7 +292,7 @@ export const PublicResultPage: React.FC<PublicResultPageProps> = ({
   // Case D: Valid Public Student Result (Strict Privacy Compliant - No Phone, No Email, No Password, No Address)
   const pageTitle = `${individualRecord.studentName} - State Rank #${individualRecord.rank} | ARDM Academy`;
   const metaDescription = `Verified result for ${individualRecord.studentName} (${individualRecord.registrationId}): State Rank #${individualRecord.rank}, Score ${individualRecord.score}/${individualRecord.totalMarks} (${individualRecord.percentage}%).`;
-  const canonicalUrl = `https://ardmacademy.in/results/${slugify(individualRecord.studentName)}-${slugify(individualRecord.registrationId)}`;
+  const canonicalUrl = `https://ardmacademy.netlify.app/results/${slugify(individualRecord.studentName)}-${slugify(individualRecord.registrationId)}`;
 
   return (
     <div className="pt-20 pb-20 bg-slate-50 min-h-screen">
@@ -401,7 +401,7 @@ export const PublicResultPage: React.FC<PublicResultPageProps> = ({
               <div className="w-14 h-14 bg-white p-1 border border-slate-300 rounded-lg">
                 <img
                   src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(
-                    `https://ardmacademy.in/results/${slugify(individualRecord.studentName)}-${slugify(individualRecord.registrationId)}`
+                    `https://ardmacademy.netlify.app/results/${slugify(individualRecord.studentName)}-${slugify(individualRecord.registrationId)}`
                   )}`}
                   alt="Verification QR"
                   className="w-full h-full object-contain"

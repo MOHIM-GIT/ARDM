@@ -44,8 +44,8 @@ import { WorkshopManagerModal } from './components/modals/WorkshopManagerModal';
 import { FoundersModal } from './components/modals/FoundersModal';
 import { MobileBottomNav } from './components/layout/MobileBottomNav';
 import { MobileFrameWrapper } from './components/common/MobileFrameWrapper';
+import { FoundersPage } from './pages/FoundersPage';
 import { GoogleStyleSearchModal } from './components/search/GoogleStyleSearchModal';
-import { GoogleStyleSearchSection } from './components/search/GoogleStyleSearchSection';
 
 const MockTestEngine = lazy(() => import('./components/mockTest/MockTestEngine').then(m => ({ default: m.MockTestEngine })));
 const AdminPanel = lazy(() => import('./components/admin/AdminPanel').then(m => ({ default: m.AdminPanel })));
@@ -165,10 +165,16 @@ export default function App() {
 
   // Universal Navigation (Supports both URL Paths and Section Anchors)
   const handleNavigate = (pathOrId: string) => {
+    if (pathOrId === '/founders' || pathOrId === 'founders') {
+      const path = normalizePath('/founders');
+      setCurrentPath(path);
+      window.history.pushState({}, '', toBrowserUrl('/founders'));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
     if (
-      pathOrId === '/founders' ||
       pathOrId === '#founders' ||
-      pathOrId === 'founders' ||
       pathOrId === '#founders-modal' ||
       pathOrId === '/founders-modal' ||
       pathOrId === '#about-founders'
@@ -329,7 +335,6 @@ export default function App() {
           }
         }}
         onOpenDownloadAdmitCard={handleQuickDownloadAdmitCard}
-        onOpenSearch={() => setSearchModalOpen(true)}
         isSidebarExpanded={sidebarExpanded}
         onToggleSidebar={() => setSidebarExpanded((prev) => !prev)}
         onOpenMobileSidebar={() => setMobileSidebarOpen(true)}
@@ -461,6 +466,14 @@ export default function App() {
         />
       )}
 
+      {currentPath === '/founders' && (
+        <FoundersPage
+          onNavigate={handleNavigate}
+          onOpenFounderModal={(founderId) => handleOpenFoundersModal(founderId || 'all')}
+          onOpenWorkshopManager={() => setWorkshopManagerOpen(true)}
+        />
+      )}
+
       {currentPath === '/contact' && (
         <ContactPage onNavigate={handleNavigate} />
       )}
@@ -469,6 +482,7 @@ export default function App() {
       {(currentPath === '/' ||
         (![
           '/courses',
+          '/founders',
           '/mock-tests',
           '/subject-diagram',
           '/diagram',
@@ -489,7 +503,7 @@ export default function App() {
           <SEOHead
             title="ARDM Academy | Founders: Akash Paik, Rupam Paul, Devnath Pramanick, Mohim Das"
             description="ARDM Academy was founded by 4 founders: Akash Paik, Rupam Paul, Devnath Pramanick, and Mohim Das. Academic coaching, Class 10 mock tests, and AI workshops."
-            canonical="https://ardmacademy.in/"
+            canonical="https://ardmacademy.netlify.app/"
           />
 
           {/* Dynamic Animated Sliding Banner (Controlled by Admin: Media & Visibility) */}
@@ -502,17 +516,6 @@ export default function App() {
               onOpenFounders={() => handleOpenFoundersModal('all')}
             />
           </div>
-
-          {/* Google-Style Deep Search & Sitelinks Section (Exact Match to User Sitelinks Reference) */}
-          <GoogleStyleSearchSection
-            onOpenSearchModal={() => setSearchModalOpen(true)}
-            onNavigate={handleNavigate}
-            onOpenFounders={(founderId) => handleOpenFoundersModal(founderId || 'all')}
-            onOpenWorkshopManager={() => setWorkshopManagerOpen(true)}
-            onOpenRegistration={() => handleRegisterWithSubject(undefined)}
-            onOpenTestEngine={() => setTestEngineOpen(true)}
-            onOpenDownloadAdmitCard={handleQuickDownloadAdmitCard}
-          />
 
           {/* Hero Section */}
           <HeroSection
