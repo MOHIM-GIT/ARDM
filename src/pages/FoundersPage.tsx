@@ -47,9 +47,10 @@ export const FoundersPage: React.FC<FoundersPageProps> = ({
       specialty: 'Mathematics, Physical Science Pedagogy & WBBSE Board Pattern Prediction',
       bio: 'Pioneered the ARDM academic syllabus, question prediction algorithms with 96%+ accuracy for Madhyamik board exams, and rigorous doubt-solving methodology.',
       email: 'akashpaik570@gmail.com',
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400',
       badge: 'Academic Lead (A)',
       pillar: 'Academic Rigor & Prediction Accuracy',
+      icon: BookOpen,
+      iconGradient: 'from-blue-600 to-indigo-600',
       highlights: [
         'Over 96% question prediction accuracy for Madhyamik',
         'Head of Mathematics & Physical Science curriculum',
@@ -65,9 +66,10 @@ export const FoundersPage: React.FC<FoundersPageProps> = ({
       specialty: 'CBT Test Engine Architecture, Exam Center Logistics & Administration',
       bio: 'Architect of the statewide CBT Computer-Based Mock Exam logistics, student roll generation, offline test center coordination, and rapid scorecard evaluation.',
       email: 'rupampaul20070@gmail.com',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400',
       badge: 'Operations Lead (R)',
       pillar: 'Logistics, CBT Systems & Evaluation',
+      icon: Cpu,
+      iconGradient: 'from-emerald-600 to-teal-600',
       highlights: [
         'Designed real-time CBT simulation engine for Madhyamik',
         'Coordinates offline physical exam centers across West Bengal',
@@ -83,9 +85,10 @@ export const FoundersPage: React.FC<FoundersPageProps> = ({
       specialty: 'Dada-Didi 1-on-1 Mentorship Model & Exam Anxiety Management',
       bio: 'Architected the hallmark Dada-Didi Mentorship program, giving students personal guidance, stress-free board preparation routines, and psychological confidence.',
       email: 'pramanickdevnath2007@gmail.com',
-      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400',
       badge: 'Mentorship Lead (D)',
       pillar: 'Student Psychology & Dada-Didi Care',
+      icon: HeartHandshake,
+      iconGradient: 'from-purple-600 to-pink-600',
       highlights: [
         'Created the famous "Dada-Didi" 1-on-1 guidance model',
         'Specialist in board exam stress reduction & study habits',
@@ -102,9 +105,10 @@ export const FoundersPage: React.FC<FoundersPageProps> = ({
       bio: 'Founder and CEO of CodeLX and Founder of ARDM Academy. Leads AI masterclasses, coding bootcamps, automated portal infrastructure, and modern technology education.',
       email: 'mohimdas300@gmail.com',
       phone: '+919123870823',
-      avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=400',
       badge: 'Technology Lead (M)',
       pillar: 'AI Mastery, CodeLX & Digital Systems',
+      icon: Code2,
+      iconGradient: 'from-amber-600 to-orange-600',
       highlights: [
         'Founder & CEO of CodeLX (Coding & AI Platform)',
         'Hands-on instructor for Python, Prompt Engineering & AI',
@@ -230,15 +234,15 @@ export const FoundersPage: React.FC<FoundersPageProps> = ({
                   </span>
                 </div>
 
-                {/* Profile Info */}
+                {/* Profile Info (No photo - Official initial badge & role icon) */}
                 <div className="flex items-start gap-4 mb-4">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border-2 border-slate-700 shrink-0 shadow-md">
-                    <img
-                      src={founder.avatar}
-                      alt={`Founder ${founder.name}`}
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                    />
+                  <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br ${founder.iconGradient} flex flex-col items-center justify-center border-2 border-white/20 shrink-0 shadow-lg relative group`}>
+                    <span className="text-2xl sm:text-3xl font-black font-mono text-white tracking-tight drop-shadow-sm">
+                      {founder.initial}
+                    </span>
+                    <span className="text-[9px] uppercase font-bold tracking-widest text-white/80">
+                      Founder
+                    </span>
                   </div>
                   <div>
                     <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
