@@ -32,8 +32,8 @@ export const FreeClassesPage: React.FC<FreeClassesPageProps> = ({ onNavigate }) 
   return (
     <div className="pt-20 pb-20 bg-slate-50 min-h-screen">
       <SEOHead
-        title="Free Education Classes 5 to 10 | ARDM Academy"
-        description="Stream free video lectures, board exam concept breakdowns, chapter-wise notes, and faculty mentoring for Classes 5, 6, 7, 8, 9, and 10 at ARDM Academy."
+        title="100% Free Live Online Classes | Dada-Didi Mentorship & Doubt Solving | ARDM Academy"
+        description="Join 100% Free Live Online Classes for WBBSE Class 8, 9, 10 Madhyamik with 24/7 Dada-Didi doubt solving, study notes, and board exam guidance at ARDM Academy."
         canonical="https://ardmacademy.netlify.app/free-classes"
         breadcrumbs={[{ name: 'Free Classes', path: '/free-classes' }]}
         schema={videoSchema}

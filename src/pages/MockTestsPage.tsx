@@ -51,8 +51,8 @@ export const MockTestsPage: React.FC<MockTestsPageProps> = ({
   return (
     <div className="pt-20 pb-20 bg-slate-50 min-h-screen">
       <SEOHead
-        title="Mock Tests | ARDM Academy"
-        description="Take ARDM Academy mock tests, practice questions and assessments for students. PROSTUTI Class 10 mock series with previous prediction accuracy over 96%."
+        title="Class 10 Mock Tests & CBT Exam Simulator | ARDM Academy (PROSTUTI 2026)"
+        description="Appear in ARDM Academy PROSTUTI Class 10 Madhyamik mock tests with 96%+ prediction accuracy, computerized CBT test engine, instant scorecards, and Dada-Didi mentorship."
         canonical="https://ardmacademy.netlify.app/mock-tests"
         breadcrumbs={[{ name: 'Mock Tests', path: '/mock-tests' }]}
         schema={mockTestSchema}

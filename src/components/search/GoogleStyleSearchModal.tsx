@@ -87,7 +87,7 @@ export const GoogleStyleSearchModal: React.FC<GoogleStyleSearchModalProps> = ({
     {
       id: 'mock-tests',
       title: 'Class 10 Madhyamik Mock Tests (PROSTUTI 2026)',
-      description: 'Up to 96%+ Board Question Prediction Accuracy • State Rank CBT Simulator & Offline Exam Centers',
+      description: 'Up to 96%+ Board Question Prediction Accuracy • State Rank CBT Simulator & Offline Exam Centers across West Bengal',
       category: 'mock-tests',
       icon: GraduationCap,
       badge: '96%+ ACCURACY',
@@ -95,12 +95,51 @@ export const GoogleStyleSearchModal: React.FC<GoogleStyleSearchModalProps> = ({
         onOpenRegistration();
         onClose();
       },
-      keywords: ['mock test', 'prostuti', 'class 10', 'madhyamik', 'cbt', 'exam', 'test', 'wbbse', 'preparation', 'question paper', 'pyq', '100'],
+      keywords: ['mock test', 'mock tests', 'prostuti', 'class 10', 'class 10 mock test', 'madhyamik', 'madhyamik mock test', 'cbt', 'exam', 'test', 'wbbse', 'preparation', 'question paper', 'pyq', '100', 'board exam', 'test series'],
+    },
+    {
+      id: 'free-classes',
+      title: '100% Free Live Online Classes (Classes 8, 9 & 10)',
+      description: 'Daily Live Syllabus Classes, Chapter Notes, Concept Breakdowns & Dedicated Live Doubt Desk',
+      category: 'free-classes',
+      icon: Video,
+      badge: '100% FREE',
+      action: () => {
+        onNavigate('/free-classes');
+        onClose();
+      },
+      keywords: ['free class', 'free classes', 'free class online', 'free classes online', 'free education', 'youtube', 'class 5', 'class 6', 'class 7', 'class 8', 'class 9', 'class 10', 'video', 'bengali', 'notes', 'study', 'live class'],
+    },
+    {
+      id: 'mentorship',
+      title: 'Mentorship by Dada-Didi & 24/7 Doubt Solving',
+      description: '1-on-1 Empathetic Senior Guidance • 24/7 Instant Doubt Clearing via WhatsApp & Call Helpline: 6289139984',
+      category: 'mentorship',
+      icon: HeartHandshake,
+      badge: '24/7 HELPLINE',
+      action: () => {
+        onNavigate('/#contact');
+        onClose();
+      },
+      keywords: ['mentorship', 'mentorship by dada-didi', 'mentorship by dada didi', 'dada-didi doubt solving', 'dada didi doubt solving', 'dada didi doubt', 'doubt solving', 'doubt', 'doubts', 'doubt clearing', 'dada didi', 'dada-didi', 'devnath pramanick', 'counseling', 'stress', 'anxiety', 'helpline', 'call', 'routine', 'guidance', 'dada-didi mentorship'],
+    },
+    {
+      id: 'best-education',
+      title: 'Best Online Education for School & Board Preparation',
+      description: 'West Bengal’s Premier Online Learning Hub • Top Subject Faculty, Predictive Mock Tests & AI Labs',
+      category: 'courses',
+      icon: Sparkles,
+      badge: 'BEST ONLINE',
+      action: () => {
+        onNavigate('/courses');
+        onClose();
+      },
+      keywords: ['best education online', 'best online education', 'best education', 'online education', 'education online', 'wbbse online', 'madhyamik coaching', 'top education', 'ardm academy'],
     },
     {
       id: 'founders',
       title: 'Meet All 4 Founders of ARDM Academy (A · R · D · M)',
-      description: 'Akash Paik (Academic Lead) • Rupam Paul (Operations) • Devnath Pramanick (Mentorship) • Mohim Das (Tech & CodeLX)',
+      description: 'Akash Paik (Academic Lead) • Rupam Paul (Operations Lead) • Devnath Pramanick (Mentorship Lead) • Mohim Das (Tech Lead & CEO CodeLX)',
       category: 'founders',
       icon: Users,
       badge: '4 FOUNDERS',
@@ -108,7 +147,7 @@ export const GoogleStyleSearchModal: React.FC<GoogleStyleSearchModalProps> = ({
         onOpenFounders('all');
         onClose();
       },
-      keywords: ['founders', 'akash paik', 'rupam paul', 'devnath pramanick', 'mohim das', 'ardm', 'who are the founders', 'founder', 'faculty', 'leadership'],
+      keywords: ['founders', 'founder', 'founders name', 'fpunders name', 'fpunders', 'akash paik', 'rupam paul', 'devnath pramanick', 'mohim das', 'ardm', 'who are the founders', 'faculty', 'leadership', '4 founders'],
     },
     {
       id: 'ai-workshop',
@@ -122,19 +161,6 @@ export const GoogleStyleSearchModal: React.FC<GoogleStyleSearchModalProps> = ({
         onClose();
       },
       keywords: ['ai', 'artificial intelligence', 'python', 'coding', 'codelx', 'mohim das', 'workshop', 'free', 'technology', 'computer science'],
-    },
-    {
-      id: 'free-classes',
-      title: 'Online Free Video Classes (Classes 5 to 10)',
-      description: 'Daily YouTube Syllabus Masterclasses, Madhyamik PYQ Solutions, Bengali Medium Guidance & Live Doubt Desk',
-      category: 'free-classes',
-      icon: Video,
-      badge: 'YOUTUBE LIVE',
-      action: () => {
-        onNavigate('/free-classes');
-        onClose();
-      },
-      keywords: ['free classes', 'youtube', 'class 5', 'class 6', 'class 7', 'class 8', 'class 9', 'class 10', 'video', 'bengali', 'notes', 'study'],
     },
     {
       id: 'admit-card',
@@ -174,19 +200,6 @@ export const GoogleStyleSearchModal: React.FC<GoogleStyleSearchModalProps> = ({
         onClose();
       },
       keywords: ['cbt', 'computer based test', 'simulator', 'online exam', 'practice test', 'timer', 'interface'],
-    },
-    {
-      id: 'mentorship',
-      title: 'Dada-Didi 1-on-1 Mentorship & Counseling',
-      description: 'Empathetic Student Psychology, Exam-Hall Anxiety Relief, Topper Study Routines & Direct Helpline: 6289139984',
-      category: 'mentorship',
-      icon: HeartHandshake,
-      badge: 'HELPLINE',
-      action: () => {
-        onNavigate('/#contact');
-        onClose();
-      },
-      keywords: ['mentorship', 'dada didi', 'devnath pramanick', 'counseling', 'stress', 'anxiety', 'helpline', 'call', 'routine', 'guidance'],
     },
     {
       id: 'courses',
@@ -275,12 +288,13 @@ export const GoogleStyleSearchModal: React.FC<GoogleStyleSearchModalProps> = ({
             {[
               { id: 'all', label: 'All Results' },
               { id: 'mock-tests', label: 'Mock Tests (₹100)' },
+              { id: 'free-classes', label: 'Free Classes' },
+              { id: 'mentorship', label: 'Dada-Didi Mentorship' },
               { id: 'founders', label: '4 Founders (A·R·D·M)' },
-              { id: 'ai-tech', label: 'Free AI Workshops' },
-              { id: 'free-classes', label: 'Free YouTube Classes' },
+              { id: 'ai-tech', label: 'AI Workshops' },
               { id: 'admit-card', label: 'Admit Card' },
               { id: 'results', label: 'Merit Ranks' },
-              { id: 'courses', label: 'Syllabus' },
+              { id: 'courses', label: 'Best Online Courses' },
             ].map((cat) => (
               <button
                 key={cat.id}
@@ -312,11 +326,11 @@ export const GoogleStyleSearchModal: React.FC<GoogleStyleSearchModalProps> = ({
             </div>
 
             <h3 className="text-base sm:text-lg font-bold text-blue-400 hover:text-blue-300 transition-colors leading-snug cursor-pointer">
-              ARDM Academy | Learn. Practice. Improve. (Official Portal)
+              ARDM Academy | Mock Tests, Free Classes & Dada-Didi Mentorship (Official Portal)
             </h3>
 
             <p className="text-xs text-slate-300 leading-relaxed font-normal">
-              Educational institution founded by 4 leaders: Akash Paik (Academic Lead), Rupam Paul (Operations Lead), Devnath Pramanick (Mentorship Lead), and Mohim Das (Technology Lead & Founder/CEO of CodeLX).
+              Best online education platform founded by 4 Founders: Akash Paik (Academic Lead), Rupam Paul (Operations Lead), Devnath Pramanick (Mentorship Lead), and Mohim Das (Technology Lead & CEO of CodeLX). Class 10 mock tests, free live classes, and 24/7 Dada-Didi doubt solving.
             </p>
           </div>
 

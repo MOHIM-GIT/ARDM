@@ -501,8 +501,8 @@ export default function App() {
           !currentPath.startsWith('/classes/'))) && (
         <>
           <SEOHead
-            title="ARDM Academy | Founders: Akash Paik, Rupam Paul, Devnath Pramanick, Mohim Das"
-            description="ARDM Academy was founded by 4 founders: Akash Paik, Rupam Paul, Devnath Pramanick, and Mohim Das. Academic coaching, Class 10 mock tests, and AI workshops."
+            title="ARDM Academy | Mock Tests, Free Classes & Dada-Didi Mentorship | Founders: Akash Paik, Rupam Paul, Devnath Pramanick, Mohim Das"
+            description="ARDM Academy provides the best online education with Class 10 mock tests, free classes, 24/7 Dada-Didi doubt solving & 1-on-1 mentorship. Founded by 4 Founders: Akash Paik, Rupam Paul, Devnath Pramanick, and Mohim Das."
             canonical="https://ardmacademy.netlify.app/"
           />
 

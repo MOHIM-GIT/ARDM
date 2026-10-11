@@ -156,8 +156,8 @@ export const FoundersPage: React.FC<FoundersPageProps> = ({
   return (
     <div className="min-h-screen bg-[#09090b] text-white pt-24 pb-20">
       <SEOHead
-        title="Founders of ARDM Academy | Akash Paik, Rupam Paul, Devnath Pramanick, Mohim Das"
-        description="ARDM Academy was founded by 4 founders: Akash Paik (Academic Lead), Rupam Paul (Operations Lead), Devnath Pramanick (Mentorship Lead), and Mohim Das (Technology Lead & CEO of CodeLX). Learn about the 4 founders."
+        title="Founders of ARDM Academy | Akash Paik, Rupam Paul, Devnath Pramanick, Mohim Das — Best Online Education"
+        description="Meet the 4 Founders of ARDM Academy: Akash Paik, Rupam Paul, Devnath Pramanick, and Mohim Das. Offering Class 10 mock tests, free classes, and 24/7 Dada-Didi mentorship."
         canonical="https://ardmacademy.netlify.app/founders"
       />
 
