@@ -145,7 +145,7 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenRegi
         courseId: selectedCourseForEnroll.id,
         courseTitle: selectedCourseForEnroll.title,
         studentName: enrollStudentName.trim(),
-        studentEmail: enrollStudentEmail.trim() || `${enrollStudentMobile.trim()}@ardmacademy.in`,
+        studentEmail: enrollStudentEmail.trim() || `${enrollStudentMobile.trim()}@ardmacademy.netlify.app`,
         studentMobile: enrollStudentMobile.trim(),
         school: enrollStudentSchool.trim(),
         paymentAmount: isFree ? 0 : selectedCourseForEnroll.price,
