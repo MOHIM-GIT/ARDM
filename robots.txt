@@ -1,4 +1,6 @@
-# ARDM Academy Robots.txt
+# ARDM Academy Official Robots.txt
+# Domain: https://ardmacademy.netlify.app
+
 User-agent: *
 Allow: /
 Allow: /founders
@@ -17,6 +19,25 @@ Allow: /results
 Allow: /results/*
 Allow: /contact
 
+# Explicitly allow AI Search & Generative Engines (Google AI Overview, Gemini, OpenAI, Perplexity)
+User-agent: Googlebot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
 # Disallow Private & Admin Sensitive Paths
 Disallow: /admin
 Disallow: /student
@@ -25,6 +46,5 @@ Disallow: /cbt
 Disallow: /api/admin/
 Disallow: /api/students/payment
 
-# Official Sitemap Locations
+# Primary Official Sitemap Location for Google Search Console & AI Engines
 Sitemap: https://ardmacademy.netlify.app/sitemap.xml
-Sitemap: https://ardmacademy.in/sitemap.xml
