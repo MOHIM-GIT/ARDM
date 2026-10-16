@@ -26,6 +26,7 @@ import {
   Image as ImageIcon,
   Trash2,
   Eye,
+  Globe,
 } from 'lucide-react';
 import {
   getCourses,
@@ -51,6 +52,7 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenRegi
   const [enrollStudentMobile, setEnrollStudentMobile] = useState('');
   const [enrollStudentEmail, setEnrollStudentEmail] = useState('');
   const [enrollStudentSchool, setEnrollStudentSchool] = useState('');
+  const [enrollMediumVersion, setEnrollMediumVersion] = useState<'Bengali' | 'English'>('Bengali');
   const [enrollTransactionId, setEnrollTransactionId] = useState('');
   const [enrollPaymentScreenshot, setEnrollPaymentScreenshot] = useState<string | null>(null);
   const [enrollScreenshotFileName, setEnrollScreenshotFileName] = useState('');
@@ -147,6 +149,8 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenRegi
         studentName: enrollStudentName.trim(),
         studentEmail: enrollStudentEmail.trim() || `${enrollStudentMobile.trim()}@ardmacademy.netlify.app`,
         studentMobile: enrollStudentMobile.trim(),
+        mediumVersion: enrollMediumVersion,
+        version: enrollMediumVersion,
         school: enrollStudentSchool.trim(),
         paymentAmount: isFree ? 0 : selectedCourseForEnroll.price,
         transactionId: isFree ? 'FREE_ENROLLMENT' : (enrollTransactionId.trim() || 'SCREENSHOT_UPLOADED'),
@@ -642,6 +646,68 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ onNavigate, onOpenRegi
                       placeholder="e.g. Bidhan Nagar Government High School"
                       className="w-full px-3.5 py-2 rounded-xl border border-slate-200"
                     />
+                  </div>
+
+                  {/* Course Medium / Version Selection */}
+                  <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+                    <label className="block font-bold text-slate-800 text-xs flex items-center justify-between">
+                      <span className="flex items-center gap-1.5">
+                        <Globe className="w-3.5 h-3.5 text-indigo-600" />
+                        <span>Choose Version / Medium</span>
+                        <span className="text-rose-500">*</span>
+                      </span>
+                      <span className="text-[10px] text-slate-500 font-normal">
+                        Select language of course materials & mentorship
+                      </span>
+                    </label>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setEnrollMediumVersion('Bengali')}
+                        className={`p-2.5 rounded-lg border-2 text-left transition-all cursor-pointer flex items-center gap-2 ${
+                          enrollMediumVersion === 'Bengali'
+                            ? 'border-indigo-600 bg-white shadow-2xs ring-1 ring-indigo-200'
+                            : 'border-slate-200 bg-white/70 hover:bg-white'
+                        }`}
+                      >
+                        <div className={`w-6 h-6 rounded-md flex items-center justify-center font-bold text-[10px] ${
+                          enrollMediumVersion === 'Bengali' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600'
+                        }`}>
+                          বাং
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <span className="font-bold text-slate-900 block text-xs truncate">Bengali Version</span>
+                          <span className="text-[10px] text-slate-500 block truncate">বাংলা মাধ্যম</span>
+                        </div>
+                        {enrollMediumVersion === 'Bengali' && (
+                          <Check className="w-3.5 h-3.5 text-indigo-600" />
+                        )}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setEnrollMediumVersion('English')}
+                        className={`p-2.5 rounded-lg border-2 text-left transition-all cursor-pointer flex items-center gap-2 ${
+                          enrollMediumVersion === 'English'
+                            ? 'border-indigo-600 bg-white shadow-2xs ring-1 ring-indigo-200'
+                            : 'border-slate-200 bg-white/70 hover:bg-white'
+                        }`}
+                      >
+                        <div className={`w-6 h-6 rounded-md flex items-center justify-center font-bold text-[10px] ${
+                          enrollMediumVersion === 'English' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600'
+                        }`}>
+                          EN
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <span className="font-bold text-slate-900 block text-xs truncate">English Version</span>
+                          <span className="text-[10px] text-slate-500 block truncate">English Medium</span>
+                        </div>
+                        {enrollMediumVersion === 'English' && (
+                          <Check className="w-3.5 h-3.5 text-indigo-600" />
+                        )}
+                      </button>
+                    </div>
                   </div>
 
                   {/* Payment Verification Proof (For Paid Courses) */}

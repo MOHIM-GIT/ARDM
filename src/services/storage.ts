@@ -1762,6 +1762,8 @@ export function getStudents(): StudentProfile[] {
         mobile: l.student?.phone || '',
         studentClass: l.school?.studentClass || 'Class 10',
         board: l.school?.board || 'WBBSE (Madhyamik)',
+        mediumVersion: l.school?.mediumVersion || l.mediumVersion || 'Bengali',
+        version: l.school?.version || l.version || 'Bengali',
         school: l.school?.schoolName || 'School',
         address: l.guardian?.address || 'Address',
         guardianName: l.guardian?.name,
@@ -1876,6 +1878,8 @@ export function registerNewStudent(data: {
   mobile: string;
   studentClass: string;
   board: string;
+  mediumVersion?: 'Bengali' | 'English' | string;
+  version?: 'Bengali' | 'English' | string;
   school: string;
   address: string;
   guardianName?: string;
@@ -1919,6 +1923,8 @@ export function registerNewStudent(data: {
     mobile: data.mobile.replace(/[^0-9]/g, ''),
     studentClass: data.studentClass,
     board: data.board,
+    mediumVersion: data.mediumVersion || data.version || 'Bengali',
+    version: data.version || data.mediumVersion || 'Bengali',
     school: data.school.trim(),
     address: data.address.trim(),
     guardianName: data.guardianName?.trim(),
@@ -1986,6 +1992,8 @@ export function registerMultipleStudents(list: Array<{
   mobile: string;
   studentClass: string;
   board: string;
+  mediumVersion?: 'Bengali' | 'English' | string;
+  version?: 'Bengali' | 'English' | string;
   school: string;
   address: string;
   guardianName?: string;
@@ -2582,6 +2590,8 @@ export async function enrollInCourse(data: {
   studentName: string;
   studentEmail: string;
   studentMobile: string;
+  mediumVersion?: string;
+  version?: string;
   school?: string;
   paymentAmount?: number;
   transactionId?: string;
@@ -2607,6 +2617,8 @@ export async function enrollInCourse(data: {
     studentName: data.studentName.trim(),
     studentEmail: data.studentEmail.trim().toLowerCase(),
     studentMobile: data.studentMobile.replace(/[^0-9]/g, ''),
+    mediumVersion: data.mediumVersion || data.version || 'Bengali',
+    version: data.version || data.mediumVersion || 'Bengali',
     school: data.school ? data.school.trim() : undefined,
     amount: resolvedAmount,
     paymentAmount: resolvedAmount,

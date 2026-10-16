@@ -13,6 +13,7 @@ export const SHEET_COLUMNS = [
   'Teacher Name (Optional)',
   'Class',
   'Board',
+  'Medium / Version',
   'Selected Subjects',
   'Subject Count',
   'Amount Paid (₹)',
@@ -31,6 +32,10 @@ export function formatRegistrationToRow(reg: StudentProfile): string[] {
   const istDate = createdDate.toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata' });
   const istTime = createdDate.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata' });
 
+  const mediumLabel = (reg.mediumVersion || reg.version || 'Bengali') === 'English'
+    ? 'English Version'
+    : 'Bengali Version (বাংলা মাধ্যম)';
+
   return [
     reg.registrationId || reg.id,
     reg.fullName,
@@ -43,6 +48,7 @@ export function formatRegistrationToRow(reg: StudentProfile): string[] {
     reg.teacherName || 'N/A',
     reg.studentClass || 'Class 10',
     reg.board || 'WBBSE (Madhyamik)',
+    mediumLabel,
     (reg.selectedSubjectNames || []).join(', '),
     String(reg.selectedSubjectNames?.length || reg.selectedSubjectIds?.length || 1),
     String(reg.paymentAmount || 100),

@@ -340,6 +340,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     mobile: string;
     studentClass: string;
     board: string;
+    mediumVersion?: string;
+    version?: string;
     school: string;
     address: string;
     selectedSubjectIds: string[];
@@ -351,6 +353,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       mobile: '',
       studentClass: 'Class 10',
       board: 'WBBSE (Madhyamik)',
+      mediumVersion: 'Bengali',
+      version: 'Bengali',
       school: '',
       address: 'Kolkata, West Bengal',
       selectedSubjectIds: ['math', 'psc'],
@@ -1675,6 +1679,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
         mobile: '',
         studentClass: 'Class 10',
         board: 'WBBSE (Madhyamik)',
+        mediumVersion: 'Bengali',
+        version: 'Bengali',
         school: '',
         address: 'Kolkata, West Bengal',
         selectedSubjectIds: ['math', 'psc'],
@@ -1715,6 +1721,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           mobile: '',
           studentClass: 'Class 10',
           board: 'WBBSE (Madhyamik)',
+          mediumVersion: 'Bengali',
+          version: 'Bengali',
           school: '',
           address: 'Kolkata, West Bengal',
           selectedSubjectIds: ['math', 'psc'],
@@ -3080,7 +3088,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                             <div>+91 {st.mobile}</div>
                             <div className="text-[10px] text-slate-400">{st.email}</div>
                           </td>
-                          <td className="py-3 px-3 text-slate-600">{st.school}</td>
+                          <td className="py-3 px-3 text-slate-600">
+                            <div className="font-medium text-slate-900">{st.school}</div>
+                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-100 mt-0.5">
+                              {(st.mediumVersion || st.version) === 'English' ? 'English Version' : 'Bengali Version (বাংলা)'}
+                            </span>
+                          </td>
                           <td className="py-3 px-3">
                             <span className="font-semibold text-slate-900 block truncate max-w-[160px]" title={st.examName}>
                               {st.examName || 'PROSTUTI Mock Test'}
@@ -6412,6 +6425,17 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 </button>
               </div>
 
+              {/* Column labels for desktop */}
+              <div className="hidden sm:grid sm:grid-cols-12 gap-2 px-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                <div className="sm:col-span-1 text-center">#</div>
+                <div className="sm:col-span-3">Full Name *</div>
+                <div className="sm:col-span-2">Mobile *</div>
+                <div className="sm:col-span-2">School</div>
+                <div className="sm:col-span-2">Version *</div>
+                <div className="sm:col-span-1">DOB</div>
+                <div className="sm:col-span-1 text-center">Del</div>
+              </div>
+
               <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1">
                 {bulkStudentsList.map((row, idx) => (
                   <div key={idx} className="p-3 rounded-xl bg-slate-50 border border-slate-200 grid grid-cols-1 sm:grid-cols-12 gap-2 items-center">
@@ -6436,7 +6460,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                         className="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-mono"
                       />
                     </div>
-                    <div className="sm:col-span-3">
+                    <div className="sm:col-span-2">
                       <input
                         type="text"
                         placeholder="School Name"
@@ -6446,11 +6470,25 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       />
                     </div>
                     <div className="sm:col-span-2">
+                      <select
+                        value={row.mediumVersion || 'Bengali'}
+                        onChange={(e) => {
+                          handleUpdateBulkRow(idx, 'mediumVersion', e.target.value);
+                          handleUpdateBulkRow(idx, 'version', e.target.value);
+                        }}
+                        className="w-full px-2 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-bold text-indigo-700"
+                        title="Choose Bengali or English Version"
+                      >
+                        <option value="Bengali">Bengali (বাংলা)</option>
+                        <option value="English">English</option>
+                      </select>
+                    </div>
+                    <div className="sm:col-span-1">
                       <input
                         type="date"
                         value={row.dob}
                         onChange={(e) => handleUpdateBulkRow(idx, 'dob', e.target.value)}
-                        className="w-full px-2 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-mono"
+                        className="w-full px-1.5 py-1.5 rounded-lg border border-slate-200 bg-white text-[11px] font-mono"
                       />
                     </div>
                     <div className="sm:col-span-1 text-center">

@@ -208,7 +208,10 @@ export const StudentPortalModal: React.FC<StudentPortalModalProps> = ({
                   <h4 className="text-xl font-extrabold">Welcome, {activeStudent.fullName}</h4>
                   <p className="text-xs text-slate-300">
                     Registration ID: <span className="font-mono font-bold text-white">{activeStudent.registrationId}</span> •{' '}
-                    {activeStudent.studentClass} ({activeStudent.board})
+                    {activeStudent.studentClass} ({activeStudent.board}) •{' '}
+                    <span className="text-cyan-300 font-bold">
+                      {(activeStudent.mediumVersion || activeStudent.version) === 'English' ? 'English Version' : 'Bengali Version (বাংলা মাধ্যম)'}
+                    </span>
                   </p>
                 </div>
 

@@ -40,6 +40,8 @@ export interface StudentProfile {
   mobile: string;
   studentClass: string;
   board: string;
+  mediumVersion?: 'Bengali' | 'English' | string;
+  version?: 'Bengali' | 'English' | string;
   school: string;
   address: string;
   guardianName?: string;
@@ -221,6 +223,8 @@ export interface CourseEnrollment {
   studentName: string;
   studentEmail: string;
   studentMobile: string;
+  mediumVersion?: string;
+  version?: string;
   school?: string;
   amount: number;
   paymentAmount?: number;

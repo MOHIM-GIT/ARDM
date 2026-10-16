@@ -28,6 +28,8 @@ import {
   Image as ImageIcon,
   Trash2,
   Eye,
+  Globe,
+  Languages,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import {
@@ -81,6 +83,7 @@ export const MockTestRegistrationModal: React.FC<MockTestRegistrationModalProps>
   const [teacherName, setTeacherName] = useState(''); // OPTIONAL
   const [studentClass, setStudentClass] = useState('Class 10');
   const [board, setBoard] = useState('WBBSE (Madhyamik)');
+  const [mediumVersion, setMediumVersion] = useState<'Bengali' | 'English'>('Bengali');
   const [location, setLocation] = useState('');
 
   const [availableSubjects, setAvailableSubjects] = useState<SubjectItem[]>([]);
@@ -188,6 +191,8 @@ export const MockTestRegistrationModal: React.FC<MockTestRegistrationModalProps>
         mobile: studentPhone,
         studentClass,
         board,
+        mediumVersion,
+        version: mediumVersion,
         school: schoolName,
         address,
         guardianName,
@@ -396,7 +401,56 @@ export const MockTestRegistrationModal: React.FC<MockTestRegistrationModalProps>
                   <User className="w-4 h-4 text-indigo-600" />
                   <span>Step 1: Student Information</span>
                 </h4>
-                <p className="text-slate-500">Official student identity details.</p>
+                <p className="text-slate-500">Official student identity details & exam version.</p>
+              </div>
+
+              {/* Language / Version Selection Quick Switcher */}
+              <div className="p-3 bg-gradient-to-r from-indigo-50/80 via-blue-50/60 to-purple-50/60 border border-indigo-100 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 shadow-2xs">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                    <Globe className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="font-extrabold text-slate-900 block text-xs">
+                      Choose Medium / Version
+                    </span>
+                    <span className="text-[11px] text-slate-500">
+                      Select your preferred language version for mock test papers
+                    </span>
+                  </div>
+                </div>
+
+                <div className="inline-flex p-1 bg-white rounded-xl border border-indigo-200/90 shadow-2xs shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setMediumVersion('Bengali')}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                      mediumVersion === 'Bengali'
+                        ? 'bg-indigo-600 text-white shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                    }`}
+                  >
+                    <span>বাংলা মাধ্যম</span>
+                    <span className={`text-[10px] px-1 py-0.2 rounded font-mono ${
+                      mediumVersion === 'Bengali' ? 'bg-indigo-700/80 text-white' : 'bg-slate-100 text-slate-500'
+                    }`}>BN</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setMediumVersion('English')}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                      mediumVersion === 'English'
+                        ? 'bg-indigo-600 text-white shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                    }`}
+                  >
+                    <span>English Version</span>
+                    <span className={`text-[10px] px-1 py-0.2 rounded font-mono ${
+                      mediumVersion === 'English' ? 'bg-indigo-700/80 text-white' : 'bg-slate-100 text-slate-500'
+                    }`}>EN</span>
+                  </button>
+                </div>
               </div>
 
               <div>
@@ -534,6 +588,94 @@ export const MockTestRegistrationModal: React.FC<MockTestRegistrationModalProps>
                 </div>
               </div>
 
+              {/* Version / Medium Selection Section */}
+              <div className="p-3.5 rounded-2xl bg-slate-50/80 border border-slate-200 space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <label className="font-extrabold text-slate-800 flex items-center gap-1.5">
+                    <Globe className="w-4 h-4 text-indigo-600" />
+                    <span>Select Language Version</span>
+                    <span className="text-rose-500">*</span>
+                  </label>
+                  <span className="text-[10px] text-indigo-700 font-bold bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">
+                    Active: {mediumVersion === 'English' ? 'English Version' : 'Bengali Version (বাংলা মাধ্যম)'}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {/* Bengali Version Card */}
+                  <div
+                    onClick={() => setMediumVersion('Bengali')}
+                    className={`p-3.5 rounded-xl border-2 transition-all cursor-pointer relative flex items-start gap-3 select-none ${
+                      mediumVersion === 'Bengali'
+                        ? 'border-indigo-600 bg-white shadow-sm ring-2 ring-indigo-200'
+                        : 'border-slate-200 bg-white/70 hover:border-slate-300 hover:bg-white'
+                    }`}
+                  >
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 ${
+                      mediumVersion === 'Bengali'
+                        ? 'bg-indigo-600 text-white shadow-xs'
+                        : 'bg-slate-100 text-slate-700'
+                    }`}>
+                      বাং
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <span className="font-extrabold text-slate-900 text-xs sm:text-sm">
+                          Bengali Version
+                        </span>
+                        {mediumVersion === 'Bengali' && (
+                          <span className="w-4 h-4 rounded-full bg-indigo-600 text-white flex items-center justify-center shrink-0">
+                            <Check className="w-2.5 h-2.5 stroke-[3]" />
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-indigo-800 font-bold text-[11px] block mt-0.5">
+                        বাংলা মাধ্যম (WBBSE)
+                      </span>
+                      <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">
+                        প্রশ্নপত্র, উত্তরপত্র মূল্যায়ন ও ডাউট ক্লিয়ারিং সম্পূর্ণ বাংলায়।
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* English Version Card */}
+                  <div
+                    onClick={() => setMediumVersion('English')}
+                    className={`p-3.5 rounded-xl border-2 transition-all cursor-pointer relative flex items-start gap-3 select-none ${
+                      mediumVersion === 'English'
+                        ? 'border-indigo-600 bg-white shadow-sm ring-2 ring-indigo-200'
+                        : 'border-slate-200 bg-white/70 hover:border-slate-300 hover:bg-white'
+                    }`}
+                  >
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 ${
+                      mediumVersion === 'English'
+                        ? 'bg-indigo-600 text-white shadow-xs'
+                        : 'bg-slate-100 text-slate-700'
+                    }`}>
+                      EN
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <span className="font-extrabold text-slate-900 text-xs sm:text-sm">
+                          English Version
+                        </span>
+                        {mediumVersion === 'English' && (
+                          <span className="w-4 h-4 rounded-full bg-indigo-600 text-white flex items-center justify-center shrink-0">
+                            <Check className="w-2.5 h-2.5 stroke-[3]" />
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-indigo-800 font-bold text-[11px] block mt-0.5">
+                        English Medium (WBBSE / CBSE)
+                      </span>
+                      <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">
+                        Question papers, test guidelines & explanations in English.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div>
                 <label className="block font-bold text-slate-700 mb-1">
                   Residential Address <span className="text-rose-500">*</span>
@@ -565,6 +707,21 @@ export const MockTestRegistrationModal: React.FC<MockTestRegistrationModalProps>
                 <span className="font-mono font-bold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-lg">
                   {pricing.subjectCount} Selected • ₹{pricing.finalAmount}
                 </span>
+              </div>
+
+              {/* Candidate Affiliation & Version Summary Banner */}
+              <div className="p-3 bg-gradient-to-r from-slate-50 to-indigo-50/40 border border-slate-200 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <span className="text-slate-500 text-[11px] block">Candidate: <strong className="text-slate-900">{studentName || 'Student'}</strong> • {schoolName || 'Institution'}</span>
+                  <span className="text-xs font-bold text-slate-800">{studentClass} • {board}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] text-slate-400 font-bold uppercase">Version:</span>
+                  <span className="inline-flex items-center gap-1 text-xs font-extrabold text-indigo-700 bg-white px-2.5 py-1 rounded-lg border border-indigo-200 shadow-2xs">
+                    <Globe className="w-3 h-3 text-indigo-600" />
+                    <span>{mediumVersion === 'English' ? 'English Version' : 'Bengali Version (বাংলা মাধ্যম)'}</span>
+                  </span>
+                </div>
               </div>
 
               {errors.subjects && <p className="text-rose-500">{errors.subjects}</p>}
@@ -611,7 +768,10 @@ export const MockTestRegistrationModal: React.FC<MockTestRegistrationModalProps>
                   </h4>
                   <p className="text-slate-500">
                     Registration ID generated:{' '}
-                    <strong className="font-mono text-indigo-700">{createdStudent.registrationId}</strong>
+                    <strong className="font-mono text-indigo-700">{createdStudent.registrationId}</strong> •{' '}
+                    <span className="font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">
+                      {createdStudent.mediumVersion === 'English' ? 'English Version' : 'Bengali Version (বাংলা মাধ্যম)'}
+                    </span>
                   </p>
                 </div>
                 <span className="font-extrabold text-base text-slate-900 font-mono">
@@ -837,6 +997,13 @@ export const MockTestRegistrationModal: React.FC<MockTestRegistrationModalProps>
                 <div className="flex items-center justify-between border-b border-slate-200 pb-2">
                   <span className="text-slate-400">Candidate Name:</span>
                   <span className="font-bold text-slate-900">{createdStudent.fullName}</span>
+                </div>
+                <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                  <span className="text-slate-400">Medium / Version:</span>
+                  <span className="font-bold text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded-md border border-indigo-100 flex items-center gap-1">
+                    <Globe className="w-3 h-3 text-indigo-600" />
+                    <span>{createdStudent.mediumVersion === 'English' ? 'English Version (English Medium)' : 'Bengali Version (বাংলা মাধ্যম)'}</span>
+                  </span>
                 </div>
                 <div className="flex items-center justify-between border-b border-slate-200 pb-2">
                   <span className="text-slate-400">Payment Status:</span>

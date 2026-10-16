@@ -15,6 +15,7 @@ import {
   Phone,
   Mail,
   QrCode,
+  Globe,
 } from 'lucide-react';
 import { StudentProfile } from '../../types';
 import { BrandLogo } from '../common/BrandLogo';
@@ -301,8 +302,12 @@ export const AdmitCardModal: React.FC<AdmitCardModalProps> = ({
                       <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">
                         Class & Board
                       </span>
-                      <span className="text-slate-800 font-semibold">
+                      <span className="text-slate-800 font-semibold block">
                         {student.studentClass} ({student.board})
+                      </span>
+                      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-indigo-800 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200 mt-1">
+                        <Globe className="w-3 h-3 text-indigo-600" />
+                        <span>{(student.mediumVersion || student.version) === 'English' ? 'English Version' : 'Bengali Version (বাংলা মাধ্যম)'}</span>
                       </span>
                     </div>
                   </div>

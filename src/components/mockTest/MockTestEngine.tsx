@@ -14,9 +14,10 @@ import {
   FileCheck,
   Check,
   Printer,
+  Globe,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { MOCK_QUESTIONS } from '../../services/storage';
+import { MOCK_QUESTIONS, lookupRegistration } from '../../services/storage';
 import { MockQuestion, TestAttemptResult } from '../../types';
 import { BrandLogo } from '../common/BrandLogo';
 
@@ -25,6 +26,7 @@ interface MockTestEngineProps {
   onClose: () => void;
   candidateRegId?: string;
   studentName?: string;
+  candidateVersion?: string;
 }
 
 export const MockTestEngine: React.FC<MockTestEngineProps> = ({
@@ -32,7 +34,11 @@ export const MockTestEngine: React.FC<MockTestEngineProps> = ({
   onClose,
   candidateRegId = 'ARDM-2026-DEMO',
   studentName = 'Candidate Student',
+  candidateVersion,
 }) => {
+  const registeredStudent = candidateRegId ? lookupRegistration(candidateRegId) : null;
+  const resolvedVersion = candidateVersion || registeredStudent?.mediumVersion || registeredStudent?.version || 'Bengali';
+
   // Questions pool
   const [questions, setQuestions] = useState<MockQuestion[]>(MOCK_QUESTIONS);
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -232,6 +238,11 @@ export const MockTestEngine: React.FC<MockTestEngineProps> = ({
           <div className="hidden md:flex items-center gap-2 text-xs text-slate-400">
             <span>Roll ID:</span>
             <span className="font-mono text-white font-bold">{candidateRegId}</span>
+            <span className="text-slate-700">•</span>
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold text-cyan-300 bg-cyan-950/70 border border-cyan-800">
+              <Globe className="w-2.5 h-2.5" />
+              <span>{resolvedVersion === 'English' ? 'English Version' : 'Bengali Version (বাংলা)'}</span>
+            </span>
           </div>
 
           {!testResult && (

@@ -202,7 +202,7 @@ export const Class10MockTestSection: React.FC<Class10MockTestSectionProps> = ({
                     <div>
                       <span className="text-slate-500 block text-[10px] font-semibold">School & Board:</span>
                       <span className="text-slate-800 font-medium">
-                        {searchResult.school} ({searchResult.board})
+                        {searchResult.school} ({searchResult.board}) • {(searchResult.mediumVersion || searchResult.version) === 'English' ? 'English Version' : 'Bengali Version (বাংলা)'}
                       </span>
                     </div>
 

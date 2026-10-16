@@ -94,6 +94,8 @@ export interface ServerStudent {
   mobile: string;
   studentClass: string;
   board: string;
+  mediumVersion?: string;
+  version?: string;
   school: string;
   address: string;
   guardianName?: string;
@@ -1523,6 +1525,8 @@ app.post('/api/students/register', rateLimiter(60, 60000), (req: Request, res: R
       mobile: cleanPhone,
       studentClass: data.studentClass || 'Class 10',
       board: data.board || 'WBBSE (Madhyamik)',
+      mediumVersion: data.mediumVersion || data.version || 'Bengali',
+      version: data.version || data.mediumVersion || 'Bengali',
       school: data.school.trim(),
       address: (data.address || '').trim(),
       guardianName: (data.guardianName || '').trim(),
