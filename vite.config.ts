@@ -49,6 +49,15 @@ export default defineConfig(() => {
         },
         output: {
           manualChunks(id) {
+            if (id.includes('node_modules/xlsx')) {
+              return 'vendor-xlsx';
+            }
+            if (id.includes('node_modules/@google/genai')) {
+              return 'vendor-genai';
+            }
+            if (id.includes('node_modules/canvas-confetti')) {
+              return 'vendor-confetti';
+            }
             if (id.includes('node_modules/lucide-react')) {
               return 'icons';
             }

@@ -67,7 +67,7 @@ export const FoundersModal: React.FC<FoundersModalProps> = ({
       icon: BookOpen,
       specialty: 'Mathematics, Physical Science & Board Strategy',
       experience: '5+ Years Academic Mentorship & Madhyamik Curriculum',
-      bio: 'Akash Paik leads the academic strategy and curriculum architecture of ARDM Academy. He specializes in secondary board examination patterns (WBBSE & CBSE), high-accuracy Madhyamik question predictions, and conceptual problem-solving frameworks that transform difficult mathematical theorems and physics concepts into intuitive, easy-to-grasp steps.',
+      bio: 'Akash Paik leads the academic strategy and curriculum architecture of ARDM Academy. He specializes in secondary board examination patterns (WBBSE Madhyamik), high-accuracy Madhyamik question predictions, and conceptual problem-solving frameworks that transform difficult mathematical theorems and physics concepts into intuitive, easy-to-grasp steps.',
       keyContributions: [
         'Formulated the 96%+ historical accuracy predictive question bank for Class 10 Board Exams (2024–2025).',
         'Directs the Subject Master Curriculum for Mathematics and Physical Science.',

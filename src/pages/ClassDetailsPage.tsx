@@ -45,10 +45,10 @@ interface ClassCurriculumData {
 const CLASS_DATA_MAP: Record<string, ClassCurriculumData> = {
   'class-10': {
     title: 'Class 10 Madhyamik & Board Exam Preparation',
-    tagline: 'Comprehensive West Bengal Board (WBBSE) & CBSE Board Excellence',
+    tagline: 'Comprehensive West Bengal Board (WBBSE) Excellence',
     description:
       'Master the complete Class 10 curriculum with chapter-wise video masterclasses, PROSTUTI mock test simulations, previous 10-year question paper solutions (PYQs), and expert Dada-Didi mentorship.',
-    board: 'WBBSE (Madhyamik) & CBSE Class 10',
+    board: 'WBBSE (Madhyamik)',
     subjects: [
       {
         name: 'Physical Science (ভৌত বিজ্ঞান)',
@@ -117,7 +117,7 @@ const CLASS_DATA_MAP: Record<string, ClassCurriculumData> = {
     tagline: 'Bridging Middle School to Board Exam Rigor',
     description:
       'Class 9 is the critical foundation year for physics, chemistry, advanced mathematics, and biology. Build rock-solid fundamental concepts before entering the Madhyamik board year.',
-    board: 'WBBSE & CBSE Class 9',
+    board: 'WBBSE Class 9',
     subjects: [
       {
         name: 'Physical Science',
@@ -176,7 +176,7 @@ const CLASS_DATA_MAP: Record<string, ClassCurriculumData> = {
     tagline: 'Cultivating Scientific Curiosity and Problem Solving',
     description:
       'Empowering Class 8 students with crystal-clear conceptual understanding in algebra, geometry, natural sciences, and introduction to computer programming.',
-    board: 'WBBSE, CBSE & ICSE Class 8',
+    board: 'WBBSE Class 8',
     subjects: [
       {
         name: 'Mathematics',
@@ -226,7 +226,7 @@ const CLASS_DATA_MAP: Record<string, ClassCurriculumData> = {
     tagline: 'Strengthening Core Concepts in Science and Mathematics',
     description:
       'A joyful, high-engagement learning experience for Class 7 students covering integers, fractions, light, heat, nutrition in plants, and basic digital awareness.',
-    board: 'WBBSE & CBSE Class 7',
+    board: 'WBBSE Class 7',
     subjects: [
       {
         name: 'Mathematics',
@@ -265,7 +265,7 @@ const CLASS_DATA_MAP: Record<string, ClassCurriculumData> = {
     tagline: 'Developing Healthy Study Habits and Conceptual Foundations',
     description:
       'Supporting young scholars as they step into middle school. We make mathematics intuitive and science an exciting journey of discovery.',
-    board: 'WBBSE & CBSE Class 6',
+    board: 'WBBSE Class 6',
     subjects: [
       {
         name: 'Mathematics',
@@ -304,7 +304,7 @@ const CLASS_DATA_MAP: Record<string, ClassCurriculumData> = {
     tagline: 'Fostering Love for Learning and Confident Numbers',
     description:
       'A warm, welcoming educational space for Class 5 students focusing on fundamental arithmetic, environmental science, reading comprehension, and creative logic.',
-    board: 'WBBSE & CBSE Class 5',
+    board: 'WBBSE Class 5',
     subjects: [
       {
         name: 'Mathematics',
@@ -486,7 +486,7 @@ export const ClassDetailsPage: React.FC<ClassDetailsPageProps> = ({
               {displayClassName} Subject Modules & Examination Syllabus
             </h2>
             <p className="text-xs sm:text-sm text-slate-500">
-              Aligned with West Bengal Board (WBBSE Madhyamik) & Central Board (CBSE) academic standards.
+              Aligned with West Bengal Board (WBBSE Madhyamik) academic standards.
             </p>
           </div>
 

@@ -151,7 +151,7 @@ export interface FreeClassVideo {
   description: string;
   category?: 'Foundation' | 'Mathematics' | 'Sciences' | 'Computer' | 'Board Strategy' | 'Academic' | 'Technology';
   studentClass: string; // Class 5, Class 6, Class 7, Class 8, Class 9, Class 10, or 'All'
-  board?: string; // e.g. 'WBBSE', 'CBSE', 'ICSE', 'All Boards'
+  board?: string; // e.g. 'WBBSE (Madhyamik)', 'WBBSE'
   subject: string;
   chapter?: string;
   teacher?: string;
@@ -255,7 +255,7 @@ export interface MeritRecord {
   grade?: string; // e.g. 'AA', 'A+', 'A'
   institute: string;
   studentClass?: string; // e.g. 'Class 10'
-  board?: string; // e.g. 'WBBSE', 'CBSE'
+  board?: string; // e.g. 'WBBSE (Madhyamik)'
   exam: string;
   batch: string;
   year: string;

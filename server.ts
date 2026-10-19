@@ -746,7 +746,7 @@ const DEFAULT_COURSES: ServerCourse[] = [
     title: 'Class 10 Madhyamik All-Subject Board Mastery 2026',
     shortBio: 'Comprehensive board preparation covering Mathematics, Physical Science, Life Science, History, Geography, Bengali & English with chapter-wise tests.',
     fullDescription: 'The flagship board preparation program designed by expert educators at ARDM Academy. Includes live concept clarity classes, printed study notes, weekly CBT mock tests, previous year question solutions, and personal doubt clearing by senior mentors.',
-    eligibility: 'Students appearing for Class 10 Board Examinations (WBBSE / CBSE)',
+    eligibility: 'Students appearing for Class 10 Board Examinations (WBBSE Madhyamik)',
     duration: '6 Months (Comprehensive Batch)',
     level: 'Class 10 Board Level',
     instructor: 'ARDM Senior Faculty Panel',
@@ -1589,6 +1589,86 @@ app.post('/api/students/register', rateLimiter(60, 60000), (req: Request, res: R
 });
 
 /**
+ * POST /api/students/bulk
+ * High-Throughput Batch Student Registration
+ */
+app.post('/api/students/bulk', (req: Request, res: Response) => {
+  try {
+    const list = Array.isArray(req.body) ? req.body : req.body.students || [];
+    if (!list.length) {
+      return res.status(400).json({ error: 'Empty student list' });
+    }
+
+    const defaultExam = db.examinations[0] || DEFAULT_EXAMINATIONS[0];
+    const defaultVenue = db.venues[0] || DEFAULT_VENUES[0];
+    const registered: ServerStudent[] = [];
+    const now = new Date().toISOString();
+
+    for (let i = 0; i < list.length; i++) {
+      const data = list[i];
+      if (!data.fullName || !data.mobile) continue;
+
+      const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+      const studentId = `std_${Date.now()}_${i}_${randomSuffix}`;
+      const regId = `ARDM-${new Date().getFullYear()}-${randomSuffix}`;
+
+      const newStudent: ServerStudent = {
+        id: studentId,
+        registrationId: regId,
+        fullName: data.fullName.trim(),
+        dob: data.dob || '2010-01-01',
+        email: (data.email || '').trim().toLowerCase(),
+        mobile: (data.mobile || '').replace(/[^0-9]/g, ''),
+        studentClass: data.studentClass || 'Class 10',
+        board: data.board || 'WBBSE (Madhyamik)',
+        mediumVersion: data.mediumVersion || data.version || 'Bengali',
+        version: data.version || data.mediumVersion || 'Bengali',
+        school: (data.school || '').trim(),
+        address: (data.address || '').trim(),
+        guardianName: (data.guardianName || '').trim(),
+        guardianPhone: (data.guardianPhone || '').replace(/[^0-9]/g, ''),
+        teacherName: (data.teacherName || '').trim(),
+        selectedSubjectIds: data.selectedSubjectIds || [],
+        selectedSubjectNames: data.selectedSubjectNames || [],
+        registrationDate: now.split('T')[0],
+        paymentStatus: 'Pending',
+        paymentAmount: data.paymentAmount || 100,
+        applicationStatus: 'Submitted',
+        admitCardStatus: 'Locked',
+        examId: defaultExam.id,
+        examName: defaultExam.name,
+        examType: defaultExam.type,
+        examDate: defaultExam.examDate,
+        examTime: `${defaultExam.startTime} – ${defaultExam.endTime}`,
+        examStartTime: defaultExam.startTime,
+        examEndTime: defaultExam.endTime,
+        examDuration: defaultExam.duration,
+        reportingTime: defaultExam.reportingTime,
+        venueId: defaultVenue.id,
+        venueName: defaultExam.venue || defaultVenue.name,
+        venueAddress: defaultExam.address || defaultVenue.address,
+        venueRoom: defaultExam.room || defaultVenue.roomOrCenter,
+        examInstructions: defaultExam.instructions,
+        examStatus: 'Scheduled',
+        createdAt: now,
+        updatedAt: now,
+      };
+
+      db.students.unshift(newStudent);
+      indexStudent(newStudent);
+      registered.push(newStudent);
+    }
+
+    saveDatabase();
+    broadcastDbChange('BULK_STUDENTS_REGISTERED', { count: registered.length });
+
+    res.status(201).json({ success: true, count: registered.length, students: registered });
+  } catch (err: any) {
+    res.status(500).json({ error: err?.message || 'Failed to process bulk registrations' });
+  }
+});
+
+/**
  * POST /api/students/payment
  * Student submits Transaction ID / UTR -> moves to Payment Under Review
  */
@@ -1633,9 +1713,10 @@ app.post('/api/students/payment', rateLimiter(60, 60000), (req: Request, res: Re
  * Unified O(1) lookup by Registration ID, Phone, or Email
  */
 app.get('/api/students/lookup', rateLimiter(200, 60000), (req: Request, res: Response) => {
-  const query = (req.query.q as string || '').trim().toLowerCase();
+  const rawParam = req.query.q || req.query.query || req.query.regId || req.query.registrationId || req.query.phone || req.query.mobile || req.query.email || '';
+  const query = (String(rawParam)).trim().toLowerCase();
   if (!query) {
-    return res.status(400).json({ error: 'Search query parameter required' });
+    return res.status(400).json({ error: 'Search query parameter required (e.g. ?q=... or ?query=...)' });
   }
 
   const cleanPhone = query.replace(/[^0-9]/g, '');

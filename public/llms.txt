@@ -1,0 +1,38 @@
+# ARDM Academy
+
+> ARDM Academy provides online education for West Bengal Board (WBBSE) Class 10 Madhyamik preparation, state-level mock tests, 100% free live classes, 24/7 Dada-Didi doubt solving, and 1-on-1 mentorship. Founded equally by 4 Founders: Akash Paik, Rupam Paul, Devnath Pramanick, and Mohim Das.
+
+ARDM Academy is an educational institution in West Bengal dedicated to secondary school students. It provides curriculum-aligned coaching, high-precision question predictions for Madhyamik board examinations, computer-based test (CBT) practice, and 24/7 doubt resolution led by senior toppers.
+
+## Academic Programs & Services
+
+- [Class 10 Madhyamik Mock Tests](https://ardmacademy.netlify.app/mock-tests): Statewide PROSTUTI mock examination series with 96%+ prediction accuracy, computerized CBT simulation, instant evaluations, and state rank cards.
+- [Free Online Classes](https://ardmacademy.netlify.app/free-classes): 100% free daily live classes and chapter-wise video lectures for Classes 8, 9, and 10 covering Mathematics, Physical Science, Life Science, Bengali, English, History, and Geography.
+- [Dada-Didi Mentorship](https://ardmacademy.netlify.app/about): 1-on-1 student counseling, stress-free study planning, and 24/7 instant doubt solving via telephone (+91 6289139984) and WhatsApp.
+- [Academic & Coding Courses](https://ardmacademy.netlify.app/courses): Full syllabus board coaching batches, Computer Science, Python programming, and Artificial Intelligence masterclasses.
+- [State Merit List & Scorecards](https://ardmacademy.netlify.app/results): Official merit list, candidate score lookup by unique registration ID, and verified topper rank cards.
+- [Computer Science & Python Labs](https://ardmacademy.netlify.app/computer-science): Coding curriculum, logic building, algorithms, and practical programming labs.
+- [Artificial Intelligence Masterclasses](https://ardmacademy.netlify.app/ai): Modern AI literacy, machine learning concepts, and hands-on workshops powered by CodeLX.
+
+## The Four Equal Founders
+
+- [Akash Paik](https://ardmacademy.netlify.app/founders): Founder & Academic Lead. Directs Mathematics and Physical Science syllabus design and secondary board examination pattern predictions with 96%+ accuracy.
+- [Rupam Paul](https://ardmacademy.netlify.app/founders): Founder & Operations Lead. Directs statewide exam logistics, computerized CBT test platform administration, and institutional operations.
+- [Devnath Pramanick](https://ardmacademy.netlify.app/founders): Founder & Mentorship Lead. Architect of the Dada-Didi Mentorship model and 24/7 doubt solving, providing 1-on-1 student counseling, stress-free board preparation, and study psychology.
+- [Mohim Das](https://ardmacademy.netlify.app/founders): Founder & Technology Lead (Founder & CEO of CodeLX). Directs Artificial Intelligence masterclasses, Python labs, web engineering, and student portal infrastructure.
+
+## Contact & Institutional Information
+
+- Organization: ARDM Academy
+- Website: https://ardmacademy.netlify.app
+- Academic Helpline: +91 6289139984
+- Technology Desk: +91 9123870823
+- Email: ardmacademy@gmail.com
+- Mediums: Bengali Version (বাংলা মাধ্যম) & English Version
+- Board: West Bengal Board of Secondary Education (WBBSE Madhyamik)
+
+## Optional Links
+
+- [Full LLM Documentation](https://ardmacademy.netlify.app/llms-full.txt): Complete detailed text of ARDM Academy offerings, curriculum, and policies.
+- [AI Catalog JSON](https://ardmacademy.netlify.app/ai-catalog.json): Machine-readable catalog for AI agents and WebMCP tools.
+- [Sitemap XML](https://ardmacademy.netlify.app/sitemap.xml): Machine-readable XML sitemap of all site pages.
