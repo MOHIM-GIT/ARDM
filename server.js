@@ -8,8 +8,19 @@ import crypto from "crypto";
 import fs from "fs";
 var __filename = fileURLToPath(import.meta.url);
 var __dirname = path.dirname(__filename);
+process.on("uncaughtException", (err) => {
+  console.error("[SERVER UNCAUGHT EXCEPTION]", err);
+});
+process.on("unhandledRejection", (reason) => {
+  console.error("[SERVER UNHANDLED REJECTION]", reason);
+});
+function getCommandLineArg(flag) {
+  const idx = process.argv.indexOf(flag);
+  return idx !== -1 && idx + 1 < process.argv.length ? process.argv[idx + 1] : void 0;
+}
 var app = express();
-var PORT = process.env.PORT || 3e3;
+var PORT = Number(process.env.PORT || getCommandLineArg("--port") || 3e3);
+var HOST = process.env.HOST || getCommandLineArg("--host") || "0.0.0.0";
 app.use(compression({
   threshold: 1024,
   filter: (req, res) => {
@@ -21,7 +32,6 @@ app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use((req, res, next) => {
   res.setHeader("X-Content-Type-Options", "nosniff");
-  res.setHeader("X-Frame-Options", "SAMEORIGIN");
   res.setHeader("Keep-Alive", "timeout=30, max=1000");
   next();
 });
@@ -1069,6 +1079,8 @@ app.post("/api/students/register", rateLimiter(60, 6e4), (req, res) => {
       mobile: cleanPhone,
       studentClass: data.studentClass || "Class 10",
       board: data.board || "WBBSE (Madhyamik)",
+      mediumVersion: data.mediumVersion || data.version || "Bengali",
+      version: data.version || data.mediumVersion || "Bengali",
       school: data.school.trim(),
       address: (data.address || "").trim(),
       guardianName: (data.guardianName || "").trim(),
@@ -2292,8 +2304,8 @@ async function startServer() {
       res.sendFile(path.resolve(__dirname, "dist", "index.html"));
     });
   }
-  app.listen(PORT, () => {
-    console.log(`ARDM Academy server running on port ${PORT}`);
+  app.listen(PORT, HOST, () => {
+    console.log(`ARDM Academy server running on http://${HOST}:${PORT}`);
   });
 }
 startServer();

@@ -840,7 +840,7 @@ export const DEFAULT_COURSES: Course[] = [
     title: 'Class 10 Madhyamik All-Subject Board Mastery 2026',
     shortBio: 'Comprehensive board preparation covering Mathematics, Physical Science, Life Science, History, Geography, Bengali & English with chapter-wise tests.',
     fullDescription: 'The flagship board preparation program designed by expert educators at ARDM Academy. Includes live concept clarity classes, printed study notes, weekly CBT mock tests, previous year question solutions, and personal doubt clearing by senior mentors.',
-    eligibility: 'Class 10 Board Aspirants (WBBSE / CBSE)',
+    eligibility: 'Class 10 Board Aspirants (WBBSE)',
     duration: '6 Months (Comprehensive Batch)',
     level: 'Class 10 Board Level',
     instructor: 'Akash Paik & Senior Academic Faculty Team',
@@ -3049,7 +3049,7 @@ export const DEFAULT_BANNERS: BannerItem[] = [
   {
     id: 'banner_prostuti_2026',
     title: 'PROSTUTI 2026: State-Level Class 10 Mock Exam Suite',
-    subtitle: 'Comprehensive WBBSE & CBSE mock examination with 96%+ historical similarity, granular speed analytics, and real exam atmosphere.',
+    subtitle: 'Comprehensive WBBSE mock examination with 96%+ historical similarity, granular speed analytics, and real exam atmosphere.',
     badgeText: 'OFFICIAL MOCK EXAM',
     mediaType: 'image',
     mediaUrl: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&auto=format&fit=crop&q=80',

@@ -10,8 +10,23 @@ import fs from 'fs';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Global unhandled error handlers to prevent silent dev server exits
+process.on('uncaughtException', (err) => {
+  console.error('[SERVER UNCAUGHT EXCEPTION]', err);
+});
+process.on('unhandledRejection', (reason) => {
+  console.error('[SERVER UNHANDLED REJECTION]', reason);
+});
+
+// Parse command line arguments (e.g. tsx server.ts --port 3000 --host 0.0.0.0)
+function getCommandLineArg(flag: string): string | undefined {
+  const idx = process.argv.indexOf(flag);
+  return idx !== -1 && idx + 1 < process.argv.length ? process.argv[idx + 1] : undefined;
+}
+
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT || getCommandLineArg('--port') || 3000);
+const HOST = process.env.HOST || getCommandLineArg('--host') || '0.0.0.0';
 
 // High-Throughput HTTP Compression for 1 Lakh+ Users
 app.use(compression({
@@ -25,10 +40,9 @@ app.use(compression({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Keep-Alive and Cache Header Defaults
+// Keep-Alive and Cache Header Defaults (Allow iframe embedding for AI Studio preview)
 app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
   res.setHeader('Keep-Alive', 'timeout=30, max=1000');
   next();
 });
@@ -3070,8 +3084,8 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, () => {
-    console.log(`ARDM Academy server running on port ${PORT}`);
+  app.listen(PORT, HOST, () => {
+    console.log(`ARDM Academy server running on http://${HOST}:${PORT}`);
   });
 }
 

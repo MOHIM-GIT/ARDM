@@ -197,7 +197,7 @@ export const SubjectUltraDiagramSection: React.FC<SubjectUltraDiagramSectionProp
                 <span>Interactive Exam Intelligence Hub</span>
               </span>
               <span className="text-xs font-mono text-white/90">
-                WBBSE Madhyamik & CBSE 2026-27
+                WBBSE Madhyamik 2026-27
               </span>
             </div>
 

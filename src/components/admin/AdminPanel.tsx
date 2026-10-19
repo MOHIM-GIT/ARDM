@@ -4841,7 +4841,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   rows={2}
                   value={bannerSubtitle}
                   onChange={(e) => setBannerSubtitle(e.target.value)}
-                  placeholder="e.g. Comprehensive WBBSE & CBSE mock examination with 96%+ historical similarity, granular speed analytics, and real exam atmosphere."
+                  placeholder="e.g. Comprehensive WBBSE mock examination with 96%+ historical similarity, granular speed analytics, and real exam atmosphere."
                   className="w-full px-3 py-2 rounded-xl border border-slate-700 bg-[#18181b] text-white placeholder-slate-500 focus:outline-none focus:border-red-500 leading-relaxed"
                 />
               </div>
@@ -5919,7 +5919,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     type="text"
                     value={fcBoard}
                     onChange={(e) => setFcBoard(e.target.value)}
-                    placeholder="WBBSE / CBSE"
+                    placeholder="WBBSE"
                     className="w-full px-3 py-2 rounded-xl border border-slate-200"
                   />
                 </div>

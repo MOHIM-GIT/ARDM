@@ -575,15 +575,18 @@ export const MockTestRegistrationModal: React.FC<MockTestRegistrationModalProps>
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Board</label>
+                  <label className="block font-bold text-slate-700 mb-1 flex items-center justify-between">
+                    <span>Board</span>
+                    <span className="text-[10px] text-indigo-700 font-bold bg-indigo-50 px-2 py-0.5 rounded">
+                      Only WBBSE
+                    </span>
+                  </label>
                   <select
                     value={board}
                     onChange={(e) => setBoard(e.target.value)}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white"
                   >
                     <option value="WBBSE (Madhyamik)">WBBSE (Madhyamik Board)</option>
-                    <option value="CBSE">CBSE Board</option>
-                    <option value="ICSE">ICSE Board</option>
                   </select>
                 </div>
               </div>
@@ -666,10 +669,10 @@ export const MockTestRegistrationModal: React.FC<MockTestRegistrationModalProps>
                         )}
                       </div>
                       <span className="text-indigo-800 font-bold text-[11px] block mt-0.5">
-                        English Medium (WBBSE / CBSE)
+                        English Medium (WBBSE)
                       </span>
                       <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">
-                        Question papers, test guidelines & explanations in English.
+                        Question papers, test guidelines & explanations in English for WBBSE candidates.
                       </p>
                     </div>
                   </div>
