@@ -1,0 +1,17 @@
+{
+  "schema_version": "v1",
+  "name_for_model": "ardm_academy",
+  "name_for_human": "ARDM Academy",
+  "description_for_model": "Educational platform providing WBBSE Madhyamik Class 10 mock tests, free live classes, study notes, and Dada-Didi mentorship.",
+  "description_for_human": "Official educational resources, Class 10 mock tests, and free classes from ARDM Academy.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://ardmacademy.netlify.app/ai-catalog.json"
+  },
+  "logo_url": "https://ardmacademy.netlify.app/logo.png",
+  "contact_email": "ardmacademy@gmail.com",
+  "legal_info_url": "https://ardmacademy.netlify.app/about"
+}

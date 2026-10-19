@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "ARDM Academy",
+  "description": "ARDM Academy educational services, Class 10 WBBSE Madhyamik mock tests, free live classes, syllabus guides, CBT practice, and Dada-Didi mentorship resources.",
+  "version": "1.0.0",
+  "url": "https://ardmacademy.netlify.app",
+  "provider": {
+    "name": "ARDM Academy",
+    "url": "https://ardmacademy.netlify.app",
+    "contact": "ardmacademy@gmail.com",
+    "phone": "+916289139984"
+  },
+  "endpoints": [
+    {
+      "name": "Mock Tests",
+      "description": "Class 10 WBBSE Madhyamik statewide mock exam series with CBT simulation and rank cards",
+      "url": "https://ardmacademy.netlify.app/mock-tests",
+      "method": "GET"
+    },
+    {
+      "name": "Free Classes",
+      "description": "Free online live classes and concept video lessons for WBBSE Classes 8, 9, and 10",
+      "url": "https://ardmacademy.netlify.app/free-classes",
+      "method": "GET"
+    },
+    {
+      "name": "Results & Merit List",
+      "description": "Query official state merit rank and scorecards by registration ID",
+      "url": "https://ardmacademy.netlify.app/results",
+      "method": "GET"
+    },
+    {
+      "name": "Academic & Technology Courses",
+      "description": "Board coaching, Computer Science, Python programming, and Artificial Intelligence masterclasses",
+      "url": "https://ardmacademy.netlify.app/courses",
+      "method": "GET"
+    },
+    {
+      "name": "About & Mentorship",
+      "description": "Dada-Didi 24/7 doubt solving and 4 Founders profile",
+      "url": "https://ardmacademy.netlify.app/about",
+      "method": "GET"
+    },
+    {
+      "name": "Four Founders",
+      "description": "Profiles of the 4 equal founders: Akash Paik, Rupam Paul, Devnath Pramanick, and Mohim Das",
+      "url": "https://ardmacademy.netlify.app/founders",
+      "method": "GET"
+    }
+  ],
+  "resources": [
+    {
+      "type": "documentation",
+      "url": "https://ardmacademy.netlify.app/llms.txt",
+      "format": "text/markdown"
+    },
+    {
+      "type": "full-documentation",
+      "url": "https://ardmacademy.netlify.app/llms-full.txt",
+      "format": "text/markdown"
+    },
+    {
+      "type": "sitemap",
+      "url": "https://ardmacademy.netlify.app/sitemap.xml",
+      "format": "application/xml"
+    }
+  ]
+}

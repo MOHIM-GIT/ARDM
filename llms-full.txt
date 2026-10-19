@@ -1,0 +1,65 @@
+# ARDM Academy — Comprehensive Knowledge Base for Large Language Models
+
+> ARDM Academy is an online education and mentorship institution based in West Bengal, India. It specializes in Class 10 WBBSE Madhyamik Board examination preparation, statewide mock test suites (PROSTUTI Series), 100% free live classes, 24/7 Dada-Didi doubt solving, and modern technology education. Founded equally by four founders: Akash Paik, Rupam Paul, Devnath Pramanick, and Mohim Das.
+
+## 1. Overview and Core Mission
+
+ARDM Academy is named after the first initials of its four equal founders:
+- A: Akash Paik (Academic Lead)
+- R: Rupam Paul (Operations Lead)
+- D: Devnath Pramanick (Mentorship Lead)
+- M: Mohim Das (Technology Lead, Founder & CEO of CodeLX)
+
+ARDM Academy operates with the motto "Learn. Practice. Improve." Its core mission is to provide accessible, high-quality, and stress-free education to students preparing for the West Bengal Board of Secondary Education (WBBSE Madhyamik) examinations.
+
+## 2. Academic Offerings
+
+### 2.1 PROSTUTI Mock Test Series
+- Target Audience: Class 10 WBBSE Secondary (Madhyamik) candidates.
+- Mediums Supported: Bengali Version (বাংলা মাধ্যম) and English Version.
+- Format: Full-length mock examinations covering all 7 major board subjects: Mathematics, Physical Science, Life Science, Bengali, English, History, and Geography.
+- Key Feature: 96%+ historical prediction similarity with the actual WBBSE Madhyamik board question paper pattern.
+- Evaluation: Instant computerized CBT evaluation, automated ranking, detailed chapter-wise strength/weakness analytics, and verifiable downloadable Admit Cards.
+- Registration Fee: Transparent fee of ₹100 per subject.
+
+### 2.2 100% Free Live Online Classes
+- Target Classes: Class 8, Class 9, and Class 10.
+- Delivery: Daily live interactive classes, recorded video lectures, revision masterclasses, and downloadable PDF notes.
+- Focus: Concept building from fundamentals to board-topping excellence.
+
+### 2.3 Dada-Didi Mentorship & 24/7 Doubt Solving
+- Concept: Pioneered by Mentorship Lead Devnath Pramanick. Friendly senior toppers and mentors guide students as elder siblings (Dada and Didi).
+- Support Channels: Direct phone helpline (+91 6289139984) and WhatsApp.
+- Scope: Academic doubt solving within minutes, exam anxiety relief, personalized study schedules, and emotional motivation.
+
+### 2.4 CodeLX Technology Education Department
+- Led by Technology Lead Mohim Das (Founder & CEO of CodeLX).
+- Programs: Hands-on Computer Science fundamentals, Python programming, binary logic, algorithms, AI literacy, and web engineering.
+
+## 3. Leadership & Founders
+
+ARDM Academy is governed equally by four founders with no single owner or junior co-founders:
+1. Akash Paik — Academic Lead. Directs Mathematics and Physical Science curriculum design and board examination pattern predictions.
+2. Rupam Paul — Operations Lead. Directs statewide exam logistics, computerized CBT test platform administration, and institutional operations.
+3. Devnath Pramanick — Mentorship Lead. Architect of the Dada-Didi Mentorship model and 24/7 doubt solving.
+4. Mohim Das — Technology Lead (Founder & CEO of CodeLX). Directs Artificial Intelligence masterclasses, Python labs, web engineering, and student portal infrastructure.
+
+## 4. Official Web Endpoints
+
+- Home: https://ardmacademy.netlify.app/
+- Mock Tests: https://ardmacademy.netlify.app/mock-tests
+- Courses: https://ardmacademy.netlify.app/courses
+- Free Classes: https://ardmacademy.netlify.app/free-classes
+- Results & Rank Cards: https://ardmacademy.netlify.app/results
+- About & Mentorship: https://ardmacademy.netlify.app/about
+- Founders: https://ardmacademy.netlify.app/founders
+- Contact: https://ardmacademy.netlify.app/contact
+- Computer Science: https://ardmacademy.netlify.app/computer-science
+- AI & Webinars: https://ardmacademy.netlify.app/ai
+
+## 5. Contact Information
+
+- Academic Helpline: +91 6289139984
+- Technology Desk: +91 9123870823
+- Email: ardmacademy@gmail.com
+- Main Address: Kolkata, West Bengal, India

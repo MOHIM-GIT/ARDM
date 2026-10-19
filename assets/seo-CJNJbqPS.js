@@ -1,0 +1,1 @@
+function e(e){return e?e.toLowerCase().trim().replace(/[^\w\s-]/g,``).replace(/[\s_-]+/g,`-`).replace(/^-+|-+$/g,``):``}function t(t){return`${e(t.title)}-${t.id.replace(/^crs_/,``)}`}function n(t){let n=t.registrationId.toLowerCase().replace(/[^a-z0-9]/g,`-`);return`${e(t.studentName)}-${n}`}export{n,e as r,t};
