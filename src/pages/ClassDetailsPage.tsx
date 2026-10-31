@@ -17,7 +17,7 @@ import {
   Layers,
   HelpCircle,
 } from 'lucide-react';
-import { getFreeClasses, getCourses } from '../services/storage';
+import { getFreeClasses, getCourses, getYouTubeThumbnailUrl } from '../services/storage';
 import { FreeClassVideo, Course } from '../types';
 import { SITE_CONFIG, getTelLink } from '../config/siteConfig';
 
@@ -354,14 +354,13 @@ export const ClassDetailsPage: React.FC<ClassDetailsPageProps> = ({
   useEffect(() => {
     // Filter video lectures matching this class
     const cleanClassTag = displayClassName.toLowerCase();
-    const allVideos = getFreeClasses();
+    const allVideos = getFreeClasses().filter((v) => v.isPublished);
     const matchedVideos = allVideos.filter(
       (v) =>
-        v.isPublished &&
-        (v.studentClass.toLowerCase().includes(cleanClassTag) ||
-          cleanClassTag.includes(v.studentClass.toLowerCase()))
+        v.studentClass.toLowerCase().includes(cleanClassTag) ||
+        cleanClassTag.includes(v.studentClass.toLowerCase())
     );
-    setClassVideos(matchedVideos);
+    setClassVideos(matchedVideos.length > 0 ? matchedVideos : allVideos.slice(0, 3));
 
     // Get matching courses
     const allCourses = getCourses().filter((c) => c.publishStatus === 'Published');
@@ -564,7 +563,7 @@ export const ClassDetailsPage: React.FC<ClassDetailsPageProps> = ({
                   <div>
                     <div className="relative aspect-video w-full bg-slate-900 overflow-hidden">
                       <img
-                        src={v.thumbnailUrl || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=600&q=80'}
+                        src={getYouTubeThumbnailUrl(v.youtubeUrl, v.thumbnailUrl)}
                         alt={v.title}
                         className="w-full h-full object-cover"
                       />

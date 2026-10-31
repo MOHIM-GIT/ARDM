@@ -4,7 +4,7 @@ import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { FreeClassesSection } from '../components/home/FreeClassesSection';
 import { OnlineFreeClassesBookingSection } from '../components/home/OnlineFreeClassesBookingSection';
 import { Video, BookOpen, GraduationCap, ArrowRight } from 'lucide-react';
-import { getFreeClasses } from '../services/storage';
+import { getFreeClasses, getYouTubeEmbedUrl, getYouTubeThumbnailUrl } from '../services/storage';
 
 interface FreeClassesPageProps {
   onNavigate: (path: string) => void;
@@ -17,15 +17,15 @@ export const FreeClassesPage: React.FC<FreeClassesPageProps> = ({ onNavigate }) 
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: 'ARDM Academy Free Educational Video Masterclasses',
-    itemListElement: allVideos.slice(0, 8).map((v, i) => ({
+    itemListElement: allVideos.slice(0, 5).map((v, i) => ({
       '@type': 'VideoObject',
       position: i + 1,
       name: v.title,
       description: v.description,
-      thumbnailUrl: v.thumbnailUrl || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=600&q=80',
+      thumbnailUrl: getYouTubeThumbnailUrl(v.youtubeUrl, v.thumbnailUrl),
       uploadDate: v.publishDate || '2026-09-01',
       contentUrl: v.youtubeUrl,
-      embedUrl: v.youtubeUrl.replace('watch?v=', 'embed/'),
+      embedUrl: getYouTubeEmbedUrl(v.youtubeUrl),
     })),
   };
 

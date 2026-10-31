@@ -325,6 +325,7 @@ export interface ServerLecture {
   description: string;
   category?: string;
   studentClass: string;
+  board?: string;
   subject: string;
   chapter?: string;
   teacher?: string;
@@ -854,8 +855,8 @@ const DEFAULT_LECTURES: ServerLecture[] = [
   {
     id: 'lec_1',
     title: 'Class 10 Madhyamik Mathematics 2026: 96%+ Question Prediction & Circle Theorems',
-    youtubeUrl: 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=800&q=80',
+    youtubeUrl: 'https://youtu.be/IHOZQGtbiDQ?si=aTkbqIXPLXlJHyMz',
+    thumbnailUrl: 'https://img.youtube.com/vi/IHOZQGtbiDQ/hqdefault.jpg',
     description: 'In-depth analysis of circle theorems, quadratic equations, and high-probability board questions.',
     category: 'Mathematics',
     studentClass: 'Class 10',
@@ -871,8 +872,8 @@ const DEFAULT_LECTURES: ServerLecture[] = [
   {
     id: 'lec_2',
     title: 'Physical Science: Current Electricity & Joule’s Law Numerical Hacks',
-    youtubeUrl: 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=800&q=80',
+    youtubeUrl: 'https://youtu.be/IHOZQGtbiDQ?si=aTkbqIXPLXlJHyMz',
+    thumbnailUrl: 'https://img.youtube.com/vi/IHOZQGtbiDQ/hqdefault.jpg',
     description: 'Step-by-step circuit problems, resistance combinations, and power dissipation formulas.',
     category: 'Sciences',
     studentClass: 'Class 10',
@@ -888,8 +889,8 @@ const DEFAULT_LECTURES: ServerLecture[] = [
   {
     id: 'lec_3',
     title: 'Life Science: Chromosomes, Cell Division & Mendel’s Laws of Inheritance',
-    youtubeUrl: 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80',
+    youtubeUrl: 'https://youtu.be/IHOZQGtbiDQ?si=aTkbqIXPLXlJHyMz',
+    thumbnailUrl: 'https://img.youtube.com/vi/IHOZQGtbiDQ/hqdefault.jpg',
     description: 'Detailed microscopic phase analysis of Mitosis & Meiosis with monohybrid cross diagrams.',
     category: 'Sciences',
     studentClass: 'Class 10',
@@ -905,8 +906,8 @@ const DEFAULT_LECTURES: ServerLecture[] = [
   {
     id: 'lec_4',
     title: 'Computer Science: Binary Arithmetic, Logic Gates & Flowcharts for Beginners',
-    youtubeUrl: 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80',
+    youtubeUrl: 'https://youtu.be/IHOZQGtbiDQ?si=aTkbqIXPLXlJHyMz',
+    thumbnailUrl: 'https://img.youtube.com/vi/IHOZQGtbiDQ/hqdefault.jpg',
     description: 'Understand truth tables, AND/OR/NOT logic gates, and building program flowchart diagrams.',
     category: 'Computer',
     studentClass: 'Class 9',
@@ -922,8 +923,8 @@ const DEFAULT_LECTURES: ServerLecture[] = [
   {
     id: 'lec_5',
     title: 'Middle School Science: Solar System, Heat & Force Experiments (Classes 6–8)',
-    youtubeUrl: 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80',
+    youtubeUrl: 'https://youtu.be/IHOZQGtbiDQ?si=aTkbqIXPLXlJHyMz',
+    thumbnailUrl: 'https://img.youtube.com/vi/IHOZQGtbiDQ/hqdefault.jpg',
     description: 'Fun, visual experiments demonstrating friction, atmospheric pressure, and states of matter.',
     category: 'Foundation',
     studentClass: 'Class 7',
@@ -1323,6 +1324,33 @@ function loadDatabase() {
         meritRecords: (parsed.meritRecords && parsed.meritRecords.length > 0) ? parsed.meritRecords : DEFAULT_MERIT_RECORDS,
         webinars: (parsed.webinars && parsed.webinars.length > 0) ? parsed.webinars : DEFAULT_WEBINARS,
       };
+
+      // Sanitize lectures: Replace any old song links with new target video, ensure YouTube thumbnail and max 5
+      db.lectures = (db.lectures || []).map((l, idx) => {
+        let url = l.youtubeUrl;
+        let thumb = l.thumbnailUrl;
+        if (!url || url.includes('zYGjsevcofw')) {
+          url = 'https://youtu.be/IHOZQGtbiDQ?si=aTkbqIXPLXlJHyMz';
+          thumb = 'https://img.youtube.com/vi/IHOZQGtbiDQ/hqdefault.jpg';
+        } else if (!thumb || thumb.includes('unsplash')) {
+          const ytMatch = url.match(/(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*)/);
+          const vId = ytMatch && ytMatch[1]?.length === 11 ? ytMatch[1] : 'IHOZQGtbiDQ';
+          thumb = `https://img.youtube.com/vi/${vId}/hqdefault.jpg`;
+        }
+        return {
+          ...l,
+          youtubeUrl: url,
+          thumbnailUrl: thumb,
+          orderIndex: idx + 1,
+        };
+      });
+      if (db.lectures.length > 5) {
+        db.lectures = db.lectures.slice(0, 5);
+      }
+      if (db.lectures.length === 0) {
+        db.lectures = [...DEFAULT_LECTURES];
+      }
+
       reindexAllStudents();
       console.log(`Database loaded: ${db.students.length} students indexed, ${db.courses.length} courses, ${db.lectures.length} lectures.`);
     } else {
@@ -2534,33 +2562,45 @@ app.post('/api/admin/lectures', requireAdmin, (req: Request, res: Response) => {
     }
 
     // Auto extract YouTube ID for default thumbnail
-    const ytMatch = data.youtubeUrl.match(/(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*)/);
-    const videoId = ytMatch && ytMatch[1]?.length === 11 ? ytMatch[1] : 'zYGjsevcofw';
+    const ytMatch = data.youtubeUrl.match(/(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/)([^#&?]*)/);
+    const videoId = ytMatch && ytMatch[1]?.length === 11 ? ytMatch[1] : 'IHOZQGtbiDQ';
     const fallbackThumb = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
 
     const newLec: ServerLecture = {
       id: `lec_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
       title: String(data.title).trim(),
       youtubeUrl: String(data.youtubeUrl).trim(),
-      thumbnailUrl: data.thumbnailUrl ? String(data.thumbnailUrl).trim() : fallbackThumb,
+      thumbnailUrl: (data.thumbnailUrl && !data.thumbnailUrl.includes('unsplash')) ? String(data.thumbnailUrl).trim() : fallbackThumb,
       description: data.description ? String(data.description).trim() : '',
       category: data.category ? String(data.category).trim() : 'Academic',
       studentClass: data.studentClass ? String(data.studentClass).trim() : 'Class 10',
+      board: data.board ? String(data.board).trim() : 'WBBSE (Madhyamik)',
       subject: data.subject ? String(data.subject).trim() : 'Mathematics',
       chapter: data.chapter ? String(data.chapter).trim() : '',
-      teacher: data.teacher ? String(data.teacher).trim() : 'Faculty Mentor',
+      teacher: data.teacher ? String(data.teacher).trim() : 'ARDM Faculty Mentor',
       publishDate: data.publishDate || new Date().toISOString().split('T')[0],
       publishStatus: data.publishStatus === 'Draft' ? 'Draft' : 'Published',
-      orderIndex: db.lectures.length + 1,
+      orderIndex: 1,
       isFeatured: Boolean(data.isFeatured),
       isPublished: data.publishStatus !== 'Draft',
     };
 
-    db.lectures.push(newLec);
+    // MAX 5 VIDEOS RULE: No 6th video can be added. If 5 exist, update previous slot.
+    if (db.lectures.length >= 5) {
+      const targetSlot = Number(data.targetSlot);
+      const slotIndex = (!isNaN(targetSlot) && targetSlot >= 1 && targetSlot <= 5) ? targetSlot - 1 : 0;
+      newLec.id = db.lectures[slotIndex]?.id || newLec.id;
+      newLec.orderIndex = slotIndex + 1;
+      db.lectures[slotIndex] = newLec;
+    } else {
+      newLec.orderIndex = db.lectures.length + 1;
+      db.lectures.push(newLec);
+    }
+
     saveDatabase();
     broadcastDbChange('LECTURES_UPDATED', newLec);
 
-    res.json({ success: true, lecture: newLec });
+    res.json({ success: true, lecture: newLec, totalCount: db.lectures.length });
   } catch (err: any) {
     res.status(500).json({ error: err?.message || 'Failed to create YouTube lecture.' });
   }
@@ -2579,6 +2619,13 @@ app.put('/api/admin/lectures/:id', requireAdmin, (req: Request, res: Response) =
     }
 
     const existing = db.lectures[index];
+    const updatedUrl = data.youtubeUrl !== undefined ? String(data.youtubeUrl).trim() : existing.youtubeUrl;
+    const ytMatch = updatedUrl.match(/(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/)([^#&?]*)/);
+    const videoId = ytMatch && ytMatch[1]?.length === 11 ? ytMatch[1] : 'IHOZQGtbiDQ';
+    const computedThumb = (data.thumbnailUrl && !data.thumbnailUrl.includes('unsplash'))
+      ? String(data.thumbnailUrl).trim()
+      : `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+
     const isPublished = data.publishStatus !== undefined
       ? data.publishStatus === 'Published'
       : (data.isPublished !== undefined ? Boolean(data.isPublished) : existing.isPublished);
@@ -2586,11 +2633,12 @@ app.put('/api/admin/lectures/:id', requireAdmin, (req: Request, res: Response) =
     const updated: ServerLecture = {
       ...existing,
       title: data.title !== undefined ? String(data.title).trim() : existing.title,
-      youtubeUrl: data.youtubeUrl !== undefined ? String(data.youtubeUrl).trim() : existing.youtubeUrl,
-      thumbnailUrl: data.thumbnailUrl !== undefined ? String(data.thumbnailUrl).trim() : existing.thumbnailUrl,
+      youtubeUrl: updatedUrl,
+      thumbnailUrl: computedThumb,
       description: data.description !== undefined ? String(data.description).trim() : existing.description,
       category: data.category !== undefined ? String(data.category).trim() : existing.category,
       studentClass: data.studentClass !== undefined ? String(data.studentClass).trim() : existing.studentClass,
+      board: data.board !== undefined ? String(data.board).trim() : (existing.board || 'WBBSE (Madhyamik)'),
       subject: data.subject !== undefined ? String(data.subject).trim() : existing.subject,
       chapter: data.chapter !== undefined ? String(data.chapter).trim() : existing.chapter,
       teacher: data.teacher !== undefined ? String(data.teacher).trim() : existing.teacher,

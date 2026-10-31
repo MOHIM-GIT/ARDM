@@ -139,6 +139,16 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="whitespace-nowrap">4 Founders</span>
           </button>
 
+          {/* YouTube Video Frame Direct Button */}
+          <button
+            onClick={() => onNavigate('#youtube-video-frame')}
+            className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold text-white bg-red-600 hover:bg-red-500 shadow-md shadow-red-600/30 transition-all hover:scale-102 active:scale-98 cursor-pointer"
+            title="Watch Official YouTube Video Frame on Homepage"
+          >
+            <Video className="w-3.5 h-3.5 text-white animate-pulse" />
+            <span className="whitespace-nowrap">YouTube Frame</span>
+          </button>
+
           {/* Practice CBT */}
           <button
             onClick={onOpenTestEngine}

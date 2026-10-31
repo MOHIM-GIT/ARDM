@@ -33,7 +33,7 @@ export const SITE_CONFIG = {
     whatsappChannel: "https://whatsapp.com/channel/0029VbDUvfu6BIErmz6pxX1h",
     facebook: "https://www.facebook.com/share/1FA562wUSQ/",
     instagram: "https://www.instagram.com/ardmacademy2026?stkn=bTZnejdwbXJnNWY=",
-    youtube: "https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS",
+    youtube: "https://youtu.be/IHOZQGtbiDQ?si=aTkbqIXPLXlJHyMz",
   },
 
   // Server-Side Role-Based Admin Protection

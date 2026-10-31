@@ -249,8 +249,10 @@ export default function App() {
       'webinar': '/webinars',
       'webinars': '/webinars',
       'workshops': '/workshops',
-      'free-guidance': '/workshops',
-      'free-education': '/free-classes',
+      'youtube-video-frame': '/#youtube-video-frame',
+      'youtube-frame': '/#youtube-video-frame',
+      'youtube': '/#youtube-video-frame',
+      'video-frame': '/#youtube-video-frame',
       'about': '/about',
       'contact': '/contact',
       'home': '/',
@@ -536,6 +538,9 @@ export default function App() {
             onOpenFounders={(founderId) => handleOpenFoundersModal(founderId || 'all')}
           />
 
+          {/* Official YouTube Video Player Frame Section (Featured at top of Home Page) */}
+          <FreeClassesSection />
+
           {/* WBBSE Online Free Classes Live Booking & Helpline (Class 8, 9, 10 Madhyamik) */}
           <OnlineFreeClassesBookingSection onNavigate={handleNavigate} />
 
@@ -569,9 +574,6 @@ export default function App() {
             onOpenAdmin={() => setAdminPanelOpen(true)}
             onNavigate={handleNavigate}
           />
-
-          {/* Free Classes */}
-          <FreeClassesSection />
 
           {/* AI & Coding Webinar Masterclass */}
           <AIWebinarSection onOpenWorkshopManager={() => setWorkshopManagerOpen(true)} />

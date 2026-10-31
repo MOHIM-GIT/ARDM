@@ -131,6 +131,10 @@ import {
   setFreeClassesDisplayMode,
   isFreeClassesBannerVisible,
   setFreeClassesBannerVisible,
+  getYouTubeThumbnailUrl,
+  extractYouTubeId,
+  MAX_FREE_VIDEOS,
+  DEFAULT_TARGET_YOUTUBE_URL,
 } from '../../services/storage';
 import {
   StudentProfile,
@@ -386,6 +390,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const [fcStudyMaterialUrl, setFcStudyMaterialUrl] = useState('');
   const [fcPublishStatus, setFcPublishStatus] = useState<'Published' | 'Draft'>('Published');
   const [fcIsFeatured, setFcIsFeatured] = useState(false);
+  const [fcTargetSlot, setFcTargetSlot] = useState<number>(1);
 
   // Filters & Search
   const [searchQuery, setSearchQuery] = useState('');
@@ -1214,7 +1219,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           {
             id: `vid_1_1`,
             topicTitle: 'Lecture 1: Core Theorems & Methodologies',
-            videoUrl: 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS',
+            videoUrl: 'https://youtu.be/IHOZQGtbiDQ?si=aTkbqIXPLXlJHyMz',
             duration: '25 Mins',
           },
         ],
@@ -1327,9 +1332,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const handleOpenAddFreeClass = () => {
     setEditingFreeClassId(null);
     setFcTitle('');
-    setFcYoutubeUrl('');
-    setFcThumbnailUrl('');
-    setFcDescription('');
+    setFcYoutubeUrl(DEFAULT_TARGET_YOUTUBE_URL);
+    setFcThumbnailUrl(getYouTubeThumbnailUrl(DEFAULT_TARGET_YOUTUBE_URL));
+    setFcDescription('Official ARDM state syllabus video lecture with conceptual explanations.');
     setFcCategory('Academic');
     setFcClass('Class 10');
     setFcBoard('WBBSE');
@@ -1340,6 +1345,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     setFcStudyMaterialUrl('');
     setFcPublishStatus('Published');
     setFcIsFeatured(false);
+    // When 5 videos exist, default to slot 1 for replacement
+    setFcTargetSlot(classes.length >= MAX_FREE_VIDEOS ? 1 : classes.length + 1);
     setShowFreeClassModal(true);
   };
 
@@ -1347,7 +1354,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     setEditingFreeClassId(item.id);
     setFcTitle(item.title);
     setFcYoutubeUrl(item.youtubeUrl);
-    setFcThumbnailUrl(item.thumbnailUrl || '');
+    setFcThumbnailUrl(item.thumbnailUrl || getYouTubeThumbnailUrl(item.youtubeUrl));
     setFcDescription(item.description);
     setFcCategory((item.category as any) || 'Academic');
     setFcClass(item.studentClass);
@@ -1359,6 +1366,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     setFcStudyMaterialUrl(item.studyMaterialUrl || '');
     setFcPublishStatus(item.publishStatus || (item.isPublished ? 'Published' : 'Draft'));
     setFcIsFeatured(Boolean(item.isFeatured));
+    const slotIdx = classes.findIndex((c) => c.id === item.id);
+    setFcTargetSlot(slotIdx >= 0 ? slotIdx + 1 : 1);
     setShowFreeClassModal(true);
   };
 
@@ -1366,10 +1375,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     e.preventDefault();
     if (!fcTitle.trim()) return;
 
-    const data: Partial<FreeClassVideo> = {
+    const finalYoutubeUrl = fcYoutubeUrl.trim() || DEFAULT_TARGET_YOUTUBE_URL;
+    const finalThumbnailUrl = getYouTubeThumbnailUrl(finalYoutubeUrl, fcThumbnailUrl.trim() || undefined);
+
+    const data: Partial<FreeClassVideo> & { targetSlot?: number } = {
       title: fcTitle.trim(),
-      youtubeUrl: fcYoutubeUrl.trim(),
-      thumbnailUrl: fcThumbnailUrl.trim() || undefined,
+      youtubeUrl: finalYoutubeUrl,
+      thumbnailUrl: finalThumbnailUrl,
       description: fcDescription.trim(),
       category: fcCategory,
       studentClass: fcClass,
@@ -1381,6 +1393,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       studyMaterialUrl: fcStudyMaterialUrl.trim() || undefined,
       publishStatus: fcPublishStatus,
       isFeatured: fcIsFeatured,
+      targetSlot: fcTargetSlot,
     };
 
     if (editingFreeClassId) {
@@ -4057,134 +4070,231 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-xl font-bold text-slate-900">Free Education & Video Studio (Classes 5-10)</h3>
-                      <span className="px-2.5 py-0.5 rounded-full bg-red-50 text-red-700 font-mono text-xs font-bold border border-red-200">
-                        {classes.length} Published Lectures
-                      </span>
+                {/* Strict 5-Slot YouTube Content Delivery Studio */}
+                <div className="bg-slate-900 border border-slate-800 rounded-3xl p-5 sm:p-6 text-white shadow-xl relative overflow-hidden">
+                  <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-red-600/10 rounded-full blur-3xl pointer-events-none" />
+                  
+                  <div className="relative z-10 space-y-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="p-1.5 rounded-lg bg-red-600 text-white">
+                            <Video className="w-4 h-4" />
+                          </span>
+                          <h3 className="text-lg font-bold text-white tracking-tight">
+                            YouTube Content Delivery Studio
+                          </h3>
+                          <span className="px-2.5 py-0.5 rounded-full bg-red-500/20 text-red-400 font-mono text-[11px] font-bold border border-red-500/30">
+                            Strict Limit: 5 / {MAX_FREE_VIDEOS} Videos
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-400 mt-1 max-w-2xl">
+                          Admin can post or update up to <strong>5 videos max</strong>. Video #6 cannot be added.
+                          Submitting a new video automatically updates and replaces the target slot (1 to 5).
+                          Player frames and high-definition thumbnail frames update instantaneously across the homepage and course catalog.
+                        </p>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={handleOpenAddFreeClass}
+                        className="px-4 py-2.5 bg-red-600 hover:bg-red-500 text-white rounded-xl text-xs font-bold flex items-center gap-2 cursor-pointer shadow-lg shadow-red-600/30 transition-all shrink-0"
+                      >
+                        <Plus className="w-4 h-4" />
+                        <span>{classes.length >= MAX_FREE_VIDEOS ? 'Update Video Slot (1-5)' : 'Add / Update Video Slot'}</span>
+                      </button>
                     </div>
+
+                    {/* Quick 5-Slot Status Bar */}
+                    <div className="pt-3 border-t border-slate-800">
+                      <div className="text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center justify-between">
+                        <span>Active Video Delivery Slots (1 to 5):</span>
+                        <span className="text-slate-400 font-normal">Click any slot to edit or replace</span>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-5 gap-2.5">
+                        {[1, 2, 3, 4, 5].map((slotNum) => {
+                          const slotVideo = classes[slotNum - 1];
+                          const vidId = slotVideo ? extractYouTubeId(slotVideo.youtubeUrl) : null;
+                          return (
+                            <div
+                              key={slotNum}
+                              onClick={() => {
+                                if (slotVideo) {
+                                  handleOpenEditFreeClass(slotVideo);
+                                } else {
+                                  setFcTargetSlot(slotNum);
+                                  handleOpenAddFreeClass();
+                                }
+                              }}
+                              className={`p-2.5 rounded-xl border text-left cursor-pointer transition-all ${
+                                slotVideo
+                                  ? 'bg-slate-800/80 hover:bg-slate-800 border-slate-700/80 hover:border-red-500/60'
+                                  : 'bg-slate-950/40 hover:bg-slate-900 border-dashed border-slate-800'
+                              }`}
+                            >
+                              <div className="flex items-center justify-between mb-1.5">
+                                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold font-mono bg-red-600/20 text-red-400 border border-red-500/30">
+                                  Slot {slotNum}
+                                </span>
+                                {slotVideo && (
+                                  <span className="text-[9px] font-mono text-slate-400 truncate max-w-[80px]">
+                                    {vidId || 'YouTube'}
+                                  </span>
+                                )}
+                              </div>
+                              {slotVideo ? (
+                                <div className="space-y-1">
+                                  <div className="text-[11px] font-bold text-white truncate" title={slotVideo.title}>
+                                    {slotVideo.title}
+                                  </div>
+                                  <div className="text-[10px] text-slate-400 truncate flex items-center gap-1">
+                                    <span className="text-red-400">{slotVideo.studentClass}</span> • {slotVideo.subject}
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="text-[11px] text-slate-500 italic py-1">
+                                  Empty Slot
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
+                  <div>
+                    <h3 className="text-xl font-bold text-slate-900">Platform Lectures & Frames</h3>
                     <p className="text-xs text-slate-500 mt-0.5">
-                      Structured learning for Classes 5 to 10 with embedded YouTube lectures, chapter-wise notes, and faculty mentoring.
+                      Showing active lectures delivered across the website. Each video automatically receives high-resolution YouTube thumbnail frames.
                     </p>
                   </div>
-                  <button
-                    type="button"
-                    onClick={handleOpenAddFreeClass}
-                    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs shrink-0"
-                  >
-                    <Plus className="w-4 h-4" />
-                    <span>Add Free Class Video</span>
-                  </button>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                  {classes.map((cls) => (
-                    <div
-                      key={cls.id}
-                      className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-2xs hover:shadow-md transition-all flex flex-col justify-between"
-                    >
-                      <div>
-                        {/* Video / Thumbnail preview */}
-                        <div className="relative aspect-video w-full bg-slate-900 overflow-hidden">
-                          {cls.thumbnailUrl ? (
-                            <img
-                              src={cls.thumbnailUrl}
-                              alt={cls.title}
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-slate-950 text-red-500">
-                              <Video className="w-10 h-10" />
-                            </div>
-                          )}
-                          <div className="absolute top-2 left-2 flex items-center gap-1.5">
-                            <span className="px-2 py-0.5 rounded-md bg-slate-900/80 backdrop-blur-xs text-white text-[10px] font-bold">
-                              {cls.studentClass}
-                            </span>
-                            <span className="px-2 py-0.5 rounded-md bg-red-600 text-white text-[10px] font-bold uppercase">
-                              {cls.subject}
-                            </span>
-                          </div>
-                          {cls.isFeatured && (
-                            <div className="absolute top-2 right-2">
-                              <span className="px-2 py-0.5 rounded-md bg-amber-500 text-slate-950 text-[10px] font-bold flex items-center gap-1">
-                                <Sparkles className="w-3 h-3" /> Featured
+                  {classes.map((cls, idx) => {
+                    const videoId = extractYouTubeId(cls.youtubeUrl);
+                    const thumbUrl = getYouTubeThumbnailUrl(cls.youtubeUrl, cls.thumbnailUrl);
+                    return (
+                      <div
+                        key={cls.id}
+                        className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-2xs hover:shadow-md transition-all flex flex-col justify-between"
+                      >
+                        <div>
+                          {/* Video / Thumbnail preview frame */}
+                          <div className="relative aspect-video w-full bg-slate-950 overflow-hidden group">
+                            {thumbUrl ? (
+                              <img
+                                src={thumbUrl}
+                                alt={cls.title}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center bg-slate-950 text-red-500">
+                                <Video className="w-10 h-10" />
+                              </div>
+                            )}
+                            <div className="absolute inset-0 bg-linear-to-t from-slate-950/80 via-transparent to-black/30 pointer-events-none" />
+
+                            {/* Slot and Class Badges */}
+                            <div className="absolute top-2 left-2 flex items-center gap-1.5">
+                              <span className="px-2 py-0.5 rounded-md bg-red-600 text-white text-[10px] font-bold uppercase shadow-sm">
+                                Slot {idx + 1} of {MAX_FREE_VIDEOS}
+                              </span>
+                              <span className="px-2 py-0.5 rounded-md bg-slate-900/90 backdrop-blur-xs text-white text-[10px] font-bold">
+                                {cls.studentClass}
                               </span>
                             </div>
-                          )}
-                        </div>
 
-                        <div className="p-4 space-y-2 text-xs">
-                          <h4 className="font-bold text-slate-900 line-clamp-2 leading-snug">
-                            {cls.title}
-                          </h4>
-                          <p className="text-slate-500 text-[11px] line-clamp-2">
-                            {cls.description}
-                          </p>
-                          <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
-                            <span>Chapter: <strong>{cls.chapter || 'Foundations'}</strong></span>
-                            <span>Faculty: <strong>{cls.teacher || 'ARDM Faculty'}</strong></span>
-                          </div>
-                          {(cls.notesUrl || cls.studyMaterialUrl) && (
-                            <div className="pt-1 flex items-center gap-3 text-[11px]">
-                              {cls.notesUrl && (
-                                <a
-                                  href={cls.notesUrl}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="text-indigo-600 hover:underline flex items-center gap-1"
-                                >
-                                  <FileText className="w-3 h-3" /> Notes
-                                </a>
-                              )}
-                              {cls.studyMaterialUrl && (
-                                <a
-                                  href={cls.studyMaterialUrl}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="text-emerald-600 hover:underline flex items-center gap-1"
-                                >
-                                  <Download className="w-3 h-3" /> Materials
-                                </a>
-                              )}
+                            {/* YouTube Video ID badge */}
+                            <div className="absolute bottom-2 left-2 flex items-center gap-1.5">
+                              <span className="px-2 py-0.5 rounded bg-black/80 font-mono text-[10px] text-slate-300">
+                                ID: {videoId || 'IHOZQGtbiDQ'}
+                              </span>
                             </div>
-                          )}
-                        </div>
-                      </div>
 
-                      <div className="p-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-xs">
-                        <a
-                          href={cls.youtubeUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-slate-500 hover:text-red-600 font-mono text-[10px] flex items-center gap-1"
-                        >
-                          <ExternalLink className="w-3 h-3" />
-                          <span>YouTube Link</span>
-                        </a>
-                        <div className="flex items-center gap-1">
-                          <button
-                            type="button"
-                            onClick={() => handleOpenEditFreeClass(cls)}
-                            className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded-lg cursor-pointer"
-                            title="Edit Lecture"
+                            {cls.isFeatured && (
+                              <div className="absolute top-2 right-2">
+                                <span className="px-2 py-0.5 rounded-md bg-amber-500 text-slate-950 text-[10px] font-bold flex items-center gap-1 shadow-sm">
+                                  <Sparkles className="w-3 h-3" /> Featured Player
+                                </span>
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="p-4 space-y-2 text-xs">
+                            <h4 className="font-bold text-slate-900 line-clamp-2 leading-snug">
+                              {cls.title}
+                            </h4>
+                            <p className="text-slate-500 text-[11px] line-clamp-2">
+                              {cls.description}
+                            </p>
+                            <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+                              <span>Chapter: <strong>{cls.chapter || 'Foundations'}</strong></span>
+                              <span>Subject: <strong>{cls.subject || 'Mathematics'}</strong></span>
+                            </div>
+                            {(cls.notesUrl || cls.studyMaterialUrl) && (
+                              <div className="pt-1 flex items-center gap-3 text-[11px]">
+                                {cls.notesUrl && (
+                                  <a
+                                    href={cls.notesUrl}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="text-indigo-600 hover:underline flex items-center gap-1"
+                                  >
+                                    <FileText className="w-3 h-3" /> Notes
+                                  </a>
+                                )}
+                                {cls.studyMaterialUrl && (
+                                  <a
+                                    href={cls.studyMaterialUrl}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="text-emerald-600 hover:underline flex items-center gap-1"
+                                  >
+                                    <Download className="w-3 h-3" /> Materials
+                                  </a>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="p-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-xs">
+                          <a
+                            href={cls.youtubeUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-slate-600 hover:text-red-600 font-mono text-[11px] flex items-center gap-1.5 font-bold"
                           >
-                            <Edit className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleDeleteFreeClass(cls.id)}
-                            className="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg cursor-pointer"
-                            title="Delete Lecture"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
+                            <ExternalLink className="w-3.5 h-3.5 text-red-600" />
+                            <span>Watch Frame</span>
+                          </a>
+                          <div className="flex items-center gap-1">
+                            <button
+                              type="button"
+                              onClick={() => handleOpenEditFreeClass(cls)}
+                              className="px-2.5 py-1 text-red-600 hover:bg-red-50 rounded-lg cursor-pointer font-bold text-[11px] flex items-center gap-1"
+                              title={`Update Video in Slot ${idx + 1}`}
+                            >
+                              <Edit className="w-3.5 h-3.5" />
+                              <span>Update Slot {idx + 1}</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteFreeClass(cls.id)}
+                              className="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg cursor-pointer"
+                              title="Delete Lecture"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -4938,7 +5048,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     type="button"
                     onClick={() => {
                       setBannerMediaType('video');
-                      setBannerMediaUrl('https://www.youtube.com/embed/zYGjsevcofw');
+                      setBannerMediaUrl('https://www.youtube.com/embed/IHOZQGtbiDQ');
                     }}
                     className="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-white text-[10px] rounded font-mono border border-slate-700"
                   >
@@ -5853,15 +5963,58 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
         <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs overflow-y-auto">
           <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 text-xs my-8 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h4 className="font-extrabold text-base text-slate-900">
-                {editingFreeClassId ? 'Edit Video Lecture' : 'Add Free Video Lecture (Class 5-10)'}
-              </h4>
+              <div>
+                <h4 className="font-extrabold text-base text-slate-900 flex items-center gap-2">
+                  <Video className="w-4 h-4 text-red-600" />
+                  <span>
+                    {editingFreeClassId
+                      ? `Update Video (Slot ${fcTargetSlot} of ${MAX_FREE_VIDEOS})`
+                      : classes.length >= MAX_FREE_VIDEOS
+                      ? `Update / Replace Video (Slot ${fcTargetSlot} of ${MAX_FREE_VIDEOS})`
+                      : `Add Video (Slot ${fcTargetSlot} of ${MAX_FREE_VIDEOS})`}
+                  </span>
+                </h4>
+                <p className="text-[11px] text-slate-500 mt-0.5">
+                  Platform strictly supports a maximum of 5 video lectures.
+                </p>
+              </div>
               <button type="button" onClick={() => setShowFreeClassModal(false)} className="p-1 text-slate-400 hover:text-slate-700">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleSaveFreeClass} className="space-y-3">
+              {/* Slot Selection & Max 5 Policy Indicator */}
+              <div className="p-3 rounded-2xl bg-slate-900 text-white space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="block font-bold text-slate-200 text-xs">
+                    Target Delivery Slot (1 to 5) *
+                  </label>
+                  <span className="px-2 py-0.5 rounded-full bg-red-600/30 text-red-400 border border-red-500/30 font-mono text-[10px] font-bold">
+                    Slot {fcTargetSlot} of 5
+                  </span>
+                </div>
+                <select
+                  value={fcTargetSlot}
+                  onChange={(e) => setFcTargetSlot(Number(e.target.value))}
+                  className="w-full px-3 py-2 rounded-xl border border-slate-700 bg-slate-800 text-white font-medium text-xs focus:ring-2 focus:ring-red-500 outline-none"
+                >
+                  {[1, 2, 3, 4, 5].map((slotNum) => {
+                    const existing = classes[slotNum - 1];
+                    return (
+                      <option key={slotNum} value={slotNum}>
+                        Slot {slotNum}: {existing ? `${existing.title} (${existing.studentClass})` : '(Empty Slot)'}
+                      </option>
+                    );
+                  })}
+                </select>
+                <p className="text-[10px] text-slate-400 leading-relaxed">
+                  {classes.length >= MAX_FREE_VIDEOS
+                    ? `⚠️ Max 5 videos limit: saving will overwrite and replace the video in Slot ${fcTargetSlot}. No 6th video will be created.`
+                    : `Delivering into Slot ${fcTargetSlot}. Videos and thumbnail frames sync everywhere immediately.`}
+                </p>
+              </div>
+
               <div>
                 <label className="block font-bold text-slate-700 mb-1">Lecture Title *</label>
                 <input
@@ -5875,16 +6028,58 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">YouTube URL or Embed Link *</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block font-bold text-slate-700">YouTube URL or Embed Link *</label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFcYoutubeUrl(DEFAULT_TARGET_YOUTUBE_URL);
+                      setFcThumbnailUrl(getYouTubeThumbnailUrl(DEFAULT_TARGET_YOUTUBE_URL));
+                    }}
+                    className="text-[10px] font-bold text-red-600 hover:text-red-700 hover:underline cursor-pointer flex items-center gap-1"
+                  >
+                    <span>Use Target Video (IHOZQGtbiDQ)</span>
+                  </button>
+                </div>
                 <input
                   type="url"
                   required
                   value={fcYoutubeUrl}
-                  onChange={(e) => setFcYoutubeUrl(e.target.value)}
-                  placeholder="https://www.youtube.com/watch?v=..."
+                  onChange={(e) => {
+                    const url = e.target.value;
+                    setFcYoutubeUrl(url);
+                    setFcThumbnailUrl(getYouTubeThumbnailUrl(url));
+                  }}
+                  placeholder="https://youtu.be/IHOZQGtbiDQ?si=aTkbqIXPLXlJHyMz"
                   className="w-full px-3 py-2 rounded-xl border border-slate-200 font-mono text-[11px]"
                 />
               </div>
+
+              {/* Live Thumbnail Frame Preview */}
+              {fcYoutubeUrl && (
+                <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="font-bold text-slate-700 flex items-center gap-1">
+                      <ImageIcon className="w-3.5 h-3.5 text-red-600" /> Auto-Generated YouTube Thumbnail Frame
+                    </span>
+                    <span className="font-mono text-[10px] text-slate-500">
+                      ID: {extractYouTubeId(fcYoutubeUrl) || 'IHOZQGtbiDQ'}
+                    </span>
+                  </div>
+                  <div className="relative aspect-video rounded-xl overflow-hidden bg-black max-w-xs mx-auto border border-slate-300 shadow-xs">
+                    <img
+                      src={getYouTubeThumbnailUrl(fcYoutubeUrl)}
+                      alt="Thumbnail Frame Preview"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 pointer-events-none">
+                      <div className="w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg">
+                        <Video className="w-5 h-5 fill-white" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 <div>

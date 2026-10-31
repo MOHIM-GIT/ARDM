@@ -11,7 +11,7 @@ import {
   Image as ImageIcon,
 } from 'lucide-react';
 import { BannerItem } from '../../types';
-import { getBanners } from '../../services/storage';
+import { getBanners, extractYouTubeId } from '../../services/storage';
 
 interface AnimatedBannerSliderProps {
   onNavigate?: (target: string) => void;
@@ -177,12 +177,9 @@ export const AnimatedBannerSlider: React.FC<AnimatedBannerSliderProps> = ({
 
   // Helper to extract clean embeddable video URL
   const formatVideoEmbed = (url: string) => {
-    if (url.includes('youtube.com/watch?v=')) {
-      const id = url.split('v=')[1]?.split('&')[0];
-      return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&controls=1`;
-    }
-    if (url.includes('youtu.be/')) {
-      const id = url.split('youtu.be/')[1]?.split('?')[0];
+    if (!url) return 'https://www.youtube.com/embed/IHOZQGtbiDQ?autoplay=1&mute=1&loop=1&playlist=IHOZQGtbiDQ&controls=1';
+    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+      const id = extractYouTubeId(url);
       return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&controls=1`;
     }
     return url;

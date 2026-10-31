@@ -635,8 +635,8 @@ export const DEFAULT_FREE_CLASSES: FreeClassVideo[] = [
   {
     id: 'yt_1',
     title: 'Class 10 Madhyamik Mathematics 2026: 96%+ Question Prediction & Circle Theorems',
-    youtubeUrl: 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=600&q=80',
+    youtubeUrl: 'https://youtu.be/IHOZQGtbiDQ?si=aTkbqIXPLXlJHyMz',
+    thumbnailUrl: 'https://img.youtube.com/vi/IHOZQGtbiDQ/hqdefault.jpg',
     description: 'In-depth analysis of circle theorems, quadratic formulas, and high-probability board questions.',
     category: 'Mathematics',
     studentClass: 'Class 10',
@@ -648,8 +648,8 @@ export const DEFAULT_FREE_CLASSES: FreeClassVideo[] = [
   {
     id: 'yt_2',
     title: 'Physical Science: Current Electricity & Joule’s Law Numerical Hacks',
-    youtubeUrl: 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=600&q=80',
+    youtubeUrl: 'https://youtu.be/IHOZQGtbiDQ?si=aTkbqIXPLXlJHyMz',
+    thumbnailUrl: 'https://img.youtube.com/vi/IHOZQGtbiDQ/hqdefault.jpg',
     description: 'Learn how to solve complex circuit resistance problems in under 60 seconds with clear diagrams.',
     category: 'Sciences',
     studentClass: 'Class 10',
@@ -661,8 +661,8 @@ export const DEFAULT_FREE_CLASSES: FreeClassVideo[] = [
   {
     id: 'yt_3',
     title: 'Life Science: Genetics, Punnett Squares & Cell Division in 30 Minutes',
-    youtubeUrl: 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=600&q=80',
+    youtubeUrl: 'https://youtu.be/IHOZQGtbiDQ?si=aTkbqIXPLXlJHyMz',
+    thumbnailUrl: 'https://img.youtube.com/vi/IHOZQGtbiDQ/hqdefault.jpg',
     description: 'Mendelian genetics laws, monohybrid and dihybrid crosses made intuitive and visually clear.',
     category: 'Sciences',
     studentClass: 'Class 10',
@@ -674,13 +674,26 @@ export const DEFAULT_FREE_CLASSES: FreeClassVideo[] = [
   {
     id: 'yt_4',
     title: 'Free Coding Foundation: Python & Logic Building for School Students',
-    youtubeUrl: 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=600&q=80',
+    youtubeUrl: 'https://youtu.be/IHOZQGtbiDQ?si=aTkbqIXPLXlJHyMz',
+    thumbnailUrl: 'https://img.youtube.com/vi/IHOZQGtbiDQ/hqdefault.jpg',
     description: 'Zero-prerequisite introduction to coding logic, computational thinking, and building fun text games.',
     category: 'Computer',
-    studentClass: 'Class 8-10',
+    studentClass: 'Class 9',
     subject: 'Computer Science',
     publishDate: '2026-09-20',
+    isFeatured: false,
+    isPublished: true,
+  },
+  {
+    id: 'yt_5',
+    title: 'Middle School Science: Solar System, Heat & Force Experiments (Classes 6–8)',
+    youtubeUrl: 'https://youtu.be/IHOZQGtbiDQ?si=aTkbqIXPLXlJHyMz',
+    thumbnailUrl: 'https://img.youtube.com/vi/IHOZQGtbiDQ/hqdefault.jpg',
+    description: 'Fun, visual experiments demonstrating friction, atmospheric pressure, and states of matter.',
+    category: 'Foundation',
+    studentClass: 'Class 8',
+    subject: 'Physical Science',
+    publishDate: '2026-09-22',
     isFeatured: false,
     isPublished: true,
   },
@@ -1138,7 +1151,7 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   googleSheetUrl: '',
   registrationIsOpen: true,
   upiVpa: SITE_CONFIG.contact.upiId,
-  freeClassesDisplayMode: 'coming_soon',
+  freeClassesDisplayMode: 'active',
   freeClassesBannerVisible: false,
 };
 
@@ -2155,22 +2168,93 @@ export function updatePYQ(id: string, updates: Partial<PYQItem>): PYQItem | null
   return pyqs[idx];
 }
 
-// ================= FREE YOUTUBE CLASSES =================
+// ================= FREE YOUTUBE CLASSES & VIDEO DELIVERY =================
+
+export const MAX_FREE_VIDEOS = 5;
+export const DEFAULT_TARGET_YOUTUBE_URL = 'https://youtu.be/IHOZQGtbiDQ?si=aTkbqIXPLXlJHyMz';
+export const DEFAULT_TARGET_YOUTUBE_ID = 'IHOZQGtbiDQ';
+
+/**
+ * Extract YouTube 11-char Video ID reliably from any URL format
+ */
+export function extractYouTubeId(url?: string): string {
+  if (!url || typeof url !== 'string') return DEFAULT_TARGET_YOUTUBE_ID;
+  const cleanUrl = url.trim();
+  const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=|shorts\/)|youtu\.be\/)([^"&?\/\s]{11})/;
+  const match = cleanUrl.match(regExp);
+  if (match && match[1] && match[1].length === 11) {
+    return match[1];
+  }
+  return DEFAULT_TARGET_YOUTUBE_ID;
+}
+
+/**
+ * Format YouTube iframe embed URL
+ */
+export function getYouTubeEmbedUrl(url?: string): string {
+  const videoId = extractYouTubeId(url);
+  return `https://www.youtube.com/embed/${videoId}?rel=0`;
+}
+
+/**
+ * Format YouTube high-res or HQ thumbnail image URL
+ */
+export function getYouTubeThumbnailUrl(url?: string, customThumb?: string): string {
+  if (customThumb && customThumb.startsWith('http') && !customThumb.includes('placeholder') && !customThumb.includes('unsplash')) {
+    return customThumb;
+  }
+  const videoId = extractYouTubeId(url);
+  return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+}
 
 export function getFreeClasses(): FreeClassVideo[] {
-  const classes = getFromStorage<FreeClassVideo[]>(KEYS.FREE_CLASSES, DEFAULT_FREE_CLASSES);
-  const yt1 = classes.find((c) => c.id === 'yt_1');
-  if (yt1 && (yt1.title !== 'Class 10 Madhyamik Mathematics 2026: 96%+ Question Prediction & Circle Theorems' || yt1.youtubeUrl !== 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS')) {
-    yt1.title = 'Class 10 Madhyamik Mathematics 2026: 96%+ Question Prediction & Circle Theorems';
-    yt1.youtubeUrl = 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS';
+  let classes = getFromStorage<FreeClassVideo[]>(KEYS.FREE_CLASSES, DEFAULT_FREE_CLASSES);
+  let changed = false;
+
+  // Clean any stale old song URLs (zYGjsevcofw) and ensure proper YouTube thumbnail frames
+  classes = classes.map((c, idx) => {
+    let url = c.youtubeUrl;
+    let thumb = c.thumbnailUrl;
+    if (!url || url.includes('zYGjsevcofw')) {
+      url = DEFAULT_TARGET_YOUTUBE_URL;
+      thumb = `https://img.youtube.com/vi/${DEFAULT_TARGET_YOUTUBE_ID}/hqdefault.jpg`;
+      changed = true;
+    } else if (!thumb || thumb.includes('unsplash')) {
+      const vidId = extractYouTubeId(url);
+      thumb = `https://img.youtube.com/vi/${vidId}/hqdefault.jpg`;
+      changed = true;
+    }
+    return {
+      ...c,
+      youtubeUrl: url,
+      thumbnailUrl: thumb,
+      orderIndex: idx + 1,
+    };
+  });
+
+  // Strict Max 5 Videos Rule: No 6th video can ever be kept
+  if (classes.length > MAX_FREE_VIDEOS) {
+    classes = classes.slice(0, MAX_FREE_VIDEOS);
+    changed = true;
+  } else if (classes.length === 0) {
+    classes = [...DEFAULT_FREE_CLASSES];
+    changed = true;
+  }
+
+  if (changed) {
     saveToStorage(KEYS.FREE_CLASSES, classes);
   }
   return classes;
 }
 
 export function saveFreeClasses(classes: FreeClassVideo[]): void {
-  saveToStorage(KEYS.FREE_CLASSES, classes);
-  logAuditAction('Admin', 'UPDATE_FREE_CLASSES', `Updated YouTube free classes (${classes.length} items)`);
+  // Always strictly clamp to at most 5 videos
+  const capped = classes.slice(0, MAX_FREE_VIDEOS);
+  saveToStorage(KEYS.FREE_CLASSES, capped);
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('ardm_free_classes_updated'));
+  }
+  logAuditAction('Admin', 'UPDATE_FREE_CLASSES', `Updated YouTube free classes (${capped.length} items, max 5 allowed)`);
 }
 
 // ================= AI & CODING WEBINAR =================
@@ -2949,22 +3033,23 @@ export function searchMeritList(query: string): MeritRecord[] {
   );
 }
 
-// ================= FREE EDUCATION / CLASSES 5-10 CRUD =================
-
-export async function addFreeClass(data: Partial<FreeClassVideo>): Promise<FreeClassVideo> {
+export async function addFreeClass(data: Partial<FreeClassVideo> & { targetSlot?: number }): Promise<FreeClassVideo> {
   const list = getFreeClasses();
+  const url = data.youtubeUrl ? data.youtubeUrl.trim() : DEFAULT_TARGET_YOUTUBE_URL;
+  const thumb = getYouTubeThumbnailUrl(url, data.thumbnailUrl ? data.thumbnailUrl.trim() : undefined);
+
   const newItem: FreeClassVideo = {
     id: `lec_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
-    title: data.title ? data.title.trim() : 'Free Class Lecture',
-    youtubeUrl: data.youtubeUrl ? data.youtubeUrl.trim() : '',
-    thumbnailUrl: data.thumbnailUrl ? data.thumbnailUrl.trim() : undefined,
+    title: data.title ? data.title.trim() : 'Free Class Video Lecture',
+    youtubeUrl: url,
+    thumbnailUrl: thumb,
     description: data.description ? data.description.trim() : '',
     category: data.category || 'Academic',
     studentClass: data.studentClass || 'Class 10',
-    board: data.board || 'WBBSE',
+    board: data.board || 'WBBSE (Madhyamik)',
     subject: data.subject || 'Mathematics',
     chapter: data.chapter ? data.chapter.trim() : '',
-    teacher: data.teacher ? data.teacher.trim() : 'Faculty Mentor',
+    teacher: data.teacher ? data.teacher.trim() : 'ARDM Faculty Mentor',
     notesUrl: data.notesUrl ? data.notesUrl.trim() : undefined,
     pdfUrl: data.pdfUrl ? data.pdfUrl.trim() : undefined,
     studyMaterialUrl: data.studyMaterialUrl ? data.studyMaterialUrl.trim() : undefined,
@@ -2975,7 +3060,19 @@ export async function addFreeClass(data: Partial<FreeClassVideo>): Promise<FreeC
     isPublished: data.publishStatus !== 'Draft',
   };
 
-  list.push(newItem);
+  // MAX 5 VIDEOS RULE: No 6th video is ever added. If 5 exist, update previous slot.
+  if (list.length >= MAX_FREE_VIDEOS) {
+    const slotIdx = typeof data.targetSlot === 'number' && data.targetSlot >= 1 && data.targetSlot <= MAX_FREE_VIDEOS
+      ? data.targetSlot - 1
+      : 0; // default to slot 1 if no slot specified
+    newItem.id = list[slotIdx]?.id || newItem.id;
+    newItem.orderIndex = slotIdx + 1;
+    list[slotIdx] = newItem;
+  } else {
+    newItem.orderIndex = list.length + 1;
+    list.push(newItem);
+  }
+
   saveFreeClasses(list);
 
   const token = typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('ardm_admin_token') : null;
@@ -2985,7 +3082,7 @@ export async function addFreeClass(data: Partial<FreeClassVideo>): Promise<FreeC
       'Content-Type': 'application/json',
       ...(token ? { 'x-admin-token': token } : {}),
     },
-    body: JSON.stringify(newItem),
+    body: JSON.stringify({ ...newItem, targetSlot: (newItem.orderIndex || 1) }),
   }).catch(() => {});
 
   return newItem;
@@ -2996,9 +3093,14 @@ export async function updateFreeClass(id: string, updates: Partial<FreeClassVide
   const index = list.findIndex(c => c.id === id);
   if (index === -1) return null;
 
+  const url = updates.youtubeUrl !== undefined ? updates.youtubeUrl.trim() : list[index].youtubeUrl;
+  const thumb = getYouTubeThumbnailUrl(url, updates.thumbnailUrl !== undefined ? updates.thumbnailUrl.trim() : list[index].thumbnailUrl);
+
   list[index] = {
     ...list[index],
     ...updates,
+    youtubeUrl: url,
+    thumbnailUrl: thumb,
     isPublished: updates.publishStatus !== undefined ? updates.publishStatus === 'Published' : (updates.isPublished !== undefined ? updates.isPublished : list[index].isPublished),
   };
   saveFreeClasses(list);
@@ -3010,7 +3112,7 @@ export async function updateFreeClass(id: string, updates: Partial<FreeClassVide
       'Content-Type': 'application/json',
       ...(token ? { 'x-admin-token': token } : {}),
     },
-    body: JSON.stringify(updates),
+    body: JSON.stringify({ ...updates, youtubeUrl: url, thumbnailUrl: thumb }),
   }).catch(() => {});
 
   return list[index];
@@ -3065,9 +3167,9 @@ export const DEFAULT_BANNERS: BannerItem[] = [
     subtitle: '100% free video classes for Classes 5 to 10 covering Mathematics, Physical Science, and Life Science with senior toppers.',
     badgeText: '100% FREE EDUCATION & YOUTUBE CLASSES',
     mediaType: 'video',
-    mediaUrl: 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS',
+    mediaUrl: 'https://youtu.be/IHOZQGtbiDQ?si=aTkbqIXPLXlJHyMz',
     ctaText: 'Watch Free YouTube Classes',
-    ctaLink: 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS',
+    ctaLink: 'https://youtu.be/IHOZQGtbiDQ?si=aTkbqIXPLXlJHyMz',
     isVisible: false,
     orderIndex: 2,
     createdAt: '2026-01-02T00:00:00.000Z',
@@ -3141,9 +3243,9 @@ export function getBanners(): BannerItem[] {
           title: 'Free Education & YouTube Classes (Classes 5 to 10)',
           badgeText: '100% FREE EDUCATION & YOUTUBE CLASSES',
           mediaType: 'video',
-          mediaUrl: 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS',
+          mediaUrl: 'https://youtu.be/IHOZQGtbiDQ?si=aTkbqIXPLXlJHyMz',
           ctaText: 'Watch Free YouTube Classes',
-          ctaLink: 'https://youtu.be/zYGjsevcofw?si=Lt-RV5Fb0sOT91oS',
+          ctaLink: 'https://youtu.be/IHOZQGtbiDQ?si=aTkbqIXPLXlJHyMz',
           isVisible: shouldBeVisible,
         };
         saveBanners(parsed);
@@ -3231,7 +3333,10 @@ export function deleteBanner(id: string): boolean {
 
 export function getFreeClassesDisplayMode(): FreeClassesDisplayMode {
   const settings = getSiteSettings();
-  return settings.freeClassesDisplayMode || 'coming_soon';
+  if (!settings.freeClassesDisplayMode || settings.freeClassesDisplayMode === 'coming_soon') {
+    return 'active';
+  }
+  return settings.freeClassesDisplayMode;
 }
 
 export function setFreeClassesDisplayMode(mode: FreeClassesDisplayMode): void {

@@ -12,6 +12,7 @@ import {
   FileCheck,
   TrendingUp,
   Percent,
+  Video,
 } from 'lucide-react';
 import {
   SITE_CONFIG,
@@ -53,6 +54,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <span className="truncate">PROSTUTI 2026 • Class 10 Mock Test</span>
                 <Sparkles className="w-3.5 h-3.5 text-red-600 dark:text-red-400 shrink-0" />
               </div>
+              <a
+                href="#youtube-video-frame"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full bg-red-950/80 border border-red-600/70 text-red-300 text-xs font-bold hover:bg-red-900/90 transition-all shadow-2xs"
+                title="Scroll down to Official YouTube Video Frame"
+              >
+                <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
+                <Video className="w-3.5 h-3.5 text-red-400 shrink-0" />
+                <span className="truncate">Official YouTube Frame • Live Stream</span>
+              </a>
               <a
                 href="#free-online-classes"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-950/70 border border-emerald-700/60 text-emerald-300 text-xs font-bold hover:bg-emerald-900/80 transition-all shadow-2xs"
@@ -199,6 +209,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <FileCheck className="w-4 h-4 text-red-400" />
                 <span>Admit Card</span>
               </button>
+
+              {/* Watch YouTube Video Frame */}
+              <a
+                href="#youtube-video-frame"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white text-xs font-bold shadow-md shadow-red-600/30 transition-all hover:scale-102 cursor-pointer"
+                title="Scroll to Official YouTube Video Frame"
+              >
+                <Video className="w-4 h-4 text-white" />
+                <span>Watch YouTube Frame</span>
+              </a>
             </div>
 
             {/* Secondary Contact Quick Links */}

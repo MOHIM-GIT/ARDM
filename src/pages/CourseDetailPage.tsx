@@ -20,7 +20,7 @@ import {
   Play,
   X,
 } from 'lucide-react';
-import { getCourses, enrollInCourse } from '../services/storage';
+import { getCourses, enrollInCourse, extractYouTubeId } from '../services/storage';
 import { Course } from '../types';
 import { SITE_CONFIG, getTelLink } from '../config/siteConfig';
 import { slugify, getCourseSlug } from '../utils/seo';
@@ -41,13 +41,9 @@ export const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
   const [activeVideoModal, setActiveVideoModal] = useState<{ title: string; url: string } | null>(null);
 
   const formatVideoEmbed = (url: string) => {
-    if (!url) return '';
-    if (url.includes('youtube.com/watch?v=')) {
-      const id = url.split('v=')[1]?.split('&')[0];
-      return `https://www.youtube.com/embed/${id}?autoplay=1`;
-    }
-    if (url.includes('youtu.be/')) {
-      const id = url.split('youtu.be/')[1]?.split('?')[0];
+    if (!url) return 'https://www.youtube.com/embed/IHOZQGtbiDQ?autoplay=1';
+    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+      const id = extractYouTubeId(url);
       return `https://www.youtube.com/embed/${id}?autoplay=1`;
     }
     return url;

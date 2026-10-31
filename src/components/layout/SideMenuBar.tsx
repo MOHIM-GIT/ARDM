@@ -68,6 +68,14 @@ export const SideMenuBar: React.FC<SideMenuBarProps> = ({
       icon: Home,
     },
     {
+      id: 'youtube-video-frame',
+      path: '/#youtube-video-frame',
+      label: 'YouTube Frame',
+      icon: Video,
+      badge: 'Live',
+      badgeColor: 'bg-red-600/20 text-red-400 border-red-500/30',
+    },
+    {
       id: 'about',
       path: '/about',
       label: 'About',
