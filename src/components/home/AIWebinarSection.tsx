@@ -35,18 +35,29 @@ export const AIWebinarSection: React.FC<AIWebinarSectionProps> = ({ onOpenWorksh
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-4xl mx-auto">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/20 text-red-300 border border-red-400/30 text-xs font-semibold mb-6">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Open Access Tech Masterclass</span>
+          {/* SEO Badges */}
+          <div className="flex flex-wrap items-center gap-2 mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-600/20 text-red-300 border border-red-400/40 text-xs font-mono font-bold uppercase tracking-wider">
+              <Sparkles className="w-3.5 h-3.5 text-red-400" />
+              <span>Best AI School in West Bengal</span>
+            </div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 text-amber-300 border border-amber-400/30 text-xs font-mono font-bold">
+              <span>Best AI Workshop Conducted by Mohim Das</span>
+            </div>
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-900/80 text-slate-300 border border-slate-700 text-[11px] font-mono">
+              <span>AI &amp; Coding Coaching Centre</span>
+            </div>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight mb-4">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight mb-4 text-white">
             {webinar.title}
           </h2>
 
-          <p className="text-sm sm:text-base text-slate-300 leading-relaxed mb-8 max-w-2xl">
+          <p className="text-sm sm:text-base text-slate-300 leading-relaxed mb-6 max-w-3xl">
             {webinar.description}
+          </p>
+          <p className="text-xs sm:text-sm text-red-300/90 font-medium mb-8 max-w-2xl">
+            Recognized across Kolkata and districts as the <strong>best AI School in West Bengal</strong> and premier <strong>AI and Coding coaching centre</strong>. Don't miss the <strong>best AI Workshop which is conducted by Mohim Das</strong> (Founder &amp; Tech Lead of ARDM Academy, Founder &amp; CEO of CodeLX).
           </p>
 
           {/* Details Card */}

@@ -8,6 +8,7 @@ export interface BreadcrumbItem {
 export interface SEOHeadProps {
   title: string;
   description: string;
+  keywords?: string;
   canonical?: string;
   ogType?: 'website' | 'article';
   ogImage?: string;
@@ -18,6 +19,7 @@ export interface SEOHeadProps {
 export const SEOHead: React.FC<SEOHeadProps> = ({
   title,
   description,
+  keywords,
   canonical = typeof window !== 'undefined' ? window.location.href : 'https://ardmacademy.netlify.app/',
   ogType = 'website',
   ogImage = 'https://ardmacademy.netlify.app/logo.png',
@@ -39,8 +41,11 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
       el.setAttribute('content', content);
     };
 
-    // Description
+    // Description & Keywords
     setMetaTag('name', 'description', description);
+    if (keywords) {
+      setMetaTag('name', 'keywords', keywords);
+    }
 
     // OpenGraph
     setMetaTag('property', 'og:title', title);
@@ -105,7 +110,7 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
     } else if (pageScriptEl) {
       pageScriptEl.remove();
     }
-  }, [title, description, canonical, ogType, ogImage, breadcrumbs, schema]);
+  }, [title, description, keywords, canonical, ogType, ogImage, breadcrumbs, schema]);
 
   return null;
 };

@@ -22,6 +22,11 @@ interface WorkshopsPageProps {
 export const WorkshopsPage: React.FC<WorkshopsPageProps> = ({ onNavigate, onOpenMockTest }) => {
   const resources = [
     {
+      title: 'Best AI Workshop in West Bengal Conducted by Mohim Das',
+      category: 'Flagship AI Masterclass (CodeLX)',
+      desc: 'Hands-on AI and coding workshop conducted by Mohim Das (Founder & Tech Lead, CEO of CodeLX). Learn Python, generative AI tools, and prompt engineering.',
+    },
+    {
       title: 'Class 10 Mathematical Formula Handbook',
       category: 'Downloadable PDF',
       desc: 'All algebraic identities, quadratic equations, trigonometry ratios, and geometry theorems in one place.',
@@ -46,8 +51,8 @@ export const WorkshopsPage: React.FC<WorkshopsPageProps> = ({ onNavigate, onOpen
   return (
     <div className="pt-20 pb-20 bg-slate-50 min-h-screen">
       <SEOHead
-        title="Workshops & Free Guidance | ARDM Academy"
-        description="Access free academic webinars, board exam strategy sessions, and downloadable formula revision sheets from ARDM Academy mentors."
+        title="Best AI Workshop Conducted by Mohim Das & Educational Guidance | ARDM Academy"
+        description="Join the best AI Workshop in West Bengal conducted by Mohim Das (Founder & Tech Lead of ARDM Academy, CEO of CodeLX). Free AI & coding coaching, revision kits, and mentorship."
         canonical="https://ardmacademy.netlify.app/workshops"
         breadcrumbs={[{ name: 'Workshops & Guidance', path: '/workshops' }]}
       />
